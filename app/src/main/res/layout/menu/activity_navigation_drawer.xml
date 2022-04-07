@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    android:layoutDirection="rtl">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/b"
+            android:title="b" />
+
+
+        <item
+            android:id="@+id/nav_buy_history"
+            android:icon="@drawable/b"
+            android:title="b" />
+
+        <item
+            android:id="@+id/nav_rep"
+            android:icon="@drawable/b"
+            android:title="b" />
+
+
+    </group>
+
+    <item android:title="عمومی">
+        <menu>
+            <item
+                android:id="@+id/nav_cfg"
+                android:icon="@drawable/a"
+                android:title="a" />
+            <item
+                android:id="@+id/aboutus"
+                android:icon="@drawable/b"
+                android:title="b" />
+
+
+        </menu>
+    </item>
+
+</menu>

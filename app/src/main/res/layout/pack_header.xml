@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layoutDirection="rtl">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="2dp"
+        >
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:text="اعلام کننده :"
+                android:gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:paddingLeft="20dp"
+                />
+            <Spinner
+                android:id="@+id/pack_header_spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textColor="@color/Black"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_header_btn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:backgroundTint="@color/grey_800"
+                app:icon="@drawable/add_vector"
+                app:iconSize="30dp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:text="کنترل کننده :"
+                android:gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:paddingLeft="20dp"
+                />
+            <Spinner
+                android:id="@+id/pack_header_spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/Black"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_header_btn2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:backgroundTint="@color/grey_800"
+                app:icon="@drawable/add_vector"
+                app:iconSize="30dp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:text="بسته بندی :"
+                android:gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:paddingLeft="20dp"
+                />
+            <Spinner
+                android:id="@+id/pack_header_spinner3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/Black"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_header_btn3"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:backgroundTint="@color/grey_800"
+                app:icon="@drawable/add_vector"
+                app:iconSize="30dp"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:text="تعداد بسته :"
+                android:gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:paddingLeft="20dp"
+                />
+            <EditText
+                android:id="@+id/pack_header_packamount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/Black"
+                android:text=""
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_header_btn4"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:backgroundTint="@color/grey_800"
+                android:text="جدید"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                android:visibility="invisible"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:text="تاریخ تحویل :"
+                android:gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:paddingLeft="20dp"
+                />
+            <TextView
+                android:id="@+id/pack_header_senddate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/Black"
+                android:text=""
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_header_btn5"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:backgroundTint="@color/grey_800"
+                android:text="ثبت"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/pack_new_reader"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:visibility="gone"
+            >
+
+            <EditText
+                android:id="@+id/pack_new_ed1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textColor="@color/Black"
+                android:hint="اعلام کننده"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_new_btn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:backgroundTint="@color/green_500"
+                android:text="تایید"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/pack_new_control"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:visibility="gone"
+
+            >
+
+            <EditText
+                android:id="@+id/pack_new_ed2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textColor="@color/Black"
+
+                android:hint="کنترل کننده"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_new_btn2"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:backgroundTint="@color/green_500"
+                android:text="تایید"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/pack_new_pack"
+
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:visibility="gone"
+
+            >
+
+            <EditText
+                android:id="@+id/pack_new_ed3"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:textColor="@color/Black"
+                android:hint="بسته بندی"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pack_new_btn3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:backgroundTint="@color/green_500"
+                android:text="تایید"
+                android:textSize="18sp"
+                android:layout_margin="5dp"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pack_header_send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:backgroundTint="@color/red_600"
+            android:text="ارسال بسته بندی فاکتور"
+            android:layout_margin="5dp"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
