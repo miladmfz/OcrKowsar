@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.ConfirmActivity">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,7 +13,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <EditText
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:id="@+id/confirmActivity_barcode"
+                android:background="@color/white"
+                android:visibility="visible"/>
+            <FrameLayout
+                android:id="@+id/confirm_framelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

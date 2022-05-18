@@ -1,6 +1,7 @@
 package com.kits.ocrkowsar.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,27 +14,28 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.kits.ocrkowsar.R;
+import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 
 import java.util.ArrayList;
 
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
     DatabaseHelper dbh;
+    DatabaseHelper dbhbase;
     Intent intent;
     Handler handler;
     final int PERMISSION_CODE = 1;
     CallMethod callMethod;
     final int PERMISSION_REQUEST_CODE = 1;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,26 +47,31 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("SdCardPath")
     public void init() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         callMethod.EditString("Last_search", "");
 
         if (callMethod.firstStart()) {
             callMethod.EditString("Deliverer",  "پیش فرض");
             callMethod.EditString("Category", "0");
             callMethod.EditString("StackCategory", "همه");
+            callMethod.EditString("ConditionPosition", "0");
+            callMethod.EditString("TitleSize", "22");
+
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("SQLiteURLUse", "");
             callMethod.EditString("PersianCompanyNameUse", "");
             callMethod.EditString("EnglishCompanyNameUse", "");
+            callMethod.EditString("DatabaseName", "");
             callMethod.saveArrayList(new ArrayList<>(), "ServerURLs");
             callMethod.saveArrayList(new ArrayList<>(), "SQLiteURLs");
             callMethod.saveArrayList(new ArrayList<>(), "PersianCompanyNames");
             callMethod.saveArrayList(new ArrayList<>(), "EnglishCompanyNames");
-
+            dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.ocrkowsar/databases/KowsarDb.sqlite");
+            dbhbase.CreateActivationDb();
 
             callMethod.EditBoolan("FirstStart", false);
         }
@@ -97,7 +104,7 @@ public class SplashActivity extends AppCompatActivity {
     }
     private void Startapplication() {
 
-        if (callMethod.ReadString("UseSQLiteURL").equals("")) {
+        if (callMethod.ReadString("DatabaseName").equals("")) {
             handler = new Handler();
             handler.postDelayed(() -> {
                 intent = new Intent(this, ChoiceDatabaseActivity.class);

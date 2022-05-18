@@ -1,5 +1,6 @@
 package com.kits.ocrkowsar.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
@@ -29,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Factor_List_adapter;
+import com.kits.ocrkowsar.adapter.OcrFactorList_Adapter;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -45,21 +47,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FactorListActivity extends AppCompatActivity {
+public class OcrFactorListActivity extends AppCompatActivity {
 
     APIInterface apiInterface;
-    Factor_List_adapter adapter;
+    OcrFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_list_recycler;
     AppCompatEditText edtsearch;
     Handler handler;
     ArrayList<Factor> factors=new ArrayList<>();
-    ArrayList<Factor> selectfactors=new ArrayList<>();
     String srch="";
     TextView textView_Count;
     String state="0",StateEdited="0",StateShortage="0";
 
-
+    Dialog dialog1;
     SwitchMaterial RadioEdited;
     SwitchMaterial RadioShortage;
     Spinner spinnerPath;
@@ -76,20 +77,24 @@ public class FactorListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_factor_list);
-        Dialog dialog1 = new Dialog(this);
+        setContentView(R.layout.activity_ocr_factor_list);
+
+        dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.rep_prog);
         TextView repw = dialog1.findViewById(R.id.rep_prog_text);
         repw.setText("در حال خواندن اطلاعات");
         dialog1.show();
+
+
+
+
         intent();
         Config();
         try {
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
-            handler.postDelayed(dialog1::dismiss, 1000);
         }catch (Exception e){
             callMethod.ErrorLog(e.getMessage());
         }
@@ -116,7 +121,7 @@ public class FactorListActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler=new Handler();
 
@@ -160,6 +165,7 @@ public class FactorListActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
                             srch = NumberFunctions.EnglishNumber(editable.toString());
+
                             retrofitrequset();
                         }, 1000);
 
@@ -178,6 +184,7 @@ public class FactorListActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 path=customerpath.get(position);
+                callMethod.EditString("ConditionPosition",String.valueOf(position));
                 callrecycle();
 
             }
@@ -239,66 +246,61 @@ public class FactorListActivity extends AppCompatActivity {
 
 
     public void callrecycle() {
-        adapter = new Factor_List_adapter(factors,state, filter,path,FactorListActivity.this);
+        adapter = new OcrFactorList_Adapter(factors,state, filter,path,OcrFactorListActivity.this);
         if (adapter.getItemCount()==0){
-             callMethod.showToast("فاکتوری یافت نشد");
+            callMethod.showToast("فاکتوری یافت نشد");
         }
         textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
         factor_list_recycler.setLayoutManager(gridLayoutManager);
         factor_list_recycler.setAdapter(adapter);
         factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
+        dialog1.dismiss();
 
 
     }
 
     public void retrofitpath() {
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetCustomerPath");
-        call.enqueue(new Callback<RetrofitResponse>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     assert response.body() != null;
-                    for ( Factor factor : response.body().getFactors()) {
+                    for (Factor factor : response.body().getFactors()) {
                         customerpath.add(factor.getCustomerPath());
                     }
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(FactorListActivity.this,
-                            android.R.layout.simple_spinner_item,customerpath);
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(OcrFactorListActivity.this,
+                            android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
-                    spinnerPath.setSelection(0);
+                    try {
+                        spinnerPath.setSelection(Integer.parseInt(callMethod.ReadString("ConditionPosition")));
+                    } catch (Exception e) {
+                        spinnerPath.setSelection(0);
+                    }
                 }
             }
+
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 finish();
                 callMethod.showToast("فاکتوری موجود نمی باشد");
-                Log.e("",t.getMessage()); }
+                Log.e("", t.getMessage());
+            }
         });
     }
 
     public void retrofitrequset() {
-        if(!state.equals("2")){
-            Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
-            call.enqueue(new Callback<RetrofitResponse>() {
+
+        Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
+
+        if(state.equals("0")){
+
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-
-                }
-
-                @Override
-                public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-
-                }
-            });
-        }
-        if(state.equals("2")){
-
-            Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
-            call.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                     if(response.isSuccessful()) {
                         assert response.body() != null;
@@ -306,16 +308,30 @@ public class FactorListActivity extends AppCompatActivity {
                         if(factors.size()>0){
                             callrecycle();
                             retrofitpath();
-                            if(state.equals("0")){
-                                for(Factor factor:factors){
-                                    if(factor.getHasShortage().equals("1")){
-                                        noti_Messaging("کسری", "فکتور دارای کسری موجود است","0");
-                                    }
-                                    if(factor.getIsEdited().equals("1")){
-                                        noti_Messaging("اصلاحی", "فکتور اصلاحی موجود است", "1");
-                                    }
+                            int ShortageCount=0;
+                            int EditedCount=0;
+                            String Titlequery="";
+                            String Bodyquery="";
+                            for(Factor factor:factors){
+                                if(factor.getHasShortage().equals("1")){
+                                    ShortageCount++;
+                                }
+                                if(factor.getIsEdited().equals("1")){
+                                    EditedCount++;
                                 }
                             }
+
+                            if (ShortageCount>0){
+                                Titlequery=Titlequery+"  کسری  ";
+                                Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(ShortageCount))+" فکتور کسری)";
+                            }
+                            if (EditedCount>0){
+                                Titlequery=Titlequery+"  اصلاحی  ";
+                                Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(EditedCount))+" فکتور اصلاحی)";
+                            }
+                            if(!Titlequery.equals(""))
+                                noti_Messaging(Titlequery, Bodyquery,"0");
+
 
                         }else {
                             finish();
@@ -325,17 +341,17 @@ public class FactorListActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
                     finish();
                     callMethod.showToast("فاکتوری موجود نمی باشد");
                     Log.e("",t.getMessage()); }
             });
         }else {
 
-            Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
-            call.enqueue(new Callback<RetrofitResponse>() {
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                     if(response.isSuccessful()) {
                         assert response.body() != null;
@@ -344,6 +360,7 @@ public class FactorListActivity extends AppCompatActivity {
                             callrecycle();
                             retrofitpath();
                         }else {
+
                             finish();
                             callMethod.showToast("فاکتوری موجود نمی باشد");
                         }
@@ -351,8 +368,11 @@ public class FactorListActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+
                     finish();
+
                     callMethod.showToast("فاکتوری موجود نمی باشد");
                     Log.e("",t.getMessage()); }
             });
@@ -370,7 +390,7 @@ public class FactorListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(FactorListActivity.this, FactorListActivity.class);
+        intent = new Intent(this, OcrFactorListActivity.class);
         intent.putExtra("State", state);
         startActivity(intent);
         finish();
@@ -385,7 +405,7 @@ public class FactorListActivity extends AppCompatActivity {
             NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(Channel);
         }
-        Intent notificationIntent = new Intent(this, FactorListActivity.class);
+        Intent notificationIntent = new Intent(this, OcrFactorListActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){
             notificationIntent.putExtra("StateEdited", "0");
@@ -397,10 +417,10 @@ public class FactorListActivity extends AppCompatActivity {
         }
 
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder notcompat = new NotificationCompat.Builder(FactorListActivity.this, channel_id)
+        NotificationCompat.Builder notcompat = new NotificationCompat.Builder(this, channel_id)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setOnlyAlertOnce(false)
@@ -409,5 +429,6 @@ public class FactorListActivity extends AppCompatActivity {
 
         notificationManager.notify(1, notcompat.build());
     }
+
 
 }

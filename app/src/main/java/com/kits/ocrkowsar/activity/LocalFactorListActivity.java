@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Factor_Header_adapter;
+import com.kits.ocrkowsar.adapter.LocalFactorList_Adapter;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -32,19 +32,17 @@ import com.kits.ocrkowsar.model.NumberFunctions;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
-public class FactorHeaderActivity extends AppCompatActivity {
-
-    private DatabaseHelper dbh ;
-    Factor_Header_adapter adapter;
+public class LocalFactorListActivity extends AppCompatActivity {
+    private DatabaseHelper dbh;
+    LocalFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_header_recycler;
     private EditText edtsearch;
     Handler handler;
-    ArrayList<Factor> factors= new ArrayList<>();
-    String IsSent,signature="1",srch="";
+    ArrayList<Factor> factors = new ArrayList<>();
+    String IsSent, signature = "1", srch = "";
     TextView textView_Count;
-    int width=1;
+    int width = 1;
 
 
     FloatingActionButton fab;
@@ -54,11 +52,13 @@ public class FactorHeaderActivity extends AppCompatActivity {
     Intent intent;
     CallMethod callMethod;
     Toolbar toolbar;
-    SwitchMaterial mySwitch_activestack ;
+    SwitchMaterial mySwitch_activestack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_factor_header);
+        setContentView(R.layout.activity_local_factor_list);
+
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -72,45 +72,46 @@ public class FactorHeaderActivity extends AppCompatActivity {
             Handler handler = new Handler();
             handler.postDelayed(this::init, 100);
             handler.postDelayed(dialog1::dismiss, 1000);
-        }catch (Exception e){
+        } catch (Exception e) {
             callMethod.ErrorLog(e.getMessage());
         }
 
     }
     ////////////////////////////////////////////////////////////////////////////
 
-    public  void intent(){
-        Bundle bundle =getIntent().getExtras();
+    public void intent() {
+        Bundle bundle = getIntent().getExtras();
         assert bundle != null;
-        IsSent=bundle.getString("IsSent");
-        signature=bundle.getString("signature");
+        IsSent = bundle.getString("IsSent");
+        signature = bundle.getString("signature");
 
     }
+
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
 
-        factor_header_recycler=findViewById(R.id.factor_headerActivity_recyclerView);
+        factor_header_recycler = findViewById(R.id.factor_headerActivity_recyclerView);
         fab = findViewById(R.id.factor_headerActivity_fab);
-        textView_Count=findViewById(R.id.factorheaderActivity_count);
+        textView_Count = findViewById(R.id.factorheaderActivity_count);
         toolbar = findViewById(R.id.factor_headerActivity_toolbar);
         edtsearch = findViewById(R.id.factorheaderActivity_edtsearch);
         mySwitch_activestack = findViewById(R.id.factorheaderActivityswitch);
 
         setSupportActionBar(toolbar);
-        handler=new Handler();
+        handler = new Handler();
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        width =metrics.widthPixels;
+        width = metrics.widthPixels;
 
     }
 
-    public void init(){
+    public void init() {
 
-        srch=callMethod.ReadString("Last_search");
+        srch = callMethod.ReadString("Last_search");
 
-        factors = dbh.factorscan(IsSent,srch,signature);
+        factors = dbh.factorscan(IsSent, srch, signature);
 
         edtsearch.setText(callMethod.ReadString("Last_search"));
 
@@ -118,7 +119,7 @@ public class FactorHeaderActivity extends AppCompatActivity {
             for (String[] s : Multi_sign) {
                 Multi_barcode.add(s[0]);
             }
-            intent = new Intent(FactorHeaderActivity.this, PaintActivity.class);
+            intent = new Intent(this, PaintActivity.class);
             intent.putExtra("ScanResponse", "Multi_sign");
             intent.putExtra("FactorImage", "hasimage");
             intent.putExtra("Width", String.valueOf(width));
@@ -129,38 +130,27 @@ public class FactorHeaderActivity extends AppCompatActivity {
         });
 
 
-
         mySwitch_activestack.setOnCheckedChangeListener((compoundButton, b) -> {
+            //grid
             if (b) {
                 signature = "1";
                 mySwitch_activestack.setText("بدون امضا");
-                factors = dbh.factorscan(IsSent,srch,signature);
-
-                adapter = new Factor_Header_adapter(factors, FactorHeaderActivity.this,width);
-                if (adapter.getItemCount()==0){
-                     callMethod.showToast("فاکتوری یافت نشد");
-                }
-                textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
-                gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
-                factor_header_recycler.setLayoutManager(gridLayoutManager);
-                factor_header_recycler.setAdapter(adapter);
-                factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
 
             } else {
                 signature = "0";
                 mySwitch_activestack.setText("همه");
-                factors = dbh.factorscan(IsSent,srch,signature);
 
-                adapter = new Factor_Header_adapter(factors, FactorHeaderActivity.this,width);
-                if (adapter.getItemCount()==0){
-                     callMethod.showToast("فاکتوری یافت نشد");
-                }
-                textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
-                gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
-                factor_header_recycler.setLayoutManager(gridLayoutManager);
-                factor_header_recycler.setAdapter(adapter);
-                factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
             }
+            factors = dbh.factorscan(IsSent, srch, signature);
+            adapter = new LocalFactorList_Adapter(factors, this, width);
+            if (adapter.getItemCount() == 0) {
+                callMethod.showToast("فاکتوری یافت نشد");
+            }
+            textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
+            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
+            factor_header_recycler.setLayoutManager(gridLayoutManager);
+            factor_header_recycler.setAdapter(adapter);
+            factor_header_recycler.setItemAnimator(new DefaultItemAnimator());
         });
 
 
@@ -181,11 +171,11 @@ public class FactorHeaderActivity extends AppCompatActivity {
 
                             srch = NumberFunctions.EnglishNumber(editable.toString());
                             callMethod.EditString("Last_search", srch);
-                            factors = dbh.factorscan(IsSent,srch,signature);
+                            factors = dbh.factorscan(IsSent, srch, signature);
 
-                            adapter = new Factor_Header_adapter(factors, FactorHeaderActivity.this,width);
-                            if (adapter.getItemCount()==0){
-                                 callMethod.showToast("فاکتوری یافت نشد");
+                            adapter = new LocalFactorList_Adapter(factors, getApplicationContext(), width);
+                            if (adapter.getItemCount() == 0) {
+                                callMethod.showToast("فاکتوری یافت نشد");
                             }
                             textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
                             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
@@ -201,9 +191,9 @@ public class FactorHeaderActivity extends AppCompatActivity {
                 });
 
 
-        adapter = new Factor_Header_adapter(factors, FactorHeaderActivity.this,width);
-        if (adapter.getItemCount()==0){
-             callMethod.showToast("فاکتوری یافت نشد");
+        adapter = new LocalFactorList_Adapter(factors, this, width);
+        if (adapter.getItemCount() == 0) {
+            callMethod.showToast("فاکتوری یافت نشد");
         }
         textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
@@ -221,6 +211,7 @@ public class FactorHeaderActivity extends AppCompatActivity {
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -232,7 +223,7 @@ public class FactorHeaderActivity extends AppCompatActivity {
             Multi_sign.clear();
             adapter.multi_select = false;
 
-            adapter = new Factor_Header_adapter(factors, FactorHeaderActivity.this,width);
+            adapter = new LocalFactorList_Adapter(factors, this, width);
             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
             factor_header_recycler.setLayoutManager(gridLayoutManager);
             factor_header_recycler.setAdapter(adapter);
@@ -242,10 +233,11 @@ public class FactorHeaderActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void factor_select_function(String Factor_barcode, String Customer_code, int flag) {
         if (flag == 1) {
             fab.setVisibility(View.VISIBLE);
-            Multi_sign.add(new String[]{Factor_barcode, Customer_code,""});
+            Multi_sign.add(new String[]{Factor_barcode, Customer_code, ""});
             item_multi.findItem(R.id.menu_multi).setVisible(true);
 
         } else {
@@ -268,12 +260,12 @@ public class FactorHeaderActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        intent = new Intent(FactorHeaderActivity.this, FactorHeaderActivity.class);
+        intent = new Intent(this, LocalFactorListActivity.class);
         intent.putExtra("IsSent", IsSent);
         intent.putExtra("signature", signature);
         startActivity(intent);
         finish();
 
     }
-
 }
+

@@ -30,8 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapter.facViewHolder> {
+public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Adapter.facViewHolder> {
     APIInterface apiInterface ;
 
     private final Context mContext;
@@ -44,7 +43,7 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
     String path;
     CallMethod callMethod;
 
-    public Factor_List_adapter(ArrayList<Factor> retrofitFactors,String State,String efilter,String pathfilter, Context context) {
+    public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State,String efilter,String pathfilter, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.state = State;
@@ -118,6 +117,8 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
 
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
+        holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
+
         if(state.equals("0")){
             if(factor.getIsEdited().equals("1")){
                 holder.fac_hasedite.setText("اصلاح شده");
@@ -145,23 +146,23 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
         }
 
         if(callMethod.ReadString("Category").equals("4")) {
-            holder.fac_factor.setText("دریافت فاکتور");
+            holder.fac_factor_btn.setText("دریافت فاکتور");
         }
         if(state.equals("4")){
-            holder.fac_factor.setVisibility(View.GONE);
+            holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
-            holder.fac_factor.setVisibility(View.VISIBLE);
+            holder.fac_factor_btn.setVisibility(View.VISIBLE);
         }
 
 
-        holder.fac_factor.setOnClickListener(v -> {
+        holder.fac_factor_btn.setOnClickListener(v -> {
 
             if(callMethod.ReadString("Category").equals("4")) {
 
                 Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
-                call.enqueue(new Callback<RetrofitResponse>() {
+                call.enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if(response.isSuccessful()) {
                             Log.e("test","0");
                             assert response.body() != null;
@@ -174,7 +175,7 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
                         }
                     }
                     @Override
-                    public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                         Log.e("test","1");
 
                         Log.e("test",t.getMessage());
@@ -185,6 +186,7 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
             }else {
                 intent = new Intent(mContext, ConfirmActivity.class);
                 intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                intent.putExtra("State",state);
                 mContext.startActivity(intent);
             }
 
@@ -199,12 +201,12 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
 
     static class facViewHolder extends RecyclerView.ViewHolder {
         private final TextView fac_customer;
+        private final TextView fac_customercode;
         private final TextView fac_code;
-        private final TextView fac_hasshortage;
         private final TextView fac_hasedite;
         private final TextView fac_kowsardate;
         private final TextView fac_state;
-        private final Button fac_factor;
+        private final Button fac_factor_btn;
 
         MaterialCardView fac_rltv;
 
@@ -212,13 +214,13 @@ public class Factor_List_adapter extends RecyclerView.Adapter<Factor_List_adapte
             super(itemView);
 
             fac_customer = itemView.findViewById(R.id.factor_list_customer);
+            fac_customercode = itemView.findViewById(R.id.factor_list_customercode);
 
             fac_code = itemView.findViewById(R.id.factor_list_privatecode);
-            fac_hasshortage = itemView.findViewById(R.id.factor_list_hasshortage);
             fac_hasedite = itemView.findViewById(R.id.factor_list_hasedited);
             fac_kowsardate = itemView.findViewById(R.id.factor_list_kowsardate);
             fac_state = itemView.findViewById(R.id.factor_list_state);
-            fac_factor = itemView.findViewById(R.id.factor_list_factor);
+            fac_factor_btn = itemView.findViewById(R.id.factor_list_btn);
 
             fac_rltv = itemView.findViewById(R.id.factor_list);
         }

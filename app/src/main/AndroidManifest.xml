@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kits.ocrkowsar">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -39,17 +39,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-        <activity android:name=".activity.RegistrationActivity"></activity>
+        <activity
+            android:name=".activity.OcrFactorListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.LocalFactorListActivity"
+            android:exported="false" />
         <activity android:name=".activity.ChoiceDatabaseActivity" />
-        <activity android:name=".activity.FactorListActivity" />
         <activity android:name=".activity.ConfirmActivity" />
         <activity android:name=".activity.ConfigActivity" />
-        <activity android:name=".activity.FactorHeaderActivity" />
         <activity android:name=".activity.FactorActivity" />
         <activity android:name=".activity.PaintActivity" />
         <activity android:name=".activity.NavActivity" />
         <activity android:name=".activity.ScanCodeActivity" />
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".activity.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

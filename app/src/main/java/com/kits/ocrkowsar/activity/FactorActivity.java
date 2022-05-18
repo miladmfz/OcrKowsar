@@ -1,5 +1,6 @@
 package com.kits.ocrkowsar.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,9 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.kits.ocrkowsar.R;
@@ -50,9 +51,8 @@ public class  FactorActivity extends AppCompatActivity {
     LinearLayoutCompat boby_good_layout;
     LinearLayoutCompat good_layout;
     LinearLayoutCompat total_layout;
-    NestedScrollView scrollView;
     androidx.viewpager.widget.ViewPager ViewPager, ViewPager_chap, ViewPager_rast;
-    private DecimalFormat decimalFormat = new DecimalFormat("0,000");
+    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     ArrayList<Good> goods;
     Factor factor;
     String BarcodeScan;
@@ -61,6 +61,7 @@ public class  FactorActivity extends AppCompatActivity {
     Bitmap bitmap_factor;
     int width=1;
     CallMethod callMethod;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +96,7 @@ public class  FactorActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         main_layout = findViewById(R.id.factor_layout);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -109,9 +110,9 @@ public class  FactorActivity extends AppCompatActivity {
 
         if(bitmap_factor_base64.equals("")){
             Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan);
-            call.enqueue(new Callback<RetrofitResponse>() {
+            call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()){
 
                         assert response.body() !=null;
@@ -133,7 +134,7 @@ public class  FactorActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     callMethod.showToast("Connection fail ...!!!");
                 }
             });
@@ -153,19 +154,16 @@ public class  FactorActivity extends AppCompatActivity {
             button.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
             button.setBackgroundResource(R.color.green_700);
             button.setText("تایید و امضای رسید");
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-            button.setTextColor(getResources().getColor(R.color.white));
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            button.setTextColor(getColor(R.color.white));
+            button.setOnClickListener(v -> {
 
-                    intent = new Intent(FactorActivity.this, PaintActivity.class);
-                    intent.putExtra("ScanResponse", BarcodeScan);
-                    intent.putExtra("FactorImage", "hasimage");
-                    intent.putExtra("Width", String.valueOf(width));
-                    startActivity(intent);
-                    finish();
-                }
+                intent = new Intent(FactorActivity.this, PaintActivity.class);
+                intent.putExtra("ScanResponse", BarcodeScan);
+                intent.putExtra("FactorImage", "hasimage");
+                intent.putExtra("Width", String.valueOf(width));
+                startActivity(intent);
+                finish();
             });
             main_layout.addView(button);
         }
@@ -174,6 +172,7 @@ public class  FactorActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("RtlHardcoded")
     public void CreateView(){
 
         title_layout = new LinearLayoutCompat(getApplicationContext());
@@ -192,8 +191,8 @@ public class  FactorActivity extends AppCompatActivity {
         TextView company_tv = new TextView(getApplicationContext());
         company_tv.setText(NumberFunctions.PerisanNumber("فاکتور فروش"));
         company_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-        company_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        company_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        company_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+        company_tv.setTextColor(getColor(R.color.colorPrimaryDark));
         company_tv.setGravity(Gravity.CENTER);
         company_tv.setPadding(0, 0, 0, 20);
 
@@ -227,37 +226,37 @@ public class  FactorActivity extends AppCompatActivity {
             TextView customername_tv = new TextView(getApplicationContext());
             customername_tv.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
             customername_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            customername_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            customername_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            customername_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            customername_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             customername_tv.setGravity(Gravity.RIGHT);
             customername_tv.setPadding(0, 0, 0, 15);
 
             TextView factorcode_tv = new TextView(getApplicationContext());
             factorcode_tv.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
             factorcode_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            factorcode_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            factorcode_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            factorcode_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            factorcode_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             factorcode_tv.setGravity(Gravity.RIGHT);
             factorcode_tv.setPadding(0, 0, 0, 15);
 
             TextView factordate_tv = new TextView(getApplicationContext());
             factordate_tv.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
             factordate_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            factordate_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            factordate_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            factordate_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            factordate_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             factordate_tv.setGravity(Gravity.RIGHT);
             factordate_tv.setPadding(0, 0, 0, 35);
             TextView address_tv = new TextView(getApplicationContext());
             address_tv.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
             address_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            address_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            address_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            address_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            address_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             address_tv.setGravity(Gravity.RIGHT);
             TextView phone_tv = new TextView(getApplicationContext());
             phone_tv.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
             phone_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            phone_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            phone_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            phone_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            phone_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             phone_tv.setGravity(Gravity.RIGHT);
 
             title_layout.addView(company_tv);
@@ -271,8 +270,8 @@ public class  FactorActivity extends AppCompatActivity {
             TextView total_amount_tv = new TextView(getApplicationContext());
             total_amount_tv.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
             total_amount_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            total_amount_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            total_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            total_amount_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             total_amount_tv.setGravity(Gravity.RIGHT);
             total_amount_tv.setPadding(0, 20, 0, 10);
 
@@ -280,8 +279,8 @@ public class  FactorActivity extends AppCompatActivity {
             TextView total_price_tv = new TextView(getApplicationContext());
             total_price_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
             total_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-            total_price_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            total_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+            total_price_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             total_price_tv.setGravity(Gravity.RIGHT);
 
 
@@ -292,8 +291,8 @@ public class  FactorActivity extends AppCompatActivity {
             TextView total_newprice_tv = new TextView(getApplicationContext());
             total_newprice_tv.setText(NumberFunctions.PerisanNumber(" قیمت کل(جدید) : " + decimalFormat.format(Integer.valueOf(factor.getNewSumPrice())) + " ریال"));
             total_newprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-            total_newprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-            total_newprice_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            total_newprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            total_newprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             total_newprice_tv.setGravity(Gravity.RIGHT);
 
             total_layout.addView(total_newprice_tv);
@@ -303,9 +302,9 @@ public class  FactorActivity extends AppCompatActivity {
 
 
 
-        int j = 0;
+        int CounterGood = 0;
         for (Good g : goods) {
-            j++;
+            CounterGood++;
             LinearLayoutCompat first_layout = new LinearLayoutCompat(getApplicationContext());
             first_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
             first_layout.setOrientation(LinearLayoutCompat.VERTICAL);
@@ -317,12 +316,12 @@ public class  FactorActivity extends AppCompatActivity {
             name_detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 
             TextView radif = new TextView(getApplicationContext());
-            radif.setText(NumberFunctions.PerisanNumber(String.valueOf(j)));
+            radif.setText(NumberFunctions.PerisanNumber(String.valueOf(CounterGood)));
             radif.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 5));
-            radif.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+            radif.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
             radif.setGravity(Gravity.CENTER);
-            radif.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            radif.setPadding(0, 10, 0, 10);
+            radif.setTextColor(getColor(R.color.colorPrimaryDark));
+            radif.setPadding(0, 10, 0, Integer.parseInt(callMethod.ReadString("TitleSize")));
 
             androidx.viewpager.widget.ViewPager ViewPager_goodname = new ViewPager(getApplicationContext());
             ViewPager_goodname.setLayoutParams(new LinearLayoutCompat.LayoutParams(2, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
@@ -331,9 +330,9 @@ public class  FactorActivity extends AppCompatActivity {
             TextView good_name_tv = new TextView(getApplicationContext());
             good_name_tv.setText(NumberFunctions.PerisanNumber(g.getGoodName()));
             good_name_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 1));
-            good_name_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+            good_name_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
             good_name_tv.setGravity(Gravity.RIGHT);
-            good_name_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            good_name_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             good_name_tv.setPadding(0, 10, 5, 0);
 
             name_detail.addView(radif);
@@ -349,22 +348,22 @@ public class  FactorActivity extends AppCompatActivity {
             TextView good_price_tv = new TextView(getApplicationContext());
             good_price_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getPrice()))));
             good_price_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-            good_price_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            good_price_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            good_price_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             good_price_tv.setGravity(Gravity.CENTER);
 
             TextView good_amount_tv = new TextView(getApplicationContext());
             good_amount_tv.setText(NumberFunctions.PerisanNumber(String.valueOf(g.getFacAmount())));
             good_amount_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-            good_amount_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            good_amount_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            good_amount_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             good_amount_tv.setGravity(Gravity.CENTER);
 
             TextView good_totalprice_tv = new TextView(getApplicationContext());
             good_totalprice_tv.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(g.getSumPrice()))));
             good_totalprice_tv.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT, 3));
-            good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-            good_totalprice_tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            good_totalprice_tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+            good_totalprice_tv.setTextColor(getColor(R.color.colorPrimaryDark));
             good_totalprice_tv.setPadding(0, 0, 0, 10);
             good_totalprice_tv.setGravity(Gravity.CENTER);
 
@@ -431,19 +430,16 @@ public class  FactorActivity extends AppCompatActivity {
         button.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         button.setBackgroundResource(R.color.green_700);
         button.setText("تایید و امضای رسید");
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-        button.setTextColor(getResources().getColor(R.color.white));
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        button.setTextColor(getColor(R.color.white));
+        button.setOnClickListener(v -> {
 
-                intent = new Intent(FactorActivity.this, PaintActivity.class);
-                intent.putExtra("ScanResponse", BarcodeScan);
-                intent.putExtra("FactorImage", "hasimage");
-                intent.putExtra("Width", String.valueOf(width));
-                startActivity(intent);
-                finish();
-            }
+            intent = new Intent(FactorActivity.this, PaintActivity.class);
+            intent.putExtra("ScanResponse", BarcodeScan);
+            intent.putExtra("FactorImage", "hasimage");
+            intent.putExtra("Width", String.valueOf(width));
+            startActivity(intent);
+            finish();
         });
         main_layout.addView(button);
 

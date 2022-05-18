@@ -1,5 +1,6 @@
 package com.kits.ocrkowsar.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -109,28 +110,28 @@ public class PaintActivity extends AppCompatActivity {
                     TextView Deliverer = new TextView(getApplicationContext());
                     Deliverer.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Deliverer")));
                     Deliverer.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                    Deliverer.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    Deliverer.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    Deliverer.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                    Deliverer.setTextColor(getColor(R.color.colorPrimaryDark));
                     Deliverer.setGravity(Gravity.CENTER);
-                    Deliverer.setBackgroundColor(getResources().getColor(R.color.white));
+                    Deliverer.setBackgroundColor(getColor(R.color.white));
                     Deliverer.setPadding(0, 10, 0, 20) ;
 
 
                     TextView factorbarcode = new TextView(getApplicationContext());
                     factorbarcode.setText(NumberFunctions.PerisanNumber(s));
                     factorbarcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                    factorbarcode.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    factorbarcode.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    factorbarcode.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                    factorbarcode.setTextColor(getColor(R.color.colorPrimaryDark));
                     factorbarcode.setGravity(Gravity.CENTER);
-                    factorbarcode.setBackgroundColor(getResources().getColor(R.color.white));
+                    factorbarcode.setBackgroundColor(getColor(R.color.white));
                     factorbarcode.setPadding(0, 10, 0, 20) ;
 
                     TextView textView = new TextView(getApplicationContext());
                     textView.setText(NumberFunctions.PerisanNumber(ed_signexplain.getText().toString()));
                     textView.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    textView.setBackgroundColor(getResources().getColor(R.color.white));
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                    textView.setTextColor(getColor(R.color.colorPrimaryDark));
+                    textView.setBackgroundColor(getColor(R.color.white));
                     textView.setGravity(Gravity.CENTER);
 
                     textView.setPadding(0, 10, 0, 20);
@@ -177,28 +178,28 @@ public class PaintActivity extends AppCompatActivity {
                 TextView Deliverer = new TextView(getApplicationContext());
                 Deliverer.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("Deliverer")));
                 Deliverer.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                Deliverer.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                Deliverer.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                Deliverer.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                Deliverer.setTextColor(getColor(R.color.colorPrimaryDark));
                 Deliverer.setGravity(Gravity.CENTER);
-                Deliverer.setBackgroundColor(getResources().getColor(R.color.white));
+                Deliverer.setBackgroundColor(getColor(R.color.white));
                 Deliverer.setPadding(0, 10, 0, 20) ;
 
                 TextView factorbarcode = new TextView(getApplicationContext());
 
                 factorbarcode.setText(NumberFunctions.PerisanNumber(BarcodeScan));
                 factorbarcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                factorbarcode.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                factorbarcode.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                factorbarcode.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                factorbarcode.setTextColor(getColor(R.color.colorPrimaryDark));
                 factorbarcode.setGravity(Gravity.CENTER);
-                factorbarcode.setBackgroundColor(getResources().getColor(R.color.white));
+                factorbarcode.setBackgroundColor(getColor(R.color.white));
                 factorbarcode.setPadding(0, 10, 0, 20) ;
 
                 TextView textView = new TextView(getApplicationContext());
                 textView.setText(NumberFunctions.PerisanNumber(ed_signexplain.getText().toString()));
                 textView.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                textView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                textView.setBackgroundColor(getResources().getColor(R.color.white));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                textView.setTextColor(getColor(R.color.colorPrimaryDark));
+                textView.setBackgroundColor(getColor(R.color.white));
                 textView.setGravity(Gravity.CENTER);
 
                 textView.setPadding(0, 10, 0, 20);
@@ -239,21 +240,16 @@ public class PaintActivity extends AppCompatActivity {
                 button1.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                 button1.setBackgroundResource(R.color.green_900);
                 button1.setText("تایید و ارسال");
-                button1.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                button1.setTextColor(getResources().getColor(R.color.white));
+                button1.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                button1.setTextColor(getColor(R.color.white));
                 button1.setPadding(0, 5, 0, 5);
-                button1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        action.sendfactor(BarcodeScan,bitmap_signature_base);
-                    }
-                });
+                button1.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
                 Button btn_pic=  new Button(getApplicationContext());
                 btn_pic.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                 btn_pic.setBackgroundResource(R.color.green_900);
                 btn_pic.setText("اضافه کردن عکس");
-                btn_pic.setTextColor(getResources().getColor(R.color.white));
-                btn_pic.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                btn_pic.setTextColor(getColor(R.color.white));
+                btn_pic.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
                 btn_pic.setOnClickListener(v -> {
 
                     final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
@@ -290,7 +286,7 @@ public class PaintActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         action =new Action(PaintActivity.this);
 
@@ -357,15 +353,10 @@ public class PaintActivity extends AppCompatActivity {
                     button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     button.setBackgroundResource(R.color.green_900);
                     button.setText("تایید و ارسال");
-                    button.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    button.setTextColor(getResources().getColor(R.color.white));
+                    button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                    button.setTextColor(getColor(R.color.white));
                     button.setPadding(0, 10, 0, 10);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            action.sendfactor(BarcodeScan,bitmap_signature_base);
-                        }
-                    });
+                    button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
                     main_layout.addView(button,0);
 
                 } else {
@@ -393,15 +384,10 @@ public class PaintActivity extends AppCompatActivity {
                     button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                     button.setBackgroundResource(R.color.green_900);
                     button.setText("تایید و ارسال");
-                    button.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    button.setTextColor(getResources().getColor(R.color.white));
+                    button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                    button.setTextColor(getColor(R.color.white));
                     button.setPadding(0, 10, 0, 10);
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            action.sendfactor(BarcodeScan,bitmap_signature_base);
-                        }
-                    });
+                    button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
                     main_layout.addView(button,0);
 
                 }
@@ -434,15 +420,10 @@ public class PaintActivity extends AppCompatActivity {
                 button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                 button.setBackgroundResource(R.color.green_900);
                 button.setText("تایید و ارسال");
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                button.setTextColor(getResources().getColor(R.color.white));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+                button.setTextColor(getColor(R.color.white));
                 button.setPadding(0, 10, 0, 10);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        action.sendfactor(BarcodeScan,bitmap_signature_base);
-                    }
-                });
+                button.setOnClickListener(v -> action.sendfactor(BarcodeScan,bitmap_signature_base));
                 main_layout.addView(button,0);
 
 
@@ -458,6 +439,7 @@ public class PaintActivity extends AppCompatActivity {
         return b;
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {

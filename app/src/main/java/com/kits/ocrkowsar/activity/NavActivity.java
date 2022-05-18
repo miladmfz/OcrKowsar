@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.CallMethod;
@@ -31,15 +33,12 @@ import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
-import java.text.DecimalFormat;
-
 
 public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     Integer state_category;
     private boolean doubleBackToExitPressedOnce = false;
     private Intent intent;
-    private DecimalFormat decimalFormat = new DecimalFormat("0,000");
     Button btn1,btn2,btn3;
     Handler handler;
     CallMethod callMethod;
@@ -47,6 +46,11 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     APIInterface apiInterface;
     Toolbar toolbar;
     Action action;
+    NavigationView navigationView;
+    TextView tv_versionname;
+    TextView tv_dbname;
+    Button btn_changedb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +66,24 @@ public void Config() {
 
     callMethod = new CallMethod(this);
     action = new Action(this);
-    dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+    dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
     apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
 
     toolbar = findViewById(R.id.NavActivity_toolbar);
     setSupportActionBar(toolbar);
+    DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    drawer.addDrawerListener(toggle);
+    toggle.syncState();
+    navigationView = findViewById(R.id.NavActivity_nav);
+    navigationView.setNavigationItemSelectedListener(this);
+    View hView = navigationView.getHeaderView(0);
+    tv_versionname = hView.findViewById(R.id.header_versionname);
+    tv_dbname = hView.findViewById(R.id.header_dbname);
+    btn_changedb = hView.findViewById(R.id.header_changedb);
+
+
+
 
     btn1 = findViewById(R.id.mainactivity_btn1);
     btn2 = findViewById(R.id.mainactivity_btn2);
@@ -76,37 +93,40 @@ public void Config() {
 
     public void init() {
 
+
+        tv_versionname.setText(BuildConfig.VERSION_NAME);
+        tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
+        toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
+        btn_changedb.setOnClickListener(v -> {
+            callMethod.EditString("PersianCompanyNameUse", "");
+            callMethod.EditString("EnglishCompanyNameUse", "");
+            callMethod.EditString("ServerURLUse", "");
+            callMethod.EditString("DatabaseName", "");
+            intent = new Intent(this, SplashActivity.class);
+            finish();
+            startActivity(intent);
+        });
+
+
+
         try {
             state_category=Integer.parseInt(callMethod.ReadString("Category"));
         }catch (Exception e){
             state_category=0;
         }
 
-        DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = findViewById(R.id.NavActivity_nav);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-
         if(state_category==0){
+            FirstLogin();
 
-
-            newlogin();
         }else if(state_category==1){
-            scan();
-        }else if(state_category==2){
-            Stack();
-        }else if(state_category==3){
-            Assemblage();
-        }else if(state_category==4){
-            Ocr();
+            Scan();
+        }else if(state_category==2){ //state 0
+            Collect();
+        }else if(state_category==3){ //state 1
+            Pack();
+        }else if(state_category==4){ //state 2
+            Delivery();
         }
-
-
-
 
     }
 
@@ -114,30 +134,27 @@ public void Config() {
 
 
 
-    public void newlogin() {
+    public void FirstLogin() {
 
 
         btn1.setText("تنظیمات");
         btn2.setVisibility(View.GONE);
         btn3.setVisibility(View.GONE);
-        btn1.setOnClickListener(view -> {
-            action.LoginSetting();
-
-        });
+        btn1.setOnClickListener(view -> action.LoginSetting());
 
     }
-    public void scan() {
+    public void Scan() {
 
         btn1.setText("اسکن دوربین");
         btn2.setText("اسکن بارکد خوان");
         btn3.setText("فاکتور های ارسال نشده");
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, ScanCodeActivity.class);
+            intent = new Intent(this, ScanCodeActivity.class);
             startActivity(intent);
         });
         btn2.setOnClickListener(view -> {
-            final Dialog dialog = new Dialog(NavActivity.this);
+            final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.scanner);
 
@@ -177,7 +194,7 @@ public void Config() {
 
         });
         btn3.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -186,7 +203,7 @@ public void Config() {
 
     }
 
-    public void Stack(){
+    public void Collect(){
 
 
 
@@ -196,13 +213,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "0");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
 
@@ -212,7 +229,7 @@ public void Config() {
 
     }
 
-    public void Assemblage(){
+    public void Pack(){
 
         btn1.setText("فاکتور های بسته بندی");
         btn2.setText("فاکتور های ارسال نشده");
@@ -220,13 +237,13 @@ public void Config() {
         btn3.setVisibility(View.GONE);
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "1");
             startActivity(intent);
 
         });
         btn2.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "4");
 
             startActivity(intent);
@@ -236,7 +253,7 @@ public void Config() {
 
     }
 
-    public void Ocr(){
+    public void Delivery(){
 
         btn1.setText("فاکتور های آماده");
         btn2.setText("فاکتور های من");
@@ -244,14 +261,14 @@ public void Config() {
 
 
         btn1.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorListActivity.class);
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
         });
 
 
         btn2.setOnClickListener(view -> {
-            intent = new Intent(NavActivity.this, FactorHeaderActivity.class);
+            intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
             intent.putExtra("IsSent", "0");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -259,7 +276,7 @@ public void Config() {
 
         btn3.setOnClickListener(view -> {
 
-            intent = new Intent(NavActivity.this, FactorHeaderActivity.class);
+            intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
             intent.putExtra("IsSent", "1");
             intent.putExtra("signature", "1");
             startActivity(intent);
@@ -288,13 +305,7 @@ public void Config() {
         this.doubleBackToExitPressedOnce = true;
         callMethod.showToast("برای خروج مجددا کلیک کنید");
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     @Override
@@ -303,8 +314,7 @@ public void Config() {
         final int id = item.getItemId();
 
         if (id == R.id.nav_cfg) {
-            //intent = new Intent(NavActivity.this, ConfigActivity.class);
-            //startActivity(intent);
+
             action.LoginSetting();
         }
         DrawerLayout drawer = findViewById(R.id.NavActivity_drawer_layout);

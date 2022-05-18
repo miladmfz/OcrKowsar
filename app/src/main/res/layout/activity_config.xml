@@ -155,6 +155,53 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="سایز عنوان ها"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                />
+
+            <EditText
+                android:id="@+id/config_titlesize"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/edittest1"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:inputType="number"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="سایز اطلاعات"
+                android:textColor="@color/grey_1000"
+                android:layout_weight="0.5"
+                android:visibility="invisible"
+                />
+
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/config_bodysize"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textSize="22sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

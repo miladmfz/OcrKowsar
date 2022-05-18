@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
@@ -16,6 +17,7 @@ import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
+import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
@@ -40,7 +42,7 @@ public class ConfigActivity extends AppCompatActivity {
     TextView tv_laststack;
     LinearLayoutCompat ll_Stack;
     MaterialButton btn_config;
-
+    EditText ed_titlesize;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +58,7 @@ public class ConfigActivity extends AppCompatActivity {
     public void Config() {
 
         callMethod = new CallMethod(this);
-        dbh = new DatabaseHelper(this, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
 
         works.add("برای انتخاب کلیک کنید");
@@ -71,7 +73,7 @@ public class ConfigActivity extends AppCompatActivity {
         tv_laststack =findViewById(R.id.configactivity_laststack);
         ll_Stack=findViewById(R.id.configactivity_line_stack);
         btn_config =findViewById(R.id.configactivity_btn);
-
+        ed_titlesize = findViewById(R.id.config_titlesize);
 
     }
 
@@ -79,11 +81,13 @@ public class ConfigActivity extends AppCompatActivity {
 
         ed_Deliverer.setText(callMethod.ReadString("Deliverer"));
         tv_laststack.setText(callMethod.ReadString("StackCategory"));
+        ed_titlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
 
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",ed_Deliverer.getText().toString());
             callMethod.EditString("Category",workcategory);
             callMethod.EditString("StackCategory",stackcategory);
+            callMethod.EditString("TitleSize",NumberFunctions.EnglishNumber(ed_titlesize.getText().toString()));
             finish();
         });
 
@@ -112,9 +116,9 @@ public class ConfigActivity extends AppCompatActivity {
         });
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
-        call.enqueue(new Callback<RetrofitResponse>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 stacks.add("همه");
                 if(response.isSuccessful()) {
                     assert response.body() != null;
@@ -132,7 +136,7 @@ public class ConfigActivity extends AppCompatActivity {
 
             }
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
             }
         });

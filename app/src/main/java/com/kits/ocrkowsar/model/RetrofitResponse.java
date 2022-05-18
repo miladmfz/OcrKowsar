@@ -28,7 +28,17 @@ public class RetrofitResponse {
 
     private String message;
     private String path;
+    @SerializedName("Text")
+    private String Text;
 
+
+    public String getText() {
+        return Text;
+    }
+
+    public void setText(String text) {
+        Text = text;
+    }
 
     public void setGood(Good good) {
         this.good = good;

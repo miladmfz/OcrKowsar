@@ -15,16 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.FactorActivity;
-import com.kits.ocrkowsar.activity.FactorHeaderActivity;
+import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -39,27 +41,26 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class Factor_Header_adapter extends RecyclerView.Adapter<Factor_Header_adapter.facViewHolder> {
+public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorList_Adapter.facViewHolder> {
     APIInterface apiInterface ;
 
     private final Context mContext;
     Intent intent;
     private final ArrayList<Factor> factors;
-    private Action action;
-    private DatabaseHelper dbh;
+    private final Action action;
+    private final DatabaseHelper dbh;
     Dialog dialog ;
-    int width=1;
+    int width;
     public boolean multi_select;
     CallMethod callMethod;
 
 
-    public Factor_Header_adapter(ArrayList<Factor> factors, Context context,Integer metrics) {
+    public LocalFactorList_Adapter(ArrayList<Factor> factors, Context context,Integer metrics) {
         this.mContext = context;
         this.factors = factors;
         this.action = new Action(context);
         this.callMethod = new CallMethod(context);
-        dbh = new DatabaseHelper(mContext, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         this.dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.signature);
@@ -78,7 +79,7 @@ public class Factor_Header_adapter extends RecyclerView.Adapter<Factor_Header_ad
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     @Override
-    public void onBindViewHolder(@NonNull final facViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final facViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
 
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustName()));
@@ -103,39 +104,36 @@ public class Factor_Header_adapter extends RecyclerView.Adapter<Factor_Header_ad
         holder.fac_factor.setOnClickListener(v -> {
             intent = new Intent(mContext, FactorActivity.class);
             intent.putExtra("ScanResponse", factors.get(position).getFactorBarcode());
-           intent.putExtra("FactorImage", "hasimage");
+            intent.putExtra("FactorImage", "hasimage");
             mContext.startActivity(intent);
             ((Activity) mContext).finish();
 
         });
 
 
-        holder.fac_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.fac_view.setOnClickListener(v -> {
 
-                if (!factors.get(position).getSignatureImage().equals("")) {
-                    ImageView imageView=dialog.findViewById(R.id.imageview_fromfactor);
-                    byte[] imageByteArray1;
-                    imageByteArray1 = Base64.decode(dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
-                    imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
+            if (!factors.get(position).getSignatureImage().equals("")) {
+                ImageView imageView=dialog.findViewById(R.id.imageview_fromfactor);
+                byte[] imageByteArray1;
+                imageByteArray1 = Base64.decode(dbh.getimagefromfactor(factors.get(position).getFactorBarcode(),"SignatureImage"), Base64.DEFAULT);
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth()/2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight()/3, false));
 
-                    imageView.setOnClickListener(v1 -> dialog.dismiss());
+                imageView.setOnClickListener(v1 -> dialog.dismiss());
 
-                    dialog.show();
-                }else {
+                dialog.show();
+            }else {
 
-                    callMethod.showToast("تصویری موجود نمی باشد");
-                }
-
-
-
+                callMethod.showToast("تصویری موجود نمی باشد");
             }
+
+
+
         });
 
         holder.fac_rltv.setOnClickListener(v -> {
             if (multi_select) {
-                FactorHeaderActivity activity = (FactorHeaderActivity) mContext;
+                LocalFactorListActivity activity = (LocalFactorListActivity) mContext;
 
                 holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
                 factors.get(position).setCheck(!factors.get(position).isCheck());
@@ -164,35 +162,46 @@ public class Factor_Header_adapter extends RecyclerView.Adapter<Factor_Header_ad
         });
 
         holder.fac_dlt.setOnClickListener(view -> {
-            if (factors.get(position).getIsSent().equals("0")) {
 
+            final Dialog dialog = new Dialog(mContext);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.loginconfig);
+            EditText ed_password =  dialog.findViewById(R.id.edloginconfig);
+            MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
 
-                Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
-                call.enqueue(new Callback<RetrofitResponse>() {
-                    @Override
-                    public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                        if(response.isSuccessful()) {
-                            dbh.deletescan(factors.get(position).getFactorBarcode());
-                            intent = new Intent(mContext, FactorHeaderActivity.class);
-                            intent.putExtra("IsSent", "0");
-                            intent.putExtra("signature", "0");
-                            ((Activity) mContext).finish();
-                            mContext.startActivity(intent);
-                        }
+            btn_login.setOnClickListener(v -> {
+                if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1401"))
+                {
+                    if (factors.get(position).getIsSent().equals("0")) {
+                        Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                        call.enqueue(new Callback<>() {
+                            @Override
+                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                if(response.isSuccessful()) {
+                                    dbh.deletescan(factors.get(position).getFactorBarcode());
+                                    intent = new Intent(mContext, LocalFactorListActivity.class);
+                                    intent.putExtra("IsSent", "0");
+                                    intent.putExtra("signature", "0");
+                                    ((Activity) mContext).finish();
+                                    mContext.startActivity(intent);
+                                }
+                            }
+                            @Override
+                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                Log.e("",t.getMessage()); }
+                        });
+                    }else {
+                        callMethod.showToast("تاییده ارسال شده است");
                     }
-                    @Override
-                    public void onFailure(Call<RetrofitResponse> call, Throwable t) {
-                        Log.e("",t.getMessage()); }
-                });
+                }
+            });
+            dialog.show();
 
-            }else {
-                callMethod.showToast("تاییده ارسال شده است");
-            }
         });
 
         holder.fac_send.setOnClickListener(view -> {
             if (!factors.get(position).getSignatureImage().equals("")) {
-                AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+                new AlertDialog.Builder(mContext)
                         .setTitle("توجه")
                         .setMessage("آیا رسید ارسال گردد؟")
                         .setPositiveButton("بله", (dialogInterface, i) -> action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage()))
@@ -200,38 +209,34 @@ public class Factor_Header_adapter extends RecyclerView.Adapter<Factor_Header_ad
                         .show();
             }
         });
-        holder.fac_rltv.setCheckedIcon(mContext.getResources().getDrawable(R.drawable.ic_baseline_attach_file_24));
-        if (factors.get(position).isCheck()) {
-            holder.fac_rltv.setChecked(true);
-        } else {
-            holder.fac_rltv.setChecked(false);
-        }
+        holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
+        holder.fac_rltv.setChecked(factors.get(position).isCheck());
         holder.fac_rltv.setOnLongClickListener(view -> {
-            FactorHeaderActivity activity = (FactorHeaderActivity) mContext;
+            LocalFactorListActivity activity = (LocalFactorListActivity) mContext;
 
             multi_select = true;
-                holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
-                factors.get(position).setCheck(!factors.get(position).isCheck());
+            holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
+            factors.get(position).setCheck(!factors.get(position).isCheck());
 
-                if(activity.Multi_sign.size()>0) {
-                    if (factors.get(position).getCustomerCode().equals(activity.Multi_sign.get(0)[1])) {
-                        if (factors.get(position).isCheck()) {
-                            activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 1);
-                        } else {
-                            activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 0);
-                        }
-                    } else {
-                        callMethod.showToast("مشتری یکسان نمی باشد");
-                        holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
-                        factors.get(position).setCheck(!factors.get(position).isCheck());
-                    }
-                }else {
+            if(activity.Multi_sign.size()>0) {
+                if (factors.get(position).getCustomerCode().equals(activity.Multi_sign.get(0)[1])) {
                     if (factors.get(position).isCheck()) {
                         activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 1);
                     } else {
                         activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 0);
                     }
+                } else {
+                    callMethod.showToast("مشتری یکسان نمی باشد");
+                    holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());
+                    factors.get(position).setCheck(!factors.get(position).isCheck());
                 }
+            }else {
+                if (factors.get(position).isCheck()) {
+                    activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 1);
+                } else {
+                    activity.factor_select_function(factors.get(position).getFactorBarcode(), factors.get(position).getCustomerCode(), 0);
+                }
+            }
 
             return true;
         });

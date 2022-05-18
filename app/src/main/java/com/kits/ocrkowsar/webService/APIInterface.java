@@ -94,7 +94,7 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
-    Call <String> GetImage(@Field("tag") String tag,
+    Call <RetrofitResponse> GetImage(@Field("tag") String tag,
                            @Field("GoodCode") String GoodCode,
                            @Field("IX") Integer IX,
                            @Field("Scale") Integer Scale);

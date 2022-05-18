@@ -6,23 +6,22 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import androidx.annotation.NonNull;
+
 import com.google.android.material.button.MaterialButton;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfigActivity;
-import com.kits.ocrkowsar.activity.FactorHeaderActivity;
-import com.kits.ocrkowsar.activity.NavActivity;
+import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
@@ -42,7 +41,6 @@ import retrofit2.Response;
 
 
 public class Action extends Activity {
-    String date;
     APIInterface apiInterface ;
     Call<String> call;
     DatabaseHelper dbh;
@@ -52,7 +50,7 @@ public class Action extends Activity {
     public Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
-        dbh = new DatabaseHelper(mContext, callMethod.ReadString("UseSQLiteURL"));
+        dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
     }
 
@@ -68,11 +66,12 @@ public class Action extends Activity {
         TextView tv_good_4 =  dialog.findViewById(R.id.imagezoome_tv4);
 
         Call<RetrofitResponse> call = apiInterface.GetGoodDetail("GetOcrGoodDetail",GoodCode);
-        call.enqueue(new Callback<RetrofitResponse>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
-                   ArrayList<Good> goods= response.body().getGoods();
+                    assert response.body() != null;
+                    ArrayList<Good> goods= response.body().getGoods();
 
                     tv_good_1.setText(goods.get(0).getTotalAvailable());
                     tv_good_2.setText(goods.get(0).getSize());
@@ -83,7 +82,7 @@ public class Action extends Activity {
             }
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
                 Log.e("retrofit_fail",t.getMessage());
             }
@@ -95,24 +94,20 @@ public class Action extends Activity {
 
 
 
-        Call<String> call2 = apiInterface.GetImage("getImage", GoodCode,0,400);
-        call2.enqueue(new Callback<String>() {
+        Call<RetrofitResponse> call2 = apiInterface.GetImage("getImage", GoodCode,0,400);
+        call2.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<String> call2, Response<String> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-
-                    Glide.with(iv_good)
-                            .asBitmap()
-                            .load(Base64.decode(response.body(), Base64.DEFAULT))
-                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                            .fitCenter()
-                            .into(iv_good);
+                        byte[] imageByteArray1;
+                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
+                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
                 }
             }
             @Override
-            public void onFailure(Call<String> call2, Throwable t) {
-                Log.e("onFailure", "" + t.toString());
+            public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
+                Log.e("onFailure", "" + t);
             }
         });
 
@@ -144,15 +139,15 @@ public class Action extends Activity {
 
         app_info();
         call=apiInterface.getImageData("SaveOcrImage",signatureimage,factor_code);
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
 
                 ((Activity) mContext).recreate();
-                Intent bag = new Intent(mContext, FactorHeaderActivity.class);
+                Intent bag = new Intent(mContext, LocalFactorListActivity.class);
                 bag.putExtra("IsSent", "0");
                 bag.putExtra("signature", "0");
                 ((Activity) mContext).finish();
@@ -162,9 +157,9 @@ public class Action extends Activity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
 
-                Log.e(",",t.getMessage());
+                Log.e(",", t.getMessage());
             }
         });
 
@@ -182,35 +177,23 @@ public class Action extends Activity {
 
         APIInterface apiInterface = APIClient.getCleint("http://87.107.78.234:60005/login/").create(APIInterface.class);
         Call<String> cl = apiInterface.Kowsar_log("Log_report", android_id, mContext.getString(R.string.SERVERIP), mContext.getString(R.string.app_name), "", Date + "--" + strDate, callMethod.ReadString("Deliverer"), "");
-        cl.enqueue(new Callback<String>() {
+        cl.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Log.e("ocrkowsar_onResponse", "" + response.body());
-                Log.e("1","0");
+                Log.e("1", "0");
 
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("ocrkowsar_onFailure", "" + t.toString());
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Log.e("ocrkowsar_onFailure", "" + t);
             }
         });
 
     }
 
 
-    public String arabicToenglish(String number) {
-        char[] chars = new char[number.length()];
-        for (int i = 0; i < number.length(); i++) {
-            char ch = number.charAt(i);
-            if (ch >= 0x0660 && ch <= 0x0669)
-                ch -= 0x0660 - '0';
-            else if (ch >= 0x06f0 && ch <= 0x06F9)
-                ch -= 0x06f0 - '0';
-            chars[i] = ch;
-        }
-        return new String(chars);
-    }
 
 
 }

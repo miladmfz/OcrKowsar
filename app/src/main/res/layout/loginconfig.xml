@@ -28,6 +28,8 @@
             android:hint="کد ورودی"
             android:textSize="26sp"
             android:gravity="center"
+            android:singleLine="true"
+            android:maxLength="5"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnloginconfig"

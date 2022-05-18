@@ -1,12 +1,16 @@
 package com.kits.ocrkowsar.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.application.CallMethod;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,8 +56,95 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void GetLastDataFromOldDataBase(String tempDbPath) {
 
-    public ArrayList<Factor> factorscan(String IsSent,String SearchTarget,String signature) {
+        getWritableDatabase().execSQL("ATTACH DATABASE '" + tempDbPath + "' AS tempDb");
+
+        getWritableDatabase().execSQL("INSERT INTO main.Prefactor SELECT * FROM tempDb.Prefactor " );
+        getWritableDatabase().execSQL("INSERT INTO main.PreFactorRow SELECT * FROM tempDb.PreFactorRow " );
+        getWritableDatabase().execSQL("INSERT INTO main.Config SELECT * FROM tempDb.Config " );
+
+        getWritableDatabase().execSQL("DETACH DATABASE 'tempDb' ");
+
+    }
+
+    public void CreateActivationDb() {
+        getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation (" +
+                "AppBrokerCustomerCode TEXT," +
+                "ActivationCode TEXT," +
+                "PersianCompanyName TEXT," +
+                "EnglishCompanyName TEXT," +
+                "ServerURL TEXT," +
+                "SQLiteURL TEXT," +
+                "MaxDevice TEXT)");
+    }
+
+    public void InitialConfigInsert() {
+
+//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'BrokerCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'BrokerCode')");
+//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'BrokerStack', '0' Where Not Exists(Select * From Config Where KeyValue = 'BrokerStack')");
+//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'MenuBroker', '0' Where Not Exists(Select * From Config Where KeyValue = 'MenuBroker')");
+//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'KsrImage_LastRepCode', '0' Where Not Exists(Select * From Config Where KeyValue = 'KsrImage_LastRepCode')");
+//        getWritableDatabase().execSQL("INSERT INTO config(keyvalue, datavalue) Select 'VersionInfo', '" + BuildConfig.VERSION_NAME + "' Where Not Exists(Select * From Config Where KeyValue = 'VersionInfo')");
+
+    }
+
+    public void InsertActivation(@NotNull Activation activation) {
+
+        query="select * from Activation Where ActivationCode= '"+activation.getActivationCode()+"'";
+        cursor = getWritableDatabase().rawQuery(query, null);
+        if (cursor.getCount() > 0) {
+            getWritableDatabase().execSQL("Update Activation set " +
+                    "ServerURL = '" + activation.getServerURL() + "' " +
+                    "Where ActivationCode= '"+activation.getActivationCode()+"'");
+
+            getWritableDatabase().execSQL("Update Activation set " +
+                    "SQLiteURL = '" + activation.getSQLiteURL() + "' " +
+                    "Where ActivationCode= '"+activation.getActivationCode()+"'");
+
+        } else {
+            getWritableDatabase().execSQL(" Insert Into Activation(AppBrokerCustomerCode,ActivationCode,PersianCompanyName, EnglishCompanyName,ServerURL,SQLiteURL,MaxDevice)" +
+                    " Select '" + activation.getAppBrokerCustomerCode() + "','" + activation.getActivationCode() + "','" +
+                    activation.getPersianCompanyName() + "','" + activation.getEnglishCompanyName() + "','" +
+                    activation.getServerURL() + "','" + activation.getSQLiteURL() + "','" + activation.getMaxDevice() + "'");
+
+        }
+
+
+
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<Activation> getActivation() {
+
+        query="Select * From Activation";
+        cursor = getWritableDatabase().rawQuery(query, null);
+        ArrayList<Activation> activations = new ArrayList<>();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Activation activation = new Activation();
+                try{
+                    activation.setAppBrokerCustomerCode(cursor.getString(cursor.getColumnIndex("AppBrokerCustomerCode")));
+                    activation.setActivationCode(cursor.getString(cursor.getColumnIndex("ActivationCode")));
+                    activation.setPersianCompanyName(cursor.getString(cursor.getColumnIndex("PersianCompanyName")));
+                    activation.setEnglishCompanyName(cursor.getString(cursor.getColumnIndex("EnglishCompanyName")));
+                    activation.setServerURL(cursor.getString(cursor.getColumnIndex("ServerURL")));
+                    activation.setSQLiteURL(cursor.getString(cursor.getColumnIndex("SQLiteURL")));
+                    activation.setMaxDevice(cursor.getString(cursor.getColumnIndex("MaxDevice")));
+                }catch (Exception ignored) {}
+                activations.add(activation);
+
+            }
+        }
+        assert cursor != null;
+        cursor.close();
+        return activations;
+    }
+
+
+    @SuppressLint("Range")
+    public ArrayList<Factor> factorscan(String IsSent, String SearchTarget, String signature) {
         String query = "SELECT *  FROM FactorScan ";
         String cond = "";
         SearchTarget = SearchTarget.replaceAll(" ", "%");
@@ -109,7 +200,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-    public String getimagefromfactor(String FactorBarcode,String ImageRequest) {
+    @SuppressLint("Range")
+    public String getimagefromfactor(String FactorBarcode, String ImageRequest) {
         String bitmap_String = "";
         String query = "SELECT *  FROM FactorScan Where FactorBarcode= '"+FactorBarcode+"'";
 
@@ -181,7 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Utilities utilities = new Utilities();
         SimpleDateFormat frmt = new SimpleDateFormat("yyyy-MM-dd");
-        Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
+        @SuppressLint("Range") Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
         String xDate = utilities.getShamsidate(mDate);
 
         String sq="Delete from  FactorScan Where ScanDate >="+xDate;
@@ -210,7 +302,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                String s=cursor.getString(cursor.getColumnIndex(Key));
+                @SuppressLint("Range") String s=cursor.getString(cursor.getColumnIndex(Key));
                 Packdetails.add(s);
             }
         }

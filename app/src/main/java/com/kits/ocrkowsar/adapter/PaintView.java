@@ -25,15 +25,15 @@ public class PaintView extends View {
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
-    private Paint mPaint;
-    private ArrayList<FingerPath> paths = new ArrayList<>();
+    private final Paint mPaint;
+    private final ArrayList<FingerPath> paths = new ArrayList<>();
     private int currentColor;
     private int backgroundColor = DEFAULT_BG_COLOR;
     private int strokeWidth;
 
     private Bitmap mBitmap;
     private Canvas mCanvas;
-    private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private final Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
     public PaintView(Context context) {
         this(context, null);

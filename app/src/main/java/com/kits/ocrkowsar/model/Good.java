@@ -57,7 +57,17 @@ public class Good implements Serializable {
     private String SumPrice;
 
 
+    @SerializedName("CachedBarCode")
+    private String CachedBarCode;
 
+
+    public String getCachedBarCode() {
+        return CachedBarCode;
+    }
+
+    public void setCachedBarCode(String cachedBarCode) {
+        CachedBarCode = cachedBarCode;
+    }
 
     public String getGoodExplain4() { return GoodExplain4; }
 
