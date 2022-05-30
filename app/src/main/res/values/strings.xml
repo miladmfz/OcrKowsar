@@ -9,4 +9,6 @@
 
     <string name="SERVERIP">84.241.32.119:60005</string>
     <string name="Kowsar_log">87.107.78.234:60005</string>
+    <string name="ArabicText">حروف عربی (ي , ك) :</string>
+
 </resources>

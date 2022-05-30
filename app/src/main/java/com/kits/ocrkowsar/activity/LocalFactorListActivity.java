@@ -169,7 +169,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
 
-                            srch = NumberFunctions.EnglishNumber(editable.toString());
+                            srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
                             callMethod.EditString("Last_search", srch);
                             factors = dbh.factorscan(IsSent, srch, signature);
 

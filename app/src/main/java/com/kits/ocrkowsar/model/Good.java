@@ -59,7 +59,27 @@ public class Good implements Serializable {
 
     @SerializedName("CachedBarCode")
     private String CachedBarCode;
+    @SerializedName("ErrCode")
+    private String ErrCode;
 
+    @SerializedName("ErrMessage")
+    private String ErrMessage;
+
+    public String getErrCode() {
+        return ErrCode;
+    }
+
+    public void setErrCode(String errCode) {
+        ErrCode = errCode;
+    }
+
+    public String getErrMessage() {
+        return ErrMessage;
+    }
+
+    public void setErrMessage(String errMessage) {
+        ErrMessage = errMessage;
+    }
 
     public String getCachedBarCode() {
         return CachedBarCode;

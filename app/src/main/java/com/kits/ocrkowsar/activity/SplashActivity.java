@@ -53,6 +53,7 @@ public class SplashActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         callMethod.EditString("Last_search", "");
+        callMethod.EditString("LastTcPrint","0");
 
         if (callMethod.firstStart()) {
             callMethod.EditString("Deliverer",  "پیش فرض");
@@ -60,6 +61,10 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("StackCategory", "همه");
             callMethod.EditString("ConditionPosition", "0");
             callMethod.EditString("TitleSize", "22");
+            callMethod.EditString("LastTcPrint", "0");
+            callMethod.EditBoolan("FirstStart", false);
+            callMethod.EditBoolan("ArabicText", true);
+
 
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("SQLiteURLUse", "");
@@ -73,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
             dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.ocrkowsar/databases/KowsarDb.sqlite");
             dbhbase.CreateActivationDb();
 
-            callMethod.EditBoolan("FirstStart", false);
+
         }
 
         requestPermission();

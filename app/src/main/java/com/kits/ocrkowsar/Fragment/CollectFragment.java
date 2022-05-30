@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -232,11 +233,17 @@ public class CollectFragment extends Fragment {
 
                             conter[0] = conter[0] +1;
                             if(conter[0]==b){
+
+                                assert response.body() != null;
                                 intent = new Intent(requireActivity(), ConfirmActivity.class);
                                 intent.putExtra("ScanResponse", BarcodeScan);
+                                intent.putExtra("ScanResponse", BarcodeScan);
+
+                                intent.putExtra("State", "0");
                                 intent.putExtra("FactorImage", "");
                                 startActivity(intent);
                                 requireActivity().finish();
+
                             }
                         }
                     }
@@ -559,6 +566,11 @@ public class CollectFragment extends Fragment {
 
     }
 
+    public String getBarcodeScan() {
+        return BarcodeScan;
+    }
 
-
+    public void setBarcodeScan(String barcodeScan) {
+        BarcodeScan = barcodeScan;
+    }
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -214,16 +215,18 @@ public class PackFragment extends Fragment implements  DatePickerDialog.OnDateSe
 
             for (String goodchecks : GoodCodeCheck) {
 
+
                 Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",goodchecks,"2","");
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if(response.isSuccessful()) {
-
                             conter[0] = conter[0] +1;
                             if(conter[0]==b){
                                 intent = new Intent(requireActivity(), ConfirmActivity.class);
+
                                 intent.putExtra("ScanResponse", BarcodeScan);
+                                intent.putExtra("State", "1");
                                 intent.putExtra("FactorImage", "");
                                 startActivity(intent);
                                 requireActivity().finish();
@@ -270,7 +273,7 @@ public class PackFragment extends Fragment implements  DatePickerDialog.OnDateSe
         TextView tv_amount = new TextView(requireActivity().getApplicationContext());
         TextView tv_price = new TextView(requireActivity().getApplicationContext());
 
-        MaterialCheckBox checkBox = new MaterialCheckBox(requireActivity().getApplicationContext());
+        CheckBox checkBox = new CheckBox(requireActivity());
 
         ll_factor_row.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_details.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -521,7 +524,7 @@ public class PackFragment extends Fragment implements  DatePickerDialog.OnDateSe
         TextView tv_amount = new TextView(requireActivity().getApplicationContext());
         EditText et_amountshortage = new EditText(requireActivity().getApplicationContext());
 
-        MaterialCheckBox checkBox = new MaterialCheckBox(requireActivity().getApplicationContext());
+        CheckBox checkBox = new MaterialCheckBox(requireActivity());
 
         ll_factor_row.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_details.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -991,4 +994,11 @@ public class PackFragment extends Fragment implements  DatePickerDialog.OnDateSe
         this.goods = goods;
     }
 
+    public String getBarcodeScan() {
+        return BarcodeScan;
+    }
+
+    public void setBarcodeScan(String barcodeScan) {
+        BarcodeScan = barcodeScan;
+    }
 }

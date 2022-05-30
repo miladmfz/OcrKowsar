@@ -150,8 +150,9 @@
                 android:layout_height="match_parent"
                 android:paddingTop="2dp"
                 android:layout_weight="0.6"
-                android:textSize="20dp"
-                android:layout_gravity="center"/>
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:gravity="center"/>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

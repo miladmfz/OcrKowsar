@@ -68,6 +68,9 @@ public class Factor {
     @SerializedName("HasShortage")
     private String HasShortage;
 
+    @SerializedName("HasSignature")
+    private String HasSignature;
+
     @SerializedName("ErrCode")
     private String ErrCode;
 
@@ -324,6 +327,14 @@ public class Factor {
         }else {
             return "";
         }
+    }
+
+    public String getHasSignature() {
+        return HasSignature;
+    }
+
+    public void setHasSignature(String hasSignature) {
+        HasSignature = hasSignature;
     }
 
     public void setSumAmount(String sumAmount) {

@@ -11,12 +11,18 @@ import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.kits.ocrkowsar.R;
@@ -30,6 +36,8 @@ import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.model.Utilities;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,21 +96,15 @@ public class Action extends Activity {
             }
         });
 
-
-
-
-
-
-
         Call<RetrofitResponse> call2 = apiInterface.GetImage("getImage", GoodCode,0,400);
         call2.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                        byte[] imageByteArray1;
-                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
+                    byte[] imageByteArray1;
+                    imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
+                    iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
                 }
             }
             @Override
@@ -110,6 +112,50 @@ public class Action extends Activity {
                 Log.e("onFailure", "" + t);
             }
         });
+
+        dialog.show();
+    }
+
+    public void GoodScanDetail(ArrayList<Good> goodspass,String state,String barcodescan){
+
+        ArrayList<Good> Currctgoods=new ArrayList<>();
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.goods_scan);
+        RecyclerView goodscan_recycler =  dialog.findViewById(R.id.goods_scan_recyclerView);
+        Button goodscan_btn =  dialog.findViewById(R.id.goods_scan_btn);
+        TextView goodscan_tvstatus =  dialog.findViewById(R.id.goods_scan_status);
+
+
+        if (goodspass.size()>0){
+            for (Good good:goodspass){
+                if(state.equals("0"))
+                if (good.getAppRowIsControled().equals("0")) {
+                    Currctgoods.add(good);
+                }
+                if(state.equals("1"))
+                if (good.getAppRowIsPacked().equals("0")) {
+                    Currctgoods.add(good);
+                }
+            }
+            Log.e("test_size",Currctgoods.size()+"");
+            if(Currctgoods.size()>0){
+                GoodScan_Adapter goodscanadapter=new GoodScan_Adapter(Currctgoods,mContext,state,barcodescan);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1);//grid
+                goodscan_recycler.setLayoutManager(gridLayoutManager);
+                goodscan_recycler.setAdapter(goodscanadapter);
+                goodscan_recycler.setItemAnimator(new DefaultItemAnimator());
+                //Currctgoods.clear();
+            }else {
+                goodscan_tvstatus.setText("اسکن شده");
+            }
+
+        }else {
+            goodscan_tvstatus.setText("در این فکتور وجود ندارد");
+        }
+
+        goodscan_btn.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
     }
@@ -146,7 +192,6 @@ public class Action extends Activity {
 
                 dbh.Insert_IsSent(factor_code);
 
-                ((Activity) mContext).recreate();
                 Intent bag = new Intent(mContext, LocalFactorListActivity.class);
                 bag.putExtra("IsSent", "0");
                 bag.putExtra("signature", "0");

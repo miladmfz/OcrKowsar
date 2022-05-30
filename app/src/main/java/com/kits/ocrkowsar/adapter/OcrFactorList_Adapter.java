@@ -132,22 +132,33 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             }
         }
         holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
+
+
+
+
         if(factors.get(position).getAppIsControled().equals("1")) {
-
-            if (factor.getAppIsPacked().equals("1")) {
-                holder.fac_state.setText("مرحله تحویل");
-            }else if(factor.getAppIsPacked().equals("0")){
-                holder.fac_state.setText("مرحله بسته بندی");
+            if (factors.get(position).getAppIsPacked().equals("1")) {
+                if (factors.get(position).getAppIsDelivered().equals("1")) {
+                    if (factors.get(position).getHasSignature().equals("1")) {
+                        holder.fac_state.setText("تحویل شده");
+                    }else {
+                        holder.fac_state.setText("باربری");
+                    }
+                }else {
+                    holder.fac_state.setText("آماده ارسال");
+                }
+            }else {
+                holder.fac_state.setText("بسته بندی");
             }
-
         }else {
-            holder.fac_state.setText("مرحله انبار");
-
+            holder.fac_state.setText("انبار");
         }
+
 
         if(callMethod.ReadString("Category").equals("4")) {
             holder.fac_factor_btn.setText("دریافت فاکتور");
         }
+
         if(state.equals("4")){
             holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
@@ -158,6 +169,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_factor_btn.setOnClickListener(v -> {
 
             if(callMethod.ReadString("Category").equals("4")) {
+                callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
 
                 Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
                 call.enqueue(new Callback<>() {
@@ -184,6 +196,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
 
             }else {
+
+                callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+
                 intent = new Intent(mContext, ConfirmActivity.class);
                 intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                 intent.putExtra("State",state);

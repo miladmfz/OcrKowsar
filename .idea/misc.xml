@@ -6,9 +6,17 @@
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_choice_database.xml" value="0.1765625" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_config.xml" value="0.13148148148148148" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_confirm.xml" value="0.15873015873015872" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_factor.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_factor_list.xml" value="0.26296296296296295" />
-        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/factor_list.xml" value="0.1921875" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_local_factor_list.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/factor_header.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/factor_list.xml" value="0.5401785714285714" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/fragment_collect.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/fragment_pack.xml" value="0.14322916666666666" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/goods_scan.xml" value="0.1421875" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/goods_scan_item.xml" value="0.22" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/header.xml" value="0.1765625" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/image_zoom.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/rep_prog.xml" value="0.115625" />
       </map>
     </option>

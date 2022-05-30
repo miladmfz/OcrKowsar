@@ -40,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     boolean SH_activestack;
     boolean SH_real_amount;
     boolean SH_goodamount;
+    boolean SH_ArabicText;
     int k = 0;
     String sc;
     String st;
@@ -54,6 +55,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.goods = new ArrayList<>();
         this.context = context;
 
+    }
+
+    public void GetPreference() {
+
+
+        this.SH_ArabicText = callMethod.ReadBoolan("ArabicText");
     }
 
     public void GetLastDataFromOldDataBase(String tempDbPath) {
@@ -217,6 +224,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return bitmap_String;
     }
+
+    @SuppressLint("Range")
+    public String GetRegionText(String String) {
+        GetPreference();
+        if(SH_ArabicText) {
+            //arabic
+            query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1740),char(1610)),char(1705),char(1603)) result  ";
+        }else{
+            //Persian
+            query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1610),char(1740)),char(1603),char(1705)) result  " ;
+        }
+
+        cursor = getWritableDatabase().rawQuery(query, null);
+        cursor.moveToFirst();
+        String result = cursor.getString(cursor.getColumnIndex("result"));
+        cursor.close();
+
+        return result;
+    }
+
 
     public void InsertScan(String AppOCRFactorCode,String factorbarcode, String factorprivatecode, String FactorDate, String customername, String customercode) {
         String Date = Utilities.getCurrentShamsidate();

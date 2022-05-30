@@ -164,7 +164,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     public void afterTextChanged( Editable editable) {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
-                            srch = NumberFunctions.EnglishNumber(editable.toString());
+                            srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
 
                             retrofitrequset();
                         }, 1000);
@@ -255,6 +255,14 @@ public class OcrFactorListActivity extends AppCompatActivity {
         factor_list_recycler.setLayoutManager(gridLayoutManager);
         factor_list_recycler.setAdapter(adapter);
         factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
+
+        if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
+            for (Factor singlefactor :factors) {
+                if(singlefactor.getAppTcPrintRef().equals(callMethod.ReadString("LastTcPrint")))
+                    factor_list_recycler.scrollToPosition(factors.indexOf(singlefactor));
+            }
+
+        }
         dialog1.dismiss();
 
 

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -43,6 +44,8 @@ public class ConfigActivity extends AppCompatActivity {
     LinearLayoutCompat ll_Stack;
     MaterialButton btn_config;
     EditText ed_titlesize;
+    SwitchMaterial sm_arabictext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class ConfigActivity extends AppCompatActivity {
         ll_Stack=findViewById(R.id.configactivity_line_stack);
         btn_config =findViewById(R.id.configactivity_btn);
         ed_titlesize = findViewById(R.id.config_titlesize);
+        sm_arabictext = findViewById(R.id.config_arabictext);
 
     }
 
@@ -82,6 +86,7 @@ public class ConfigActivity extends AppCompatActivity {
         ed_Deliverer.setText(callMethod.ReadString("Deliverer"));
         tv_laststack.setText(callMethod.ReadString("StackCategory"));
         ed_titlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
+        sm_arabictext.setChecked(callMethod.ReadBoolan("ArabicText"));
 
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",ed_Deliverer.getText().toString());
@@ -149,6 +154,17 @@ public class ConfigActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        sm_arabictext.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (callMethod.ReadBoolan("ArabicText")) {
+                callMethod.EditBoolan("ArabicText", false);
+                callMethod.showToast( "خیر");
+
+            } else {
+                callMethod.EditBoolan("ArabicText", true);
+                callMethod.showToast( "بله");
             }
         });
 

@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.kits.ocrkowsar.Fragment.CollectFragment;
 import com.kits.ocrkowsar.Fragment.PackFragment;
 import com.kits.ocrkowsar.R;
+import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -52,12 +53,14 @@ public class ConfirmActivity extends AppCompatActivity {
     PackFragment packFragment;
 
     ArrayList<Good> goods;
+    ArrayList<Good> goods_scan=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
     String State;
-
+    int correctgood=0;
     Intent intent;
     int width=1;
+    Action action;
     Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class ConfirmActivity extends AppCompatActivity {
         assert bundle != null;
         BarcodeScan=bundle.getString("ScanResponse");
         State=bundle.getString("State");
+
     }
 
 
@@ -99,6 +103,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        action = new Action(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler=new Handler();
         for (final String[] ignored : arraygood_shortage) {
@@ -116,7 +121,12 @@ public class ConfirmActivity extends AppCompatActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
         collectFragment = new CollectFragment();
         packFragment = new PackFragment();
+        collectFragment.setBarcodeScan(BarcodeScan);
+        packFragment.setBarcodeScan(BarcodeScan);
+        goods_scan.clear();
     }
+
+
 
 
     public void init(){
@@ -133,44 +143,143 @@ public class ConfirmActivity extends AppCompatActivity {
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     }
 
+
+
                     @Override
                     public void afterTextChanged( Editable editable) {
-                        if(goods.size()>0) {
+
+                        if (goods.size() > 0) {
+
+                            goods_scan.clear();
                             handler.removeCallbacksAndMessages(null);
                             handler.postDelayed(() -> {
+                                ed_barcode.selectAll();
+                                String barcode = editable.toString().substring(2).replace("\n", "");
+                                Log.e("test_serch",editable.toString());
 
-                                String barcode = editable.toString().substring(2);
-                                barcode = barcode.replace("\n", "");
                                 for (Good singlegood : goods) {
                                     if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
-                                        Toast.makeText(App.getContext(), singlegood.getGoodName(), Toast.LENGTH_SHORT).show();
-                                        Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",singlegood.getAppOCRFactorRowCode(),State,"");
-                                        call.enqueue(new Callback<>() {
-                                            @Override
-                                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                                if (response.isSuccessful()) {
-                                                    onRestart();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                                Log.e("", t.getMessage());
-                                            }
-                                        });
-                                    }else{
-                                        callMethod.showToast("کالایی یافت نشد");
-                                        onRestart();
-
+                                        goods_scan.add(singlegood);
                                     }
-                                }
 
+                                }
+                                Log.e("test_serch",goods_scan.size()+"");
+                                Log.e("test_serch",State);
+                                Log.e("test_serch",BarcodeScan);
+                                action.GoodScanDetail(goods_scan,State,BarcodeScan);
                             }, 200);
                         }
                     }
+
+//
+//
+//                                for (Good singlegood : goods) {
+//                                    if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
+//                                        if (State.equals("0")){
+//                                            if (singlegood.getAppRowIsControled().equals("0")){
+//                                                goods_scan.add(singlegood);
+//                                                TransationFromBarcode(singlegood);
+//                                            }else {
+//                                                callMethod.showToast("قبلا تایید شده است");
+//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                                intent.putExtra("ScanResponse", BarcodeScan);
+//                                                intent.putExtra("State", State);
+//                                                finish();
+//                                                startActivity(intent);
+//                                            }
+//
+//                                        }else if(State.equals("1")){
+//                                            if (singlegood.getAppRowIsPacked().equals("0")){
+//                                                State="2";
+//                                                TransationFromBarcode(singlegood);
+//                                            }else {
+//                                                callMethod.showToast("قبلا تایید شده است");
+//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                                intent.putExtra("ScanResponse", BarcodeScan);
+//                                                intent.putExtra("State", State);
+//                                                finish();
+//                                                startActivity(intent);
+//                                            }
+//                                        }
+//                                    } else{
+//                                        intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                        intent.putExtra("ScanResponse", BarcodeScan);
+//                                        intent.putExtra("State", State);
+//                                        finish();
+//                                        startActivity(intent);
+//                                    }
+//                                }
+//                                if (correctgood==0){
+//                                    callMethod.showToast("کالایی یافت نشد");
+//                                }
+//
+//                            }, 200);
+//                        }
+//                    }
+//
+//
+
+
+
+                    //}
+//                    @Override
+//                    public void afterTextChanged( Editable editable) {
+//                        if(goods.size()>0) {
+//                            handler.removeCallbacksAndMessages(null);
+//                            handler.postDelayed(() -> {
+//
+//                                String barcode = editable.toString().substring(2);
+//                                barcode = barcode.replace("\n", "");
+//
+//                                for (Good singlegood : goods) {
+//                                    if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
+//                                        correctgood++;
+//                                        if (State.equals("0")){
+//                                            if (singlegood.getAppRowIsControled().equals("0")){
+//                                                TransationFromBarcode(singlegood);
+//                                            }else {
+//                                                callMethod.showToast("قبلا تایید شده است");
+//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                                intent.putExtra("ScanResponse", BarcodeScan);
+//                                                intent.putExtra("State", State);
+//                                                finish();
+//                                                startActivity(intent);
+//                                            }
+//
+//                                        }else if(State.equals("1")){
+//                                            if (singlegood.getAppRowIsPacked().equals("0")){
+//                                                State="2";
+//                                                TransationFromBarcode(singlegood);
+//                                            }else {
+//                                                callMethod.showToast("قبلا تایید شده است");
+//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                                intent.putExtra("ScanResponse", BarcodeScan);
+//                                                intent.putExtra("State", State);
+//                                                finish();
+//                                                startActivity(intent);
+//                                            }
+//                                        }
+//                                    } else{
+//                                        intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
+//                                        intent.putExtra("ScanResponse", BarcodeScan);
+//                                        intent.putExtra("State", State);
+//                                        finish();
+//                                        startActivity(intent);
+//                                    }
+//                                }
+//                                if (correctgood==0){
+//                                    callMethod.showToast("کالایی یافت نشد");
+//                                }
+//
+//                            }, 200);
+//                        }
+//                    }
+//
+
+
+
                 });
 
-        Log.e("test2",BarcodeScan);
 
         Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan);
         call.enqueue(new Callback<>() {
@@ -212,15 +321,5 @@ public class ConfirmActivity extends AppCompatActivity {
         ed_barcode.requestFocus();
     }
 
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        intent = new Intent(this, ConfirmActivity.class);
-        intent.putExtra("ScanResponse", BarcodeScan);
-        startActivity(intent);
-        finish();
-
-    }
 
 }
