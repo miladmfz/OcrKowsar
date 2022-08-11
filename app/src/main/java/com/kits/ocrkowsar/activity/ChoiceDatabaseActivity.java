@@ -17,6 +17,7 @@ import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
 import com.google.android.material.button.MaterialButton;
+import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
@@ -53,6 +54,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     TextView active_edt;
     Button active_btn;
     Intent intent;
+    TextView tv_versionname;
 
 
     @Override
@@ -80,6 +82,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.rep_prog);
         tv_rep = dialog.findViewById(R.id.rep_prog_text);
         tv_step = dialog.findViewById(R.id.rep_prog_step);
+        tv_versionname = findViewById(R.id.activition_Version);
 
 
 
@@ -92,6 +95,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
             CreateView(singleactive);
         }
 
+        tv_versionname.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : "+ BuildConfig.VERSION_NAME));
 
         active_btn.setOnClickListener(v -> {
 

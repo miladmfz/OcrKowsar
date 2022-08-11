@@ -426,7 +426,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
         @SuppressLint("UnspecifiedImmutableFlag") PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder notcompat = new NotificationCompat.Builder(this, channel_id)
                 .setContentTitle(title)
