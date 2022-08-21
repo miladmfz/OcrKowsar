@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kits.ocrkowsar.BuildConfig;
+import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
 
 import org.jetbrains.annotations.NotNull;
@@ -294,7 +296,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public void DeleteLastWeek() throws ParseException {
-        String query = "SELECT date('now','-7 day') As xDay";
+        String query = "SELECT date('now','-10 day') As xDay";
         Cursor dc = getWritableDatabase().rawQuery(query, null);
         dc.moveToFirst();
 
@@ -303,7 +305,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         @SuppressLint("Range") Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
         String xDate = utilities.getShamsidate(mDate);
 
-        String sq="Delete from  FactorScan Where ScanDate >="+xDate;
+        String sq="Delete from  FactorScan Where ScanDate <="+xDate;
         getWritableDatabase().execSQL(sq);
 
     }

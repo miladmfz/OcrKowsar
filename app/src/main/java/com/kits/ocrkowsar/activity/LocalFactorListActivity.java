@@ -29,6 +29,7 @@ import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.NumberFunctions;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -94,6 +95,8 @@ public class LocalFactorListActivity extends AppCompatActivity {
 
         factor_header_recycler = findViewById(R.id.factor_headerActivity_recyclerView);
         fab = findViewById(R.id.factor_headerActivity_fab);
+        //fab.setVisibility(View.VISIBLE);
+
         textView_Count = findViewById(R.id.factorheaderActivity_count);
         toolbar = findViewById(R.id.factor_headerActivity_toolbar);
         edtsearch = findViewById(R.id.factorheaderActivity_edtsearch);
@@ -107,7 +110,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
 
     }
 
-    public void init() {
+    public void init(){
 
         srch = callMethod.ReadString("Last_search");
 
