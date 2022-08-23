@@ -118,6 +118,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
+        holder.fac_explain.setText(NumberFunctions.PerisanNumber(factors.get(position).getExplain()));
 
         if(state.equals("0")){
             if(factor.getIsEdited().equals("1")){
@@ -221,6 +222,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final TextView fac_hasedite;
         private final TextView fac_kowsardate;
         private final TextView fac_state;
+        private final TextView fac_explain;
         private final Button fac_factor_btn;
 
         MaterialCardView fac_rltv;
@@ -236,6 +238,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             fac_kowsardate = itemView.findViewById(R.id.factor_list_kowsardate);
             fac_state = itemView.findViewById(R.id.factor_list_state);
             fac_factor_btn = itemView.findViewById(R.id.factor_list_btn);
+            fac_explain = itemView.findViewById(R.id.factor_list_explain);
 
             fac_rltv = itemView.findViewById(R.id.factor_list);
         }

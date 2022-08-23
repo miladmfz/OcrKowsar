@@ -39,6 +39,8 @@ public class Factor {
     private String Address;
     @SerializedName("Phone")
     private String Phone;
+    @SerializedName("Explain")
+    private String Explain;
     @SerializedName("SignatureImage")
     private String SignatureImage;
     @SerializedName("CameraImage")
@@ -202,6 +204,14 @@ public class Factor {
         }else {
             return "";
         }
+    }
+
+    public String getExplain() {
+        return Explain;
+    }
+
+    public void setExplain(String explain) {
+        Explain = explain;
     }
 
     public boolean isCheck() {

@@ -71,6 +71,43 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:text="توضیحات :"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/factor_list_explain"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.7"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+
+
+
+
+        </LinearLayout>
+
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -178,7 +215,7 @@
                     android:layout_height="31dp"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:text=" تاریخ سفارش:"
+                    android:text="تاریخ سفارش:"
                     android:textColor="#000000"
                     android:textSize="18sp" />
 
