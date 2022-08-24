@@ -104,11 +104,13 @@ public class OcrFactorListActivity extends AppCompatActivity {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public  void intent(){
+        Log.e("0","0");
         Bundle bundle =getIntent().getExtras();
         assert bundle != null;
         state = bundle.getString("State");
         StateEdited ="0";
-        StateShortage ="0";
+        StateShortage ="0";        Log.e("0","1");
+
         if(state.equals("5"))
         {
             state = "0";
@@ -118,14 +120,17 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void Config() {
+        Log.e("0","2");
 
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler=new Handler();
+        Log.e("0","3");
 
         Toolbar toolbar = findViewById(R.id.factor_listActivity_toolbar);
         setSupportActionBar(toolbar);
+        Log.e("0","4");
 
         factor_list_recycler=findViewById(R.id.factor_listActivity_recyclerView);
         textView_Count=findViewById(R.id.factorlistActivity_count);
@@ -133,20 +138,25 @@ public class OcrFactorListActivity extends AppCompatActivity {
         RadioEdited= findViewById(R.id.factorlistActivity_edited);
         RadioShortage= findViewById(R.id.factorlistActivity_shortage);
         spinnerPath= findViewById(R.id.factorlistActivity_path);
+        Log.e("0","5");
 
     }
 
     public void init(){
+        Log.e("0","6");
 
 
         customerpath.add("همه");
+        Log.e("0","7");
 
         if(!state.equals("0")){
             RadioEdited.setVisibility(View.GONE);
             RadioShortage.setVisibility(View.GONE);
         }
+        Log.e("0","8");
 
         srch=callMethod.ReadString("Last_search");
+        Log.e("0","9");
 
         edtsearch.setText(srch);
         edtsearch.addTextChangedListener(
@@ -171,12 +181,14 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     }
                 });
 
+        Log.e("0","10");
 
         RadioEdited.setChecked(StateEdited.equals("1"));
         RadioShortage.setChecked(StateShortage.equals("1"));
 
 
 
+        Log.e("0","11");
 
 
         spinnerPath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -194,6 +206,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         });
 
 
+        Log.e("0","12");
 
 
 
@@ -245,15 +258,20 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
     public void callrecycle() {
+        Log.e("10","6");
+
         adapter = new OcrFactorList_Adapter(factors,state, filter,path,OcrFactorListActivity.this);
         if (adapter.getItemCount()==0){
             callMethod.showToast("فاکتوری یافت نشد");
         }
+        Log.e("10","7");
+
         textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
         factor_list_recycler.setLayoutManager(gridLayoutManager);
         factor_list_recycler.setAdapter(adapter);
         factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
+        Log.e("10","8");
 
         if (Integer.parseInt(callMethod.ReadString("LastTcPrint"))>0){
             for (Factor singlefactor :factors) {
@@ -262,36 +280,54 @@ public class OcrFactorListActivity extends AppCompatActivity {
             }
 
         }
+        Log.e("10","9");
+
         dialog1.dismiss();
 
+        Log.e("10","10");
 
     }
 
     public void retrofitpath() {
+        Log.e("20","0");
+
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetCustomerPath");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                Log.e("20","10");
 
                 if (response.isSuccessful()) {
+                    Log.e("20","20");
+
                     assert response.body() != null;
                     for (Factor factor : response.body().getFactors()) {
                         customerpath.add(factor.getCustomerPath());
                     }
+                    Log.e("20","30");
+
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(OcrFactorListActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
+                    Log.e("20","40");
+
                     try {
+                        Log.e("20","50");
+
                         spinnerPath.setSelection(Integer.parseInt(callMethod.ReadString("ConditionPosition")));
                     } catch (Exception e) {
                         spinnerPath.setSelection(0);
                     }
                 }
+                Log.e("20","50");
+
             }
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                Log.e("20","60");
+
                 finish();
                 callMethod.showToast("فاکتوری موجود نمی باشد");
                 Log.e("", t.getMessage());
@@ -300,21 +336,31 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void retrofitrequset() {
+        Log.e("10","0");
 
         Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
+        Log.e("10","1");
 
         if(state.equals("0")){
+            Log.e("10","2");
 
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    Log.e("10","3");
 
                     if(response.isSuccessful()) {
+                        Log.e("10","4");
+
                         assert response.body() != null;
                         factors= response.body().getFactors();
                         if(factors.size()>0){
+                            Log.e("10","5");
+
                             callrecycle();
                             retrofitpath();
+                            Log.e("10","6");
+
                             int ShortageCount=0;
                             int EditedCount=0;
                             String Titlequery="";
@@ -327,6 +373,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                                     EditedCount++;
                                 }
                             }
+                            Log.e("10","7");
 
                             if (ShortageCount>0){
                                 Titlequery=Titlequery+"  کسری  ";
@@ -339,6 +386,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                             if(!Titlequery.equals(""))
                                 noti_Messaging(Titlequery, Bodyquery,"0");
 
+                            Log.e("10","8");
 
                         }else {
                             finish();
@@ -349,24 +397,30 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Log.e("10","9");
 
                     finish();
                     callMethod.showToast("فاکتوری موجود نمی باشد");
                     Log.e("",t.getMessage()); }
             });
         }else {
+            Log.e("10","10");
 
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    Log.e("10","11");
 
                     if(response.isSuccessful()) {
                         assert response.body() != null;
                         factors= response.body().getFactors();
                         if(factors.size()>0){
+                            Log.e("10","12");
+
                             callrecycle();
                             retrofitpath();
                         }else {
+                            Log.e("10","13");
 
                             finish();
                             callMethod.showToast("فاکتوری موجود نمی باشد");
@@ -377,6 +431,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
+                    Log.e("10","14");
 
                     finish();
 
