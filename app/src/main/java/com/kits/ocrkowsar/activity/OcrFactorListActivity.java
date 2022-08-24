@@ -268,12 +268,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     recallcount=0;
-                    //customerpath.clear();
                     assert response.body() != null;
                     for (Factor factor : response.body().getFactors()) {
                         customerpath.add(factor.getCustomerPath());
                     }
-                    Log.e("test_cus_size",customerpath.size()+"");
 
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(OcrFactorListActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
@@ -281,13 +279,12 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     spinnerPath.setAdapter(spinner_adapter);
 
                     try {
-
+                        if (customerpath.size() < Integer.parseInt(callMethod.ReadString("ConditionPosition"))) {
+                            callMethod.EditString("ConditionPosition", "0");
+                        }
                         spinnerPath.setSelection(Integer.parseInt(callMethod.ReadString("ConditionPosition")));
-
                     } catch (Exception e) {
-
                         spinnerPath.setSelection(0);
-
                     }
 
                     int ShortageCount=0;

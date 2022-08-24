@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -118,20 +120,32 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
-        holder.fac_explain.setText(NumberFunctions.PerisanNumber(factors.get(position).getExplain()));
+
+        if (factors.get(position).getExplain() != null&&factors.get(position).getExplain().length()>0){
+                holder.fac_factor_explain_ll.setVisibility(View.VISIBLE);
+                holder.fac_explain.setText(NumberFunctions.PerisanNumber(factors.get(position).getExplain()));
+        }else {
+            holder.fac_factor_explain_ll.setVisibility(View.GONE);
+        }
+
+
 
         if(state.equals("0")){
+            holder.fac_factor_state_ll.setVisibility(View.GONE);
             if(factor.getIsEdited().equals("1")){
+                holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                 holder.fac_hasedite.setText("اصلاح شده");
             }else {
                 holder.fac_hasedite.setText(" ");
             }
             if(factor.getHasShortage().equals("1")){
-                holder.fac_hasedite.setText("کسری موجودی");
+                holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
+                holder.fac_hasshortage.setText("کسری موجودی");
             }else {
-                holder.fac_hasedite.setText(" ");
+                holder.fac_hasshortage.setText(" ");
             }
         }
+
         holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
 
 
@@ -220,10 +234,13 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final TextView fac_customercode;
         private final TextView fac_code;
         private final TextView fac_hasedite;
+        private final TextView fac_hasshortage;
         private final TextView fac_kowsardate;
         private final TextView fac_state;
         private final TextView fac_explain;
         private final Button fac_factor_btn;
+        private final LinearLayout fac_factor_explain_ll;
+        private final LinearLayoutCompat fac_factor_state_ll;
 
         MaterialCardView fac_rltv;
 
@@ -232,9 +249,12 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
             fac_customer = itemView.findViewById(R.id.factor_list_customer);
             fac_customercode = itemView.findViewById(R.id.factor_list_customercode);
+            fac_factor_explain_ll = itemView.findViewById(R.id.factor_list_ll_explain);
+            fac_factor_state_ll = itemView.findViewById(R.id.factor_list_ll_state);
 
             fac_code = itemView.findViewById(R.id.factor_list_privatecode);
             fac_hasedite = itemView.findViewById(R.id.factor_list_hasedited);
+            fac_hasshortage = itemView.findViewById(R.id.factor_list_hasshortage);
             fac_kowsardate = itemView.findViewById(R.id.factor_list_kowsardate);
             fac_state = itemView.findViewById(R.id.factor_list_state);
             fac_factor_btn = itemView.findViewById(R.id.factor_list_btn);

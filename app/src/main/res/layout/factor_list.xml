@@ -46,11 +46,11 @@
             <TextView
                 android:id="@+id/factor_list_customer"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 android:textColor="#000000"
-                android:textSize="20dp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center"/>
 
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_gravity="center"
-                android:layout_weight="0.7"
+                android:layout_weight="0.8"
                 android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -72,12 +72,14 @@
 
 
         <LinearLayout
+            android:id="@+id/factor_list_ll_explain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:layout_margin="5dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="150dp"
@@ -109,6 +111,8 @@
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/factor_list_ll_state"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -135,6 +139,7 @@
                 android:layout_weight="0.5"
                 android:textColor="#FF0000"
                 android:textSize="20sp"
+                android:text=":weqwe"
                 android:gravity="center"
                 />
 
