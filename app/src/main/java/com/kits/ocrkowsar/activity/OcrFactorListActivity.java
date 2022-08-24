@@ -279,23 +279,37 @@ public class OcrFactorListActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if (response.isSuccessful()) {
+                    Log.e("test11","10");
+
                     recallcount=0;
+                    Log.e("test11","20");
+
                     assert response.body() != null;
                     for (Factor factor : response.body().getFactors()) {
                         customerpath.add(factor.getCustomerPath());
                     }
+                    Log.e("test11","30");
 
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(OcrFactorListActivity.this,
                             android.R.layout.simple_spinner_item, customerpath);
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerPath.setAdapter(spinner_adapter);
+                    Log.e("test11","40");
 
                     try {
+                        Log.e("test11","50");
 
                         spinnerPath.setSelection(Integer.parseInt(callMethod.ReadString("ConditionPosition")));
+                        Log.e("test11","60");
+
                     } catch (Exception e) {
+                        Log.e("test11","70");
+
                         spinnerPath.setSelection(0);
+                        Log.e("test11","80");
+
                     }
+                    Log.e("test11","90");
 
                     int ShortageCount=0;
                     int EditedCount=0;
@@ -309,6 +323,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                             EditedCount++;
                         }
                     }
+                    Log.e("test11","100");
 
                     if (ShortageCount>0){
                         Titlequery=Titlequery+"  کسری  ";
@@ -320,6 +335,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     }
                     if(!Titlequery.equals(""))
                         noti_Messaging(Titlequery, Bodyquery,"0");
+                    Log.e("test11","110");
+
                 }
 
             }
