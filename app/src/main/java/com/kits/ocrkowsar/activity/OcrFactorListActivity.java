@@ -92,12 +92,12 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         intent();
         Config();
-//        try {
-//            Handler handler = new Handler();
-//            handler.postDelayed(this::init, 100);
-//        }catch (Exception e){
-//            callMethod.ErrorLog(e.getMessage());
-//        }
+        try {
+            Handler handler = new Handler();
+            handler.postDelayed(this::init, 100);
+        }catch (Exception e){
+            callMethod.ErrorLog(e.getMessage());
+        }
 
 
 
@@ -137,6 +137,53 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     }
 
+    public void SetViews(){
+        spinnerPath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                path=customerpath.get(position);
+                callMethod.EditString("ConditionPosition",String.valueOf(position));
+                callrecycle();
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        RadioShortage.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked) StateShortage="1"; else  StateShortage="0";
+            if(StateEdited.equals("0")){
+                if(StateShortage.equals("0")) filter="0"; else  filter="1";
+            }else {
+                if(StateShortage.equals("0")) filter="2"; else  filter="3";
+            }
+            callrecycle();
+        });
+        RadioEdited.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked) StateEdited="1"; else  StateEdited="0";
+            if(StateEdited.equals("0")){
+                if(StateShortage.equals("0")) filter="0"; else  filter="1";
+            }else {
+                if(StateShortage.equals("0")) filter="2"; else  filter="3";
+            }
+            callrecycle();
+        });
+
+        if(StateEdited.equals("0")){
+            if(StateShortage.equals("0")) {
+                filter="0";
+            }else {
+                filter="1";
+            }
+        }else {
+            if(StateShortage.equals("0")) {
+                filter="2";
+            }else {
+                filter="3";
+            }
+        }
+    }
     public void init(){
 
 
@@ -175,68 +222,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         RadioEdited.setChecked(StateEdited.equals("1"));
         RadioShortage.setChecked(StateShortage.equals("1"));
-
-
-
-
-
-        spinnerPath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                path=customerpath.get(position);
-                callMethod.EditString("ConditionPosition",String.valueOf(position));
-                callrecycle();
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-
-
-
-
-
-        RadioShortage.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked) StateShortage="1"; else  StateShortage="0";
-            if(StateEdited.equals("0")){
-                if(StateShortage.equals("0")) filter="0"; else  filter="1";
-            }else {
-                if(StateShortage.equals("0")) filter="2"; else  filter="3";
-            }
-            callrecycle();
-        });
-
-
-        RadioEdited.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked) StateEdited="1"; else  StateEdited="0";
-            if(StateEdited.equals("0")){
-                if(StateShortage.equals("0")) filter="0"; else  filter="1";
-            }else {
-                if(StateShortage.equals("0")) filter="2"; else  filter="3";
-            }
-            callrecycle();
-        });
-
-
-
-        if(StateEdited.equals("0")){
-            if(StateShortage.equals("0")) {
-                filter="0";
-            }else {
-                filter="1";
-            }
-        }else {
-            if(StateShortage.equals("0")) {
-                filter="2";
-            }else {
-                filter="3";
-            }
-        }
-
 
 
         retrofitrequset();
@@ -336,7 +321,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     if(!Titlequery.equals(""))
                         noti_Messaging(Titlequery, Bodyquery,"0");
                     Log.e("test11","110");
-
+                    SetViews();
                 }
 
             }
