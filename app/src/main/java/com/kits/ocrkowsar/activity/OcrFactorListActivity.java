@@ -254,7 +254,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         }
 
-        //dialog1.dismiss();
+        dialog1.dismiss();
 
 
     }
@@ -325,6 +325,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         noti_Messaging(Titlequery, Bodyquery,"0");
                     Log.e("test11","110");
                     SetViews();
+                    callrecycle();
+
                 }
 
             }
@@ -362,7 +364,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         if(factors.size()>0){
                             Log.e("test11","0");
 
-                            callrecycle();
                             retrofitpath();
                             Log.e("test11","1");
 
@@ -399,7 +400,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         factors= response.body().getFactors();
                         if(factors.size()>0){
 
-                            callrecycle();
                             retrofitpath();
                         }else {
 
