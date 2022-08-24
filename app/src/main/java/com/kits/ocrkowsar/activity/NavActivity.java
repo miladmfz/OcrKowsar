@@ -261,6 +261,7 @@ public void Config() {
 
 
         btn1.setOnClickListener(view -> {
+            callMethod.EditString("Last_search", "");
             intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "2");
             startActivity(intent);
@@ -268,6 +269,7 @@ public void Config() {
 
 
         btn2.setOnClickListener(view -> {
+            callMethod.EditString("Last_search", "");
             intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
             intent.putExtra("IsSent", "0");
             intent.putExtra("signature", "1");
@@ -275,7 +277,7 @@ public void Config() {
         });
 
         btn3.setOnClickListener(view -> {
-
+            callMethod.EditString("Last_search", "");
             intent = new Intent(NavActivity.this, LocalFactorListActivity.class);
             intent.putExtra("IsSent", "1");
             intent.putExtra("signature", "1");
@@ -352,6 +354,8 @@ public void Config() {
     @Override
     protected void onRestart() {
         super.onRestart();
+        callMethod.EditString("Last_search", "");
+
         startActivity(getIntent());
         finish();
 

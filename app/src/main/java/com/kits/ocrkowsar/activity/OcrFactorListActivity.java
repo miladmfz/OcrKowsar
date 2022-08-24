@@ -215,7 +215,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
                             srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
-
+                            callMethod.EditString("Last_search", srch);
                             retrofitrequset();
                         }, 1000);
 

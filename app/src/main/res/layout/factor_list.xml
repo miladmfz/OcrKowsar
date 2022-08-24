@@ -139,7 +139,6 @@
                 android:layout_weight="0.5"
                 android:textColor="#FF0000"
                 android:textSize="20sp"
-                android:text=":weqwe"
                 android:gravity="center"
                 />
 
