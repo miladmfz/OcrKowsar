@@ -80,24 +80,24 @@ public class OcrFactorListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ocr_factor_list);
 
-//        dialog1 = new Dialog(this);
-//        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog1.setContentView(R.layout.rep_prog);
-//        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
-//        repw.setText("در حال خواندن اطلاعات");
-//        dialog1.show();
+        dialog1 = new Dialog(this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setContentView(R.layout.rep_prog);
+        TextView repw = dialog1.findViewById(R.id.rep_prog_text);
+        repw.setText("در حال خواندن اطلاعات");
+        dialog1.show();
 
 
 
 
         intent();
         Config();
-        try {
-            Handler handler = new Handler();
-            handler.postDelayed(this::init, 100);
-        }catch (Exception e){
-            callMethod.ErrorLog(e.getMessage());
-        }
+//        try {
+//            Handler handler = new Handler();
+//            handler.postDelayed(this::init, 100);
+//        }catch (Exception e){
+//            callMethod.ErrorLog(e.getMessage());
+//        }
 
 
 
