@@ -81,7 +81,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         dialog1.setContentView(R.layout.rep_prog);
         TextView repw = dialog1.findViewById(R.id.rep_prog_text);
         repw.setText("در حال خواندن اطلاعات");
