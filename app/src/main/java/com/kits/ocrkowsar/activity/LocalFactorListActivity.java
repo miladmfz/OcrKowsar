@@ -176,7 +176,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
                             callMethod.EditString("Last_search", srch);
                             factors = dbh.factorscan(IsSent, srch, signature);
 
-                            adapter = new LocalFactorList_Adapter(factors, getApplicationContext(), width);
+                            adapter = new LocalFactorList_Adapter(factors, LocalFactorListActivity.this, width);
                             if (adapter.getItemCount() == 0) {
                                 callMethod.showToast("فاکتوری یافت نشد");
                             }

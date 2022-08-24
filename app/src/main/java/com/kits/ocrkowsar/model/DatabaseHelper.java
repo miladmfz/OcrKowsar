@@ -160,7 +160,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (SearchTarget.equals("")) {
             cond = "Where 1=1";
         } else {
-            cond = "Where (FactorBarcode Like '%" + SearchTarget + "%' or FactorPrivateCode Like '%" + SearchTarget + "%' or CustomerCode Like '%" + SearchTarget + "%' or CustomerName Like '%" + SearchTarget + "%')";
+            cond = "Where (" +
+                    "FactorBarcode Like '%" + SearchTarget + "%' or " +
+                    "FactorPrivateCode Like '%" + SearchTarget + "%' or " +
+                    "CustomerCode Like '%" + SearchTarget + "%' or " +
+                    "CustomerName Like '%" + GetPersianText(SearchTarget) + "%' or " +
+                    "CustomerName Like '%" + GetArabicText(SearchTarget) + "%'" +
+                    ")";
         }
 
         if (IsSent.equals("0")) {
@@ -207,8 +213,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return factors;
     }
 
-
-
     @SuppressLint("Range")
     public String getimagefromfactor(String FactorBarcode, String ImageRequest) {
         String bitmap_String = "";
@@ -243,6 +247,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String result = cursor.getString(cursor.getColumnIndex("result"));
         cursor.close();
 
+        return result;
+    }
+
+    @SuppressLint("Range")
+    public String GetPersianText(String String) {
+        query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1610),char(1740)),char(1603),char(1705)) result  " ;
+        cursor = getWritableDatabase().rawQuery(query, null);
+        cursor.moveToFirst();
+        String result = cursor.getString(cursor.getColumnIndex("result"));
+        cursor.close();
+        return result;
+    }
+
+    @SuppressLint("Range")
+    public String GetArabicText(String String) {
+        query = "Select Replace(Replace(Cast('" + String + "' as nvarchar(500)),char(1740),char(1610)),char(1705),char(1603)) result  ";
+        cursor = getWritableDatabase().rawQuery(query, null);
+        cursor.moveToFirst();
+        String result = cursor.getString(cursor.getColumnIndex("result"));
+        cursor.close();
         return result;
     }
 
