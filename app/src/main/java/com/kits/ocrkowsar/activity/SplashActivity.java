@@ -54,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         callMethod.EditString("Last_search", "");
         callMethod.EditString("LastTcPrint","0");
+        callMethod.EditString("ConditionPosition","0");
 
         if (callMethod.firstStart()) {
             callMethod.EditString("Deliverer",  "پیش فرض");
