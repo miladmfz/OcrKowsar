@@ -254,7 +254,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         }
 
-        dialog1.dismiss();
+        //dialog1.dismiss();
 
 
     }
