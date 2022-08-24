@@ -184,6 +184,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
     public void init(){
 
 
@@ -238,7 +241,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         }
 
         textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
-        gridLayoutManager = new GridLayoutManager(getApplicationContext(), 1);//grid
+        gridLayoutManager = new GridLayoutManager(this, 1);//grid
         factor_list_recycler.setLayoutManager(gridLayoutManager);
         factor_list_recycler.setAdapter(adapter);
         factor_list_recycler.setItemAnimator(new DefaultItemAnimator());
