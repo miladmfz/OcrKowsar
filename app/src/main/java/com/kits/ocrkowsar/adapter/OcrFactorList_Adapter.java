@@ -129,9 +129,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
 
 
+        holder.fac_factor_state_ll.setVisibility(View.GONE);
 
         if(state.equals("0")){
-            holder.fac_factor_state_ll.setVisibility(View.GONE);
             if(factor.getIsEdited().equals("1")){
                 holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                 holder.fac_hasedite.setText("اصلاح شده");
@@ -240,7 +240,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final TextView fac_explain;
         private final Button fac_factor_btn;
         private final LinearLayout fac_factor_explain_ll;
-        private final LinearLayoutCompat fac_factor_state_ll;
+        private final LinearLayout fac_factor_state_ll;
 
         MaterialCardView fac_rltv;
 

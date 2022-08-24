@@ -110,7 +110,7 @@
         </LinearLayout>
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <LinearLayout
             android:id="@+id/factor_list_ll_state"
 
             android:layout_width="match_parent"
@@ -118,6 +118,7 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:layout_margin="5dp"
+            android:visibility="gone"
             >
 
 
@@ -143,7 +144,7 @@
                 />
 
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </LinearLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

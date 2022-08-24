@@ -332,8 +332,18 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void retrofitrequset() {
+        Call<RetrofitResponse> call;
 
-        Call<RetrofitResponse> call =apiInterface.GetOcrFactorList("GetFactorList",state,srch);
+        if (state.equals("0")){
+            if (!callMethod.ReadString("StackCategory").equals("همه")) {
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"));
+            }else {
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, "");
+            }
+        }else{
+            call =apiInterface.GetOcrFactorList("GetFactorList",state,srch,"");
+        }
+
 
         if(state.equals("0")){
 
@@ -403,7 +413,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     }else{
                         finish();
                         callMethod.showToast("فاکتوری موجود نمی باشد");
-                        Log.e("",t.getMessage());
+                        Log.e("test",t.getMessage());
                     }
                 }
             });

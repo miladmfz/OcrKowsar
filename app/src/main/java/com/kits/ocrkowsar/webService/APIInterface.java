@@ -33,7 +33,9 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<RetrofitResponse> GetOcrFactorList(@Field("tag") String tag
                                     , @Field("State") String State
-                                    , @Field("SearchTarget") String SearchTarget);
+                                    , @Field("SearchTarget") String SearchTarget
+            , @Field("Where") String Where);
+
 
 
 

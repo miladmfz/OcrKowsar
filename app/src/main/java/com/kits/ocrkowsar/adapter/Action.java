@@ -168,15 +168,16 @@ public class Action extends Activity {
         EditText ed_password =  dialog.findViewById(R.id.edloginconfig);
         MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
 
-
-        btn_login.setOnClickListener(v -> {
-            if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1401"))
-            {
-                Intent intent = new Intent(mContext, ConfigActivity.class);
-                mContext.startActivity(intent);
-            }
-
-        });
+        Intent intent = new Intent(mContext, ConfigActivity.class);
+        mContext.startActivity(intent);
+//        btn_login.setOnClickListener(v -> {
+//            if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1401"))
+//            {
+//                Intent intent = new Intent(mContext, ConfigActivity.class);
+//                mContext.startActivity(intent);
+//            }
+//
+//        });
         dialog.show();
     }
 

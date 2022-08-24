@@ -57,11 +57,14 @@ public class ConfirmActivity extends AppCompatActivity {
     Factor factor;
     String BarcodeScan;
     String State;
+    String Step;
     int correctgood=0;
     Intent intent;
     int width=1;
     Action action;
     Handler handler;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,113 +173,6 @@ public class ConfirmActivity extends AppCompatActivity {
                             }, 200);
                         }
                     }
-
-//
-//
-//                                for (Good singlegood : goods) {
-//                                    if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
-//                                        if (State.equals("0")){
-//                                            if (singlegood.getAppRowIsControled().equals("0")){
-//                                                goods_scan.add(singlegood);
-//                                                TransationFromBarcode(singlegood);
-//                                            }else {
-//                                                callMethod.showToast("قبلا تایید شده است");
-//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                                intent.putExtra("ScanResponse", BarcodeScan);
-//                                                intent.putExtra("State", State);
-//                                                finish();
-//                                                startActivity(intent);
-//                                            }
-//
-//                                        }else if(State.equals("1")){
-//                                            if (singlegood.getAppRowIsPacked().equals("0")){
-//                                                State="2";
-//                                                TransationFromBarcode(singlegood);
-//                                            }else {
-//                                                callMethod.showToast("قبلا تایید شده است");
-//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                                intent.putExtra("ScanResponse", BarcodeScan);
-//                                                intent.putExtra("State", State);
-//                                                finish();
-//                                                startActivity(intent);
-//                                            }
-//                                        }
-//                                    } else{
-//                                        intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                        intent.putExtra("ScanResponse", BarcodeScan);
-//                                        intent.putExtra("State", State);
-//                                        finish();
-//                                        startActivity(intent);
-//                                    }
-//                                }
-//                                if (correctgood==0){
-//                                    callMethod.showToast("کالایی یافت نشد");
-//                                }
-//
-//                            }, 200);
-//                        }
-//                    }
-//
-//
-
-
-
-                    //}
-//                    @Override
-//                    public void afterTextChanged( Editable editable) {
-//                        if(goods.size()>0) {
-//                            handler.removeCallbacksAndMessages(null);
-//                            handler.postDelayed(() -> {
-//
-//                                String barcode = editable.toString().substring(2);
-//                                barcode = barcode.replace("\n", "");
-//
-//                                for (Good singlegood : goods) {
-//                                    if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
-//                                        correctgood++;
-//                                        if (State.equals("0")){
-//                                            if (singlegood.getAppRowIsControled().equals("0")){
-//                                                TransationFromBarcode(singlegood);
-//                                            }else {
-//                                                callMethod.showToast("قبلا تایید شده است");
-//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                                intent.putExtra("ScanResponse", BarcodeScan);
-//                                                intent.putExtra("State", State);
-//                                                finish();
-//                                                startActivity(intent);
-//                                            }
-//
-//                                        }else if(State.equals("1")){
-//                                            if (singlegood.getAppRowIsPacked().equals("0")){
-//                                                State="2";
-//                                                TransationFromBarcode(singlegood);
-//                                            }else {
-//                                                callMethod.showToast("قبلا تایید شده است");
-//                                                intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                                intent.putExtra("ScanResponse", BarcodeScan);
-//                                                intent.putExtra("State", State);
-//                                                finish();
-//                                                startActivity(intent);
-//                                            }
-//                                        }
-//                                    } else{
-//                                        intent = new Intent(ConfirmActivity.this, ConfirmActivity.class);
-//                                        intent.putExtra("ScanResponse", BarcodeScan);
-//                                        intent.putExtra("State", State);
-//                                        finish();
-//                                        startActivity(intent);
-//                                    }
-//                                }
-//                                if (correctgood==0){
-//                                    callMethod.showToast("کالایی یافت نشد");
-//                                }
-//
-//                            }, 200);
-//                        }
-//                    }
-//
-
-
 
                 });
 
