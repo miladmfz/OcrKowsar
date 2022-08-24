@@ -170,7 +170,7 @@ public class Action extends Activity {
 
 
         btn_login.setOnClickListener(v -> {
-            if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("8585"))
+            if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1922"))
             {
                 Intent intent = new Intent(mContext, ConfigActivity.class);
                 mContext.startActivity(intent);
