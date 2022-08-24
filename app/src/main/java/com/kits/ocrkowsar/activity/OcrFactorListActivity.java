@@ -73,6 +73,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
     String channel_name = "home";
     CallMethod callMethod;
     DatabaseHelper dbh;
+    int recallcount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,7 +279,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if (response.isSuccessful()) {
-
+                    recallcount=0;
                     assert response.body() != null;
                     for (Factor factor : response.body().getFactors()) {
                         customerpath.add(factor.getCustomerPath());
@@ -326,9 +327,15 @@ public class OcrFactorListActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                finish();
-                callMethod.showToast("فاکتوری موجود نمی باشد");
-                Log.e("", t.getMessage());
+                recallcount++;
+                if(recallcount<6){
+                    retrofitrequset();
+                }else{
+                    finish();
+                    callMethod.showToast("فاکتوری موجود نمی باشد");
+                    Log.e("",t.getMessage());
+                }
+
             }
         });
     }
@@ -365,10 +372,14 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-                    finish();
-                    callMethod.showToast("فاکتوری موجود نمی باشد");
-                    Log.e("",t.getMessage());
+                    recallcount++;
+                    if(recallcount<6){
+                        retrofitrequset();
+                    }else{
+                        finish();
+                        callMethod.showToast("فاکتوری موجود نمی باشد");
+                        Log.e("",t.getMessage());
+                    }
                 }
             });
         }else {
@@ -379,6 +390,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
                     if(response.isSuccessful()) {
                         assert response.body() != null;
+                        recallcount=0;
                         factors= response.body().getFactors();
                         if(factors.size()>0){
 
@@ -394,12 +406,15 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-
-                    finish();
-
-                    callMethod.showToast("فاکتوری موجود نمی باشد");
-                    Log.e("",t.getMessage()); }
+                    recallcount++;
+                    if(recallcount<6){
+                        retrofitrequset();
+                    }else{
+                        finish();
+                        callMethod.showToast("فاکتوری موجود نمی باشد");
+                        Log.e("",t.getMessage());
+                    }
+                }
             });
 
 
