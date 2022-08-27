@@ -52,6 +52,9 @@ public class Factor {
     @SerializedName("AppOCRFactorCode")
     private String AppOCRFactorCode;
 
+    @SerializedName("StackClass")
+    private String StackClass;
+
     @SerializedName("AppIsPacked")
     private String AppIsPacked;
 
@@ -85,6 +88,14 @@ public class Factor {
 
     public String getCustomerPath() {
         return CustomerPath;
+    }
+
+    public String getStackClass() {
+        return StackClass;
+    }
+
+    public void setStackClass(String stackClass) {
+        StackClass = stackClass;
     }
 
     public void setCustomerPath(String customerPath) {

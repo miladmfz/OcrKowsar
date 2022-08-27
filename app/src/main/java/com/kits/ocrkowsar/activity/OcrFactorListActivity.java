@@ -374,9 +374,15 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     recallcount++;
-                    if(recallcount<6){
+                    if(recallcount<2){
                         retrofitrequset();
-                    }else{
+                    }else if (recallcount==2){
+
+                        callMethod.EditString("Last_search", "");
+                        srch=callMethod.ReadString("Last_search");
+                        edtsearch.setText(srch);
+                        retrofitrequset();
+                    }else {
                         finish();
                         callMethod.showToast("فاکتوری موجود نمی باشد");
                         Log.e("",t.getMessage());
@@ -408,12 +414,17 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     recallcount++;
-                    if(recallcount<6){
+                    if(recallcount<2){
                         retrofitrequset();
-                    }else{
+                    }else if (recallcount==2){
+                        callMethod.EditString("Last_search", "");
+                        srch=callMethod.ReadString("Last_search");
+                        edtsearch.setText(srch);
+                        retrofitrequset();
+                    }else {
                         finish();
                         callMethod.showToast("فاکتوری موجود نمی باشد");
-                        Log.e("test",t.getMessage());
+                        Log.e("",t.getMessage());
                     }
                 }
             });

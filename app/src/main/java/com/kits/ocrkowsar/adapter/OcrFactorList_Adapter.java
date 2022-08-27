@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -116,7 +117,6 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
         Factor factor =factors.get(position);
 
-
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
@@ -132,6 +132,8 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_factor_state_ll.setVisibility(View.GONE);
 
         if(state.equals("0")){
+            holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+
             if(factor.getIsEdited().equals("1")){
                 holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                 holder.fac_hasedite.setText("اصلاح شده");
@@ -182,43 +184,48 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
 
         holder.fac_factor_btn.setOnClickListener(v -> {
+            if(position<5){
 
-            if(callMethod.ReadString("Category").equals("4")) {
-                callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                if(callMethod.ReadString("Category").equals("4")) {
+                    callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
 
-                Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
-                call.enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                        if(response.isSuccessful()) {
-                            Log.e("test","0");
-                            assert response.body() != null;
-                            if (response.body().getFactors().get(0).getErrCode().equals("0")){
-                                intent = new Intent(mContext, FactorActivity.class);
-                                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                                intent.putExtra("FactorImage", "");
-                                mContext.startActivity(intent);
+                    Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                    call.enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            if(response.isSuccessful()) {
+                                Log.e("test","0");
+                                assert response.body() != null;
+                                if (response.body().getFactors().get(0).getErrCode().equals("0")){
+                                    intent = new Intent(mContext, FactorActivity.class);
+                                    intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                    intent.putExtra("FactorImage", "");
+                                    mContext.startActivity(intent);
+                                }
                             }
                         }
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        Log.e("test","1");
+                        @Override
+                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            Log.e("test","1");
 
-                        Log.e("test",t.getMessage());
-                    }
-                });
+                            Log.e("test",t.getMessage());
+                        }
+                    });
 
 
-            }else {
+                }else {
 
-                callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                    callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
 
-                intent = new Intent(mContext, ConfirmActivity.class);
-                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                intent.putExtra("State",state);
-                mContext.startActivity(intent);
+                    intent = new Intent(mContext, ConfirmActivity.class);
+                    intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                    intent.putExtra("State",state);
+                    mContext.startActivity(intent);
+                }
+            }else{
+                Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
             }
+
 
         });
 
@@ -238,6 +245,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final TextView fac_kowsardate;
         private final TextView fac_state;
         private final TextView fac_explain;
+        private final TextView fac_stackclass;
         private final Button fac_factor_btn;
         private final LinearLayout fac_factor_explain_ll;
         private final LinearLayout fac_factor_state_ll;
@@ -251,6 +259,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             fac_customercode = itemView.findViewById(R.id.factor_list_customercode);
             fac_factor_explain_ll = itemView.findViewById(R.id.factor_list_ll_explain);
             fac_factor_state_ll = itemView.findViewById(R.id.factor_list_ll_state);
+            fac_stackclass = itemView.findViewById(R.id.factor_list_stackclass);
 
             fac_code = itemView.findViewById(R.id.factor_list_privatecode);
             fac_hasedite = itemView.findViewById(R.id.factor_list_hasedited);

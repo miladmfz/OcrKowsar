@@ -62,6 +62,7 @@ public class CollectFragment extends Fragment {
     Button btn_shortage;
     private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
     ArrayList<Good> goods;
+    ArrayList<Good> goods_visible=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
 
@@ -169,8 +170,10 @@ public class CollectFragment extends Fragment {
         j= 0;
         for (Good g : goods) {
             if(callMethod.ReadString("StackCategory").equals("همه")) {
+                goods_visible.add(g);
                 goodshow(g);
             }else if(g.getGoodExplain4().equals(callMethod.ReadString("StackCategory"))){
+                goods_visible.add(g);
                 goodshow(g);
             }
         }
@@ -216,7 +219,8 @@ public class CollectFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     Log.e("",t.getMessage()); }
-            });            });
+            });
+        });
 
         btn_confirm.setOnClickListener(v -> {
 
@@ -237,8 +241,6 @@ public class CollectFragment extends Fragment {
                                 assert response.body() != null;
                                 intent = new Intent(requireActivity(), ConfirmActivity.class);
                                 intent.putExtra("ScanResponse", BarcodeScan);
-                                intent.putExtra("ScanResponse", BarcodeScan);
-
                                 intent.putExtra("State", "0");
                                 intent.putExtra("FactorImage", "");
                                 startActivity(intent);
@@ -298,6 +300,7 @@ public class CollectFragment extends Fragment {
     }
 
     public void setLayoutParams(){
+
         ll_title.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_good_body_detail.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_good_body.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -509,7 +512,7 @@ public class CollectFragment extends Fragment {
         ll_good_body_detail.addView(ll_factor_row);
 
         int fa=j-1;
-        if(goods.get(fa).getAppRowIsControled().equals("1")){
+        if(goods_visible.get(fa).getAppRowIsControled().equals("1")){
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         }else {
@@ -520,20 +523,20 @@ public class CollectFragment extends Fragment {
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                goods.get(fa).setAppRowIsControled("1");
-                GoodCodeCheck.add(goods.get(fa).getAppOCRFactorRowCode());
+                goods_visible.get(fa).setAppRowIsControled("1");
+                GoodCodeCheck.add(goods_visible.get(fa).getAppOCRFactorRowCode());
             }else {
-                goods.get(fa).setAppRowIsControled("0");
+                goods_visible.get(fa).setAppRowIsControled("0");
                 int b = 0, c = 0;
                 for (String s : GoodCodeCheck) {
-                    if (s.equals(goods.get(fa).getAppOCRFactorRowCode()))
+                    if (s.equals(goods_visible.get(fa).getAppOCRFactorRowCode()))
                         b = c;
                     c++;
                 }
                 GoodCodeCheck.remove(b);
             }
         });
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view(goods_visible.get(fa).getGoodCode()));
     }
 
 
@@ -545,6 +548,20 @@ public class CollectFragment extends Fragment {
             }
         }
         if(goods.size() == ConfirmCounter){
+            Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if(response.isSuccessful()) {
+                        callMethod.showToast("تاییده ارسال شد.");
+                        requireActivity().finish();
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Log.e("",t.getMessage()); }
+            });
+
 
             btn_confirm.setBackgroundResource(R.color.grey_60);
             btn_confirm.setTextColor(requireActivity().getColor(R.color.Black));

@@ -28,6 +28,7 @@ import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
+import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
@@ -150,15 +151,15 @@ public class ConfirmActivity extends AppCompatActivity {
 
                     @Override
                     public void afterTextChanged( Editable editable) {
-
+                        //String barcode1 = editable.toString().substring(2).replace("\n", "");
                         if (goods.size() > 0) {
 
                             goods_scan.clear();
                             handler.removeCallbacksAndMessages(null);
                             handler.postDelayed(() -> {
+                                String barcode = NumberFunctions.EnglishNumber(editable.toString().substring(2,editable.toString().length()-2).replace("\n", ""));
+
                                 ed_barcode.selectAll();
-                                String barcode = editable.toString().substring(2).replace("\n", "");
-                                Log.e("test_serch",editable.toString());
 
                                 for (Good singlegood : goods) {
                                     if (singlegood.getCachedBarCode().indexOf(barcode) > 0) {
