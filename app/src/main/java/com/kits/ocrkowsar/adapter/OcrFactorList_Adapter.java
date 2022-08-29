@@ -177,6 +177,8 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
 
         if(state.equals("4")){
+            holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+
             holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
