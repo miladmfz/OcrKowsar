@@ -186,7 +186,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
 
         holder.fac_factor_btn.setOnClickListener(v -> {
-            if(position<5){
+            //if(position<5){
 
                 if(callMethod.ReadString("Category").equals("4")) {
                     callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
@@ -224,9 +224,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                     intent.putExtra("State",state);
                     mContext.startActivity(intent);
                 }
-            }else{
-                Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
-            }
+//            }else{
+//                Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
+//            }
 
 
         });
