@@ -12,29 +12,31 @@ public interface APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GetFactor(@Field("tag") String tag
-                                    , @Field("barcode") String barcode);
+            , @Field("barcode") String barcode
+            , @Field("orderby") String orderby);
 
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> CheckState(@Field("tag") String tag
-                                    , @Field("AppOCRCode") String AppOCRCode
-                                    , @Field("State") String State
-                                    , @Field("Deliverer") String Deliverer);
+            , @Field("AppOCRCode") String AppOCRCode
+            , @Field("State") String State
+            , @Field("Deliverer") String Deliverer);
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GoodShortage(@Field("tag") String tag
-                                    , @Field("OCRFactorRowCode") String OCRFactorRowCode
-                                    , @Field("Shortage") String Shortage);
+            , @Field("OCRFactorRowCode") String OCRFactorRowCode
+            , @Field("Shortage") String Shortage);
 
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GetOcrFactorList(@Field("tag") String tag
-                                    , @Field("State") String State
-                                    , @Field("SearchTarget") String SearchTarget
-            , @Field("Where") String Where);
+            , @Field("State") String State
+            , @Field("SearchTarget") String SearchTarget
+            , @Field("Where") String Where
+            , @Field("PageNo") String PageNo);
 
 
 
@@ -56,7 +58,7 @@ public interface APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GetGoodDetail(@Field("tag") String tag,
-                                  @Field("GoodCode") String GoodCode);
+                                         @Field("GoodCode") String GoodCode);
 
 
     @POST("index.php")
@@ -89,7 +91,7 @@ public interface APIInterface {
 
     @FormUrlEncoded
     @POST("index.php")
-    Call<RetrofitResponse> getImageData(@Field("tag") String tag,
+    Call<String> getImageData(@Field("tag") String tag,
                               @Field("image") String image,
                               @Field("barcode") String barcode
     );
@@ -97,9 +99,9 @@ public interface APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call <RetrofitResponse> GetImage(@Field("tag") String tag,
-                           @Field("GoodCode") String GoodCode,
-                           @Field("IX") Integer IX,
-                           @Field("Scale") Integer Scale);
+                                     @Field("GoodCode") String GoodCode,
+                                     @Field("IX") Integer IX,
+                                     @Field("Scale") Integer Scale);
 
     @POST("index.php")
     @FormUrlEncoded

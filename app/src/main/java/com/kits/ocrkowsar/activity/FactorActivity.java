@@ -109,7 +109,7 @@ public class  FactorActivity extends AppCompatActivity {
 
 
         if(bitmap_factor_base64.equals("")){
-            Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan);
+            Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

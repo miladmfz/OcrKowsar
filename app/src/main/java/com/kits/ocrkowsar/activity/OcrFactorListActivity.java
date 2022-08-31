@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,6 +41,8 @@ import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,8 +60,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
     Handler handler;
     ArrayList<Factor> factors=new ArrayList<>();
     String srch="";
+    String TotallistCount="0";
     TextView textView_Count;
     String state="0",StateEdited="0",StateShortage="0";
+    ProgressBar prog;
 
     Dialog dialog1;
     SwitchMaterial RadioEdited;
@@ -74,7 +79,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
     CallMethod callMethod;
     DatabaseHelper dbh;
     int recallcount=0;
-
+    private boolean loading = true;
+    int pastVisiblesItems=0, visibleItemCount, totalItemCount;
+    public int PageNo=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +131,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler=new Handler();
+        prog = findViewById(R.id.factor_listActivity_prog);
 
         Toolbar toolbar = findViewById(R.id.factor_listActivity_toolbar);
         setSupportActionBar(toolbar);
@@ -215,8 +223,11 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(() -> {
                             srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
+                            srch=srch.replace(" ","%");
                             callMethod.EditString("Last_search", srch);
                             retrofitrequset();
+                            retrofitrequsetfortotal();
+
                         }, 1000);
 
                     }
@@ -226,12 +237,99 @@ public class OcrFactorListActivity extends AppCompatActivity {
         RadioEdited.setChecked(StateEdited.equals("1"));
         RadioShortage.setChecked(StateShortage.equals("1"));
 
+        factor_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) { //check for scroll down
+                    visibleItemCount =   gridLayoutManager.getChildCount();
+                    totalItemCount =   gridLayoutManager.getItemCount();
+                    pastVisiblesItems =   gridLayoutManager.findFirstVisibleItemPosition();
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount-2) {
+                            loading = false;
+                            PageNo++;
+                            MoreFactor();
+                        }
+                    }
+                }
+            }
+        });
 
         retrofitrequset();
+        retrofitrequsetfortotal();
     }
 
 
 
+
+    private void MoreFactor() {
+        prog.setVisibility(View.VISIBLE);
+        Call<RetrofitResponse> call;
+        if (state.equals("0")){
+            if (!callMethod.ReadString("StackCategory").equals("همه")) {
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"),String.valueOf(PageNo));
+            }else {
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, "",String.valueOf(PageNo));
+            }
+        }else{
+            call =apiInterface.GetOcrFactorList("GetFactorList",state,srch,"",String.valueOf(PageNo));
+        }
+        if(state.equals("0")){
+            call.enqueue(new Callback<>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if(response.isSuccessful()) {
+                        assert response.body() != null;
+                        ArrayList<Factor> factor_page = response.body().getFactors();
+                        factors.addAll(factor_page);
+                        adapter.notifyDataSetChanged();
+                        String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
+                        textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
+
+                        factor_list_recycler.setVisibility(View.VISIBLE);
+                        prog.setVisibility(View.GONE);
+                        loading=true;
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    PageNo--;
+                    callMethod.showToast("فاکتور بیشتری موجود نیست");
+                    prog.setVisibility(View.GONE);
+                    loading = true;
+                }
+            });
+        }else {
+            call.enqueue(new Callback<>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                    if(response.isSuccessful()) {
+                        assert response.body() != null;
+                        ArrayList<Factor> factor_page = response.body().getFactors();
+                        factors.addAll(factor_page);
+                        adapter.notifyDataSetChanged();
+                        String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
+                        textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
+
+                        factor_list_recycler.setVisibility(View.VISIBLE);
+                        prog.setVisibility(View.GONE);
+                        loading=true;
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    PageNo--;
+                    callMethod.showToast("فاکتور بیشتری موجود نیست");
+                    prog.setVisibility(View.GONE);
+                    loading = true;
+                }
+            });
+        }
+
+    }
 
     public void callrecycle() {
 
@@ -240,7 +338,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
             callMethod.showToast("فاکتوری یافت نشد");
         }
 
-        textView_Count.setText(NumberFunctions.PerisanNumber(String.valueOf(adapter.getItemCount())));
+        String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
+        textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
         gridLayoutManager = new GridLayoutManager(this, 1);//grid
         factor_list_recycler.setLayoutManager(gridLayoutManager);
         factor_list_recycler.setAdapter(adapter);
@@ -319,7 +418,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
                 recallcount++;
-                if(recallcount<6){
+                if(recallcount<3){
                     retrofitrequset();
                 }else{
                     finish();
@@ -336,12 +435,12 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         if (state.equals("0")){
             if (!callMethod.ReadString("StackCategory").equals("همه")) {
-                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"));
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"),"0");
             }else {
-                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, "");
+                call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, "","0");
             }
         }else{
-            call =apiInterface.GetOcrFactorList("GetFactorList",state,srch,"");
+            call =apiInterface.GetOcrFactorList("GetFactorList",state,srch,"","0");
         }
 
 
@@ -356,13 +455,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         assert response.body() != null;
                         factors= response.body().getFactors();
                         if(factors.size()>0){
-                            Log.e("test11","0");
-
                             callrecycle();
                             retrofitpath();
-                            Log.e("test11","1");
-
-
 
                         }else {
                             finish();
@@ -374,9 +468,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     recallcount++;
-                    if(recallcount<2){
+                    if(recallcount<10){
                         retrofitrequset();
-                    }else if (recallcount==2){
+                    }else if (recallcount==10){
 
                         callMethod.EditString("Last_search", "");
                         srch=callMethod.ReadString("Last_search");
@@ -390,7 +484,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }
             });
         }else {
-
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -402,7 +495,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         if(factors.size()>0){
 
                             callrecycle();
-                            retrofitpath();
+                            if (!state.equals("2")){
+                                retrofitpath();
+                            }
+
                         }else {
 
                             finish();
@@ -428,8 +524,60 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
 
 
+    }
+
+    public void retrofitrequsetfortotal() {
+        Call<RetrofitResponse> call;
+
+        if (state.equals("0")){
+            if (!callMethod.ReadString("StackCategory").equals("همه")) {
+                call = apiInterface.GetOcrFactorList("GetFactorListCount", state, srch, callMethod.ReadString("StackCategory"),"0");
+            }else {
+                call = apiInterface.GetOcrFactorList("GetFactorListCount", state, srch, "","0");
+            }
+        }else{
+            call =apiInterface.GetOcrFactorList("GetFactorListCount",state,srch,"","0");
+        }
+
+
+        if(state.equals("0")){
+
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                    if(response.isSuccessful()) {
+
+                        assert response.body() != null;
+                        TotallistCount=String.valueOf(response.body().getFactors().get(0).getTotalRow());
+
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+                }
+            });
+        }else {
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                    if(response.isSuccessful()) {
+
+                        assert response.body() != null;
+                        TotallistCount=String.valueOf(response.body().getFactors().get(0).getTotalRow());
+
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+                }
+            });
         }
 
 

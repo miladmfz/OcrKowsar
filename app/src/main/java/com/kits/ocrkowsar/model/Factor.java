@@ -51,6 +51,16 @@ public class Factor {
     private String AppIsControled;
     @SerializedName("AppOCRFactorCode")
     private String AppOCRFactorCode;
+    @SerializedName("TotalRow")
+    private String TotalRow;
+
+    public String getTotalRow() {
+        return TotalRow;
+    }
+
+    public void setTotalRow(String totalRow) {
+        TotalRow = totalRow;
+    }
 
     @SerializedName("StackClass")
     private String StackClass;
@@ -81,6 +91,7 @@ public class Factor {
 
     @SerializedName("ErrMessage")
     private String ErrMessage;
+
 
     @SerializedName("Check")
     private boolean Check;

@@ -173,6 +173,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
                         handler.postDelayed(() -> {
 
                             srch = NumberFunctions.EnglishNumber(dbh.GetRegionText(editable.toString()));
+                            srch=srch.replace(" ","%");
                             callMethod.EditString("Last_search", srch);
                             factors = dbh.factorscan(IsSent, srch, signature);
 

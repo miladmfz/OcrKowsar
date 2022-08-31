@@ -132,8 +132,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_factor_state_ll.setVisibility(View.GONE);
 
         if(state.equals("0")){
-            holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+            try {
 
+                holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
             if(factor.getIsEdited().equals("1")){
                 holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                 holder.fac_hasedite.setText("اصلاح شده");
@@ -146,6 +147,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             }else {
                 holder.fac_hasshortage.setText(" ");
             }
+        }catch (Exception ignored){}
         }
 
         holder.fac_kowsardate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));

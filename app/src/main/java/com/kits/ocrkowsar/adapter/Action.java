@@ -184,12 +184,11 @@ public class Action extends Activity {
 
 
         app_info();
-        Call<RetrofitResponse> call =apiInterface.getImageData("SaveOcrImage",signatureimage,factor_code);
-        Log.e("testocr", "0");
-        Log.e("testocr", factor_code);
+        Call<String> call =apiInterface.getImageData("SaveOcrImage",signatureimage,factor_code);
+
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Log.e("testocr", "1");
 
                 callMethod.showToast("فاکتور ارسال گردید");
@@ -206,7 +205,7 @@ public class Action extends Activity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
 
                 Log.e("testocr", t.getMessage());
 

@@ -82,22 +82,32 @@
             android:layout_height="60dp"
             android:orientation="horizontal"
             android:weightSum="1">
-            <TextView
-                android:id="@+id/factorlistActivity_count"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:textSize="26sp"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@color/grey_1000"
-                />
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:layout_weight="0.4"
+                >
+                <TextView
+                    android:id="@+id/factorlistActivity_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.35"
+                    android:textSize="26sp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/grey_1000"
+                    />
+            </LinearLayout>
+
+
+
             <Spinner
                 android:id="@+id/factorlistActivity_path"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:layout_weight="0.3"
+                android:layout_weight="0.6"
                 android:background="@color/grey_5"
                 android:textColor="@color/overlay_dark_90"
                 android:scrollbarSize="20sp" />
@@ -111,6 +121,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"/>
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/factor_listActivity_prog"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            android:layout_weight="0.9"
+            />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/factor_listActivity_fab"

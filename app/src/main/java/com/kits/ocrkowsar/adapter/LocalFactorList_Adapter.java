@@ -171,7 +171,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
             MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
 
             btn_login.setOnClickListener(v -> {
-                if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1401"))
+                if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1922"))
                 {
                     if (factors.get(position).getIsSent().equals("0")) {
                         Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));

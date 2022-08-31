@@ -57,6 +57,7 @@ public class ConfirmActivity extends AppCompatActivity {
     ArrayList<Good> goods_scan=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
+    String OrderBy;
     String State;
     String Step;
     int correctgood=0;
@@ -167,22 +168,28 @@ public class ConfirmActivity extends AppCompatActivity {
                                     }
 
                                 }
-                                Log.e("test_serch",goods_scan.size()+"");
-                                Log.e("test_serch",State);
-                                Log.e("test_serch",BarcodeScan);
+
                                 action.GoodScanDetail(goods_scan,State,BarcodeScan);
                             }, 200);
                         }
                     }
 
                 });
+        Log.e("test_serch",goods_scan.size()+"");
+        Log.e("test_serch",State);
+        Log.e("test_serch",BarcodeScan);
+        if(State.equals("1")){
+            OrderBy="GoodExplain1";
+        }else{
+            OrderBy="GoodName";
+        }
 
-
-        Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan);
+        Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
+
                     assert response.body() != null;
                     factor = response.body().getFactor();
                     if (factor.getFactorCode().equals("0")) {
