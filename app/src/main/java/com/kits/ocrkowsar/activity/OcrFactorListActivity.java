@@ -239,7 +239,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         factor_list_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) { //check for scroll down
                     visibleItemCount =   gridLayoutManager.getChildCount();
                     totalItemCount =   gridLayoutManager.getItemCount();
@@ -359,12 +359,14 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void retrofitpath() {
+        Log.e("test11","0");
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetCustomerPath");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
+                Log.e("test11","1");
                 if (response.isSuccessful()) {
                     recallcount=0;
                     assert response.body() != null;
@@ -416,6 +418,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                Log.e("test11","2");
 
                 recallcount++;
                 if(recallcount<3){
@@ -495,12 +498,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         if(factors.size()>0){
 
                             callrecycle();
-                            if (!state.equals("2")){
-                                retrofitpath();
-                            }
-
+                            retrofitpath();
                         }else {
-
                             finish();
                             callMethod.showToast("فاکتوری موجود نمی باشد");
                         }

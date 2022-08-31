@@ -175,10 +175,8 @@ public class ConfirmActivity extends AppCompatActivity {
                     }
 
                 });
-        Log.e("test_serch",goods_scan.size()+"");
-        Log.e("test_serch",State);
-        Log.e("test_serch",BarcodeScan);
-        if(State.equals("1")){
+
+        if(State.equals("0")){
             OrderBy="GoodExplain1";
         }else{
             OrderBy="GoodName";
