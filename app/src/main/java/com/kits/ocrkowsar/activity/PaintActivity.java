@@ -416,7 +416,7 @@ public class PaintActivity extends AppCompatActivity {
                 bitmap_signature_base= Base64.encodeToString(byteArray, Base64.DEFAULT);
             dbh.Insert_signature(BarcodeScan,bitmap_signature_base);
 
-            Button button=  new Button(getApplicationContext());
+            Button button=  new Button(this);
                 button.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
                 button.setBackgroundResource(R.color.green_900);
                 button.setText("تایید و ارسال");

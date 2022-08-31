@@ -122,11 +122,11 @@ public class SplashActivity extends AppCompatActivity {
 
             handler = new Handler();
             handler.postDelayed(() -> {
-                try {
-                    dbh.DeleteLastWeek();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    dbh.DeleteLastWeek();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 intent = new Intent(this, NavActivity.class);
                 startActivity(intent);
                 finish();

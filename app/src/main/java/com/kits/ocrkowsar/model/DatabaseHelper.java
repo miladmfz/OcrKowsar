@@ -317,22 +317,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         getWritableDatabase().execSQL(sq);
 
     }
-
-
-    public void DeleteLastWeek() throws ParseException {
-        String query = "SELECT date('now','-10 day') As xDay";
-        Cursor dc = getWritableDatabase().rawQuery(query, null);
-        dc.moveToFirst();
-
-        Utilities utilities = new Utilities();
-        SimpleDateFormat frmt = new SimpleDateFormat("yyyy-MM-dd");
-        @SuppressLint("Range") Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
-        String xDate = utilities.getShamsidate(mDate);
-
-        String sq="Delete from  FactorScan Where ScanDate <="+xDate;
-        getWritableDatabase().execSQL(sq);
-
-    }
+//
+//
+//    public void DeleteLastWeek() throws ParseException {
+//        String query = "SELECT date('now','-10 day') As xDay";
+//        Cursor dc = getWritableDatabase().rawQuery(query, null);
+//        dc.moveToFirst();
+//
+//        Utilities utilities = new Utilities();
+//        SimpleDateFormat frmt = new SimpleDateFormat("yyyy-MM-dd");
+//        @SuppressLint("Range") Date mDate = frmt.parse(dc.getString(dc.getColumnIndex("xDay")));
+//        String xDate = utilities.getShamsidate(mDate);
+//
+//        String sq="Delete from  FactorScan Where ScanDate <="+xDate;
+//        getWritableDatabase().execSQL(sq);
+//
+//    }
 
     public ArrayList<String> Packdetail(String Key) {
 

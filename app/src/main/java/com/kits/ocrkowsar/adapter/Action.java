@@ -50,7 +50,6 @@ import retrofit2.Response;
 
 public class Action extends Activity {
     APIInterface apiInterface ;
-    Call<String> call;
     DatabaseHelper dbh;
     private final Context mContext;
     CallMethod callMethod;
@@ -183,11 +182,16 @@ public class Action extends Activity {
 
     public void sendfactor(final String factor_code, String signatureimage) {
 
+
         app_info();
-        call=apiInterface.getImageData("SaveOcrImage",signatureimage,factor_code);
+        Call<RetrofitResponse> call =apiInterface.getImageData("SaveOcrImage",signatureimage,factor_code);
+        Log.e("testocr", "0");
+        Log.e("testocr", factor_code);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                Log.e("testocr", "1");
+
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
@@ -202,9 +206,10 @@ public class Action extends Activity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                Log.e(",", t.getMessage());
+                Log.e("testocr", t.getMessage());
+
             }
         });
 

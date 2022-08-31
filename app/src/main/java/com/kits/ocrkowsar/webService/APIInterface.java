@@ -89,7 +89,7 @@ public interface APIInterface {
 
     @FormUrlEncoded
     @POST("index.php")
-    Call<String> getImageData(@Field("tag") String tag,
+    Call<RetrofitResponse> getImageData(@Field("tag") String tag,
                               @Field("image") String image,
                               @Field("barcode") String barcode
     );
