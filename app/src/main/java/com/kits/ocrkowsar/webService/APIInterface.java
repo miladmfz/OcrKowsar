@@ -35,7 +35,8 @@ public interface APIInterface {
     Call<RetrofitResponse> GetOcrFactorList(@Field("tag") String tag
             , @Field("State") String State
             , @Field("SearchTarget") String SearchTarget
-            , @Field("Where") String Where
+            , @Field("Stack") String Stack
+            , @Field("path") String path
             , @Field("PageNo") String PageNo);
 
 

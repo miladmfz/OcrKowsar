@@ -132,6 +132,7 @@
             android:layout_centerVertical="true"
             android:indeterminate="true"
             android:layout_weight="0.9"
+            android:visibility="gone"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
