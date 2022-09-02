@@ -121,6 +121,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"/>
+        <TextView
+            android:id="@+id/factor_listActivity_Tvstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/Black"
+            />
 
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/factor_listActivity_prog"

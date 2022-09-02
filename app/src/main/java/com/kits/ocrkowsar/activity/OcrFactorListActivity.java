@@ -63,6 +63,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
     String srch="";
     String TotallistCount="0";
     TextView textView_Count;
+    TextView textView_status;
     String state="0",StateEdited="0",StateShortage="0";
     ProgressBar prog;
 
@@ -139,6 +140,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         factor_list_recycler=findViewById(R.id.factor_listActivity_recyclerView);
         textView_Count=findViewById(R.id.factorlistActivity_count);
+        textView_status=findViewById(R.id.factor_listActivity_Tvstatus);
         edtsearch = findViewById(R.id.factorlistActivity_edtsearch);
         RadioEdited= findViewById(R.id.factorlistActivity_edited);
         RadioShortage= findViewById(R.id.factorlistActivity_shortage);
@@ -420,7 +422,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if(response.isSuccessful()) {
-
+                    recallcount=0;
                     assert response.body() != null;
                     factors= response.body().getFactors();
                     if(factors.size()>0){
@@ -435,6 +437,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
                 }
             }
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 recallcount++;
@@ -447,9 +450,16 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     edtsearch.setText(srch);
                     RetrofitRequset_List();
                 }else {
-                    finish();
-                    callMethod.showToast("فاکتوری یافت نشد");
-                    Log.e("",t.getMessage());
+                    try {
+                        factors.clear();
+                        dialog1.dismiss();
+                        textView_status.setText("فاکتوری یافت نشد");
+                        textView_Count.setText(NumberFunctions.PerisanNumber("تعداد 0"));
+                        adapter.notifyDataSetChanged();
+
+                    }catch (Exception ignored){}
+
+
                 }
             }
         });
