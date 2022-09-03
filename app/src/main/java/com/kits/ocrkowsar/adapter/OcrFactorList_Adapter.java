@@ -38,67 +38,19 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
     private final Context mContext;
     Intent intent;
-    ArrayList<Factor> factors = new ArrayList<>();
-    ArrayList<Factor> factors_tmp= new ArrayList<>();
-    ArrayList<Factor> factors_get;
+    ArrayList<Factor> factors ;
+
     String state ;
     String filter;
     String path;
     CallMethod callMethod;
 
-    public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State,String efilter,String pathfilter, Context context) {
+    public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
         this.state = State;
-        this.filter = efilter;
-        this.path = pathfilter;
-        this.factors_get = retrofitFactors;
+        this.factors = retrofitFactors;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-
-        if(!path.equals("همه")){
-            for ( Factor f : factors_get) {
-                if(f.getCustomerPath().equals(pathfilter)){
-                    factors_tmp.add(f);
-                }
-            }
-        }else {
-            this.factors_tmp = factors_get;
-        }
-
-
-
-        switch (filter){
-            case "0":
-                this.factors = factors_tmp;
-                break;
-            case "1":
-                for (Factor f : factors_tmp) {
-                    if(f.getHasShortage().equals("1")){
-                        this.factors.add(f);
-                    }
-                }
-                break;
-            case "2":
-                for (Factor f : factors_tmp) {
-                    if(f.getIsEdited().equals("1")){
-                        factors.add(f);
-                    }
-                }
-                break;
-
-            case "3":
-                for (Factor f : factors_tmp) {
-                    if(f.getHasShortage().equals("1")){
-                        if(f.getIsEdited().equals("1")){
-                            factors.add(f);
-                        }
-                    }
-                }
-                break;
-        }
-
-
-
 
     }
 

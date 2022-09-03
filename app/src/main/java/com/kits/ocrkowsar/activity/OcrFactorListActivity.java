@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,7 +72,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
     SwitchMaterial RadioEdited;
     SwitchMaterial RadioShortage;
     Spinner spinnerPath;
-    String filter="0";
     String path="همه";
     ArrayList<String> customerpath=new ArrayList<>();
     Intent intent;
@@ -81,9 +81,14 @@ public class OcrFactorListActivity extends AppCompatActivity {
     CallMethod callMethod;
     DatabaseHelper dbh;
     int recallcount=0;
+    int ShortageCount=0;
+    int EditedCount=0;
+
+
     private boolean loading = true;
     int pastVisiblesItems=0, visibleItemCount, totalItemCount;
     public int PageNo=0;
+    String Row="10";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,51 +155,28 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void NotificationConfig(){
 
-        int ShortageCount=0;
-        int EditedCount=0;
-        String Titlequery="";
-        String Bodyquery="";
-        for(Factor factor:factors){
-            if(factor.getHasShortage().equals("1")){
-                ShortageCount++;
-            }
-            if(factor.getIsEdited().equals("1")){
-                EditedCount++;
-            }
-        }
+        RetrofitRequset_EditeCount();
+        RetrofitRequset_shortageCount();
 
-        if (ShortageCount>0){
-            Titlequery=Titlequery+"  کسری  ";
-            Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(ShortageCount))+" فکتور کسری)";
-        }
-        if (EditedCount>0){
-            Titlequery=Titlequery+"  اصلاحی  ";
-            Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(EditedCount))+" فکتور اصلاحی)";
-        }
-        if(!Titlequery.equals(""))
-            noti_Messaging(Titlequery, Bodyquery,"0");
+
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            String Titlequery="";
+            String Bodyquery="";
+            if (ShortageCount>0){
+                Titlequery=Titlequery+"  کسری  ";
+                Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(ShortageCount))+" فکتور کسری)";
+            }
+            if (EditedCount>0){
+                Titlequery=Titlequery+"  اصلاحی  ";
+                Bodyquery=Bodyquery+"(دارای "+NumberFunctions.PerisanNumber(String.valueOf(EditedCount))+" فکتور اصلاحی)";
+            }
+            if(!Titlequery.equals(""))
+                noti_Messaging(Titlequery, Bodyquery,"0");
+        }, 500);
+
     }
 
-    public void RadioConfig(){
-
-        RadioEdited.setChecked(StateEdited.equals("1"));
-        RadioShortage.setChecked(StateShortage.equals("1"));
-
-        if(StateEdited.equals("0")){
-            if(StateShortage.equals("0")) {
-                filter="0";
-            }else {
-                filter="1";
-            }
-        }else {
-            if(StateShortage.equals("0")) {
-                filter="2";
-            }else {
-                filter="3";
-            }
-        }
-
-    }
 
 
     public void init(){
@@ -205,7 +187,12 @@ public class OcrFactorListActivity extends AppCompatActivity {
         if(!state.equals("0")){
             RadioEdited.setVisibility(View.GONE);
             RadioShortage.setVisibility(View.GONE);
+        }else{
+            NotificationConfig();
         }
+
+        RadioEdited.setChecked(StateEdited.equals("1"));
+        RadioShortage.setChecked(StateShortage.equals("1"));
 
         srch=callMethod.ReadString("Last_search");
 
@@ -264,7 +251,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -275,31 +261,34 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         RadioShortage.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) StateShortage="1"; else  StateShortage="0";
-            if(StateEdited.equals("0")){
-                if(StateShortage.equals("0")) filter="0"; else  filter="1";
-            }else {
-                if(StateShortage.equals("0")) filter="2"; else  filter="3";
-            }
-            CallRecycle();
+            spinnerPath.setSelection(0);
+            RetrofitRequset_List();
         });
         RadioEdited.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) StateEdited="1"; else  StateEdited="0";
-            if(StateEdited.equals("0")){
-                if(StateShortage.equals("0")) filter="0"; else  filter="1";
-            }else {
-                if(StateShortage.equals("0")) filter="2"; else  filter="3";
-            }
-            CallRecycle();
+            spinnerPath.setSelection(0);
+            RetrofitRequset_List();
+
         });
 
 
         RetrofitRequset_Path();
+
     }
 
     private void MoreFactor() {
 
         prog.setVisibility(View.VISIBLE);
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"),path,String.valueOf(PageNo));
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                String.valueOf(PageNo));
 
         call.enqueue(new Callback<>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -334,7 +323,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void CallRecycle() {
 
-        adapter = new OcrFactorList_Adapter(factors,state, filter,path,OcrFactorListActivity.this);
+        adapter = new OcrFactorList_Adapter(factors,state,OcrFactorListActivity.this);
         if (adapter.getItemCount()==0){
             callMethod.showToast("فاکتوری یافت نشد");
         }
@@ -412,10 +401,20 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_List() {
+
         PageNo=0;
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
-        Call<RetrofitResponse>  call = apiInterface.GetOcrFactorList("GetFactorList", state, srch, callMethod.ReadString("StackCategory"),path,"0");
+        Call<RetrofitResponse>  call = apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0");
 
         call.enqueue(new Callback<>() {
             @Override
@@ -424,10 +423,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     recallcount=0;
                     assert response.body() != null;
+                    factors.clear();
                     factors= response.body().getFactors();
                     if(factors.size()>0){
-                        RadioConfig();
-                        NotificationConfig();
                         CallRecycle();
 
                     }else {
@@ -467,13 +465,70 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_ListCount() {
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList("GetFactorListCount", state, srch, callMethod.ReadString("StackCategory"),path,"0");
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
                     TotallistCount=String.valueOf(response.body().getFactors().get(0).getTotalRow());
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+        });
+    }
+
+    public void RetrofitRequset_EditeCount() {
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                "0",
+                "همه",
+                "همه",
+                "0",
+                "1",
+                "10000",
+                "0");
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    EditedCount=Integer.parseInt(response.body().getFactors().get(0).getTotalRow());
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+        });
+    }
+
+    public void RetrofitRequset_shortageCount() {
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                "",
+                "همه",
+                "همه",
+                "1",
+                "0",
+                "10000",
+                "0");
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    ShortageCount=Integer.parseInt(response.body().getFactors().get(0).getTotalRow());
                 }
             }
             @Override

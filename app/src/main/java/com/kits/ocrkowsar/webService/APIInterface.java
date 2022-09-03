@@ -37,6 +37,9 @@ public interface APIInterface {
             , @Field("SearchTarget") String SearchTarget
             , @Field("Stack") String Stack
             , @Field("path") String path
+            , @Field("HasShortage") String HasShortage
+            , @Field("IsEdited") String IsEdited
+            , @Field("Row") String Row
             , @Field("PageNo") String PageNo);
 
 
