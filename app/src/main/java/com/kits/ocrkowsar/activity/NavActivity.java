@@ -233,6 +233,7 @@ public void Config() {
 
         btn1.setText("فاکتور های بسته بندی");
         btn2.setText("فاکتور های ارسال نشده");
+        btn3.setText("آماده ارسال ");
 
         btn3.setVisibility(View.GONE);
 
@@ -246,6 +247,13 @@ public void Config() {
             intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "4");
 
+            startActivity(intent);
+
+        });
+        btn3.setOnClickListener(view -> {
+            callMethod.EditString("Last_search", "");
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent.putExtra("State", "2");
             startActivity(intent);
 
         });

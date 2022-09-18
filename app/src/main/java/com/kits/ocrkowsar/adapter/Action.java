@@ -94,20 +94,27 @@ public class Action extends Activity {
                 Log.e("retrofit_fail",t.getMessage());
             }
         });
+        byte[] BaseImageByte;
+        BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
+        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
 
         Call<RetrofitResponse> call2 = apiInterface.GetImage("getImage", GoodCode,0,400);
         call2.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    byte[] imageByteArray1;
-                    imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
-                    iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
+                    try{
+                        assert response.body() != null;
+                        byte[] imageByteArray1;
+                        imageByteArray1 = Base64.decode(response.body().getText(), Base64.DEFAULT);
+                        iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length), BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getWidth() * 2, BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.length).getHeight() * 2, false));
+
+                    }catch (Exception ignored){}
                 }
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call2, @NonNull Throwable t) {
+
                 Log.e("onFailure", "" + t);
             }
         });

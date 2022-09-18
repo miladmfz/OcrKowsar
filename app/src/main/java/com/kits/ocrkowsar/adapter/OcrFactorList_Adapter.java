@@ -1,14 +1,20 @@
 package com.kits.ocrkowsar.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,16 +22,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.FactorActivity;
+import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
+import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.util.ArrayList;
 
@@ -45,9 +56,12 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
     String path;
     CallMethod callMethod;
 
+    DatabaseHelper dbh;
+    Dialog dialog;
     public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
+        this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         this.state = State;
         this.factors = retrofitFactors;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
@@ -126,6 +140,11 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
 
 
+        if(callMethod.ReadString("Category").equals("3")) {
+            holder.fac_factor_btn.setText("اصلاح مشخصات فاکتور");
+        }
+
+
         if(callMethod.ReadString("Category").equals("4")) {
             holder.fac_factor_btn.setText("دریافت فاکتور");
         }
@@ -138,51 +157,67 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
         }
 
-
         holder.fac_factor_btn.setOnClickListener(v -> {
 
             if(factors.get(position).getStackClass().substring(1).length()>0){
-                if(position<5){
+                if(callMethod.ReadString("Category").equals("3")) {
+                    final Dialog dialog = new Dialog(mContext);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.loginconfig);
+                    EditText ed_password =  dialog.findViewById(R.id.edloginconfig);
+                    MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
+                    btn_login.setOnClickListener(view -> {
+                        if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1922")) {
+                            Pack_detail(factor.getAppOCRFactorCode());
+                        }
 
-                    if(callMethod.ReadString("Category").equals("4")) {
-                        callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                    });
 
-                        Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
-                        call.enqueue(new Callback<>() {
-                            @Override
-                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                if(response.isSuccessful()) {
-                                    Log.e("test","0");
-                                    assert response.body() != null;
-                                    if (response.body().getFactors().get(0).getErrCode().equals("0")){
-                                        intent = new Intent(mContext, FactorActivity.class);
-                                        intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                                        intent.putExtra("FactorImage", "");
-                                        mContext.startActivity(intent);
+                    dialog.show();
+                }else{
+                    if(position<5){
+
+                        if(callMethod.ReadString("Category").equals("4")) {
+                            callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+
+                            Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                            call.enqueue(new Callback<>() {
+                                @Override
+                                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                    if(response.isSuccessful()) {
+                                        Log.e("test","0");
+                                        assert response.body() != null;
+                                        if (response.body().getFactors().get(0).getErrCode().equals("0")){
+                                            intent = new Intent(mContext, FactorActivity.class);
+                                            intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                            intent.putExtra("FactorImage", "");
+                                            mContext.startActivity(intent);
+                                        }
                                     }
                                 }
-                            }
-                            @Override
-                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                Log.e("test","1");
+                                @Override
+                                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                    Log.e("test","1");
 
-                                Log.e("test",t.getMessage());
-                            }
-                        });
+                                    Log.e("test",t.getMessage());
+                                }
+                            });
 
 
-                    }else {
+                        }else {
 
-                        callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                            callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
 
-                        intent = new Intent(mContext, ConfirmActivity.class);
-                        intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                        intent.putExtra("State",state);
-                        mContext.startActivity(intent);
+                            intent = new Intent(mContext, ConfirmActivity.class);
+                            intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                            intent.putExtra("State",state);
+                            mContext.startActivity(intent);
+                        }
+                    }else{
+                        Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
                 }
+
             }else{
                 Toast.makeText(mContext, "فاکتور خالی می باشد", Toast.LENGTH_SHORT).show();
             }
@@ -233,6 +268,142 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             fac_rltv = itemView.findViewById(R.id.factor_list);
         }
     }
+
+
+    public void Pack_detail(String FactorOcrCode){
+
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.pack_header);
+
+        ArrayList<String> arrayList1,arrayList2,arrayList3;
+        arrayList1=dbh.Packdetail("Reader");
+        arrayList2=dbh.Packdetail("Controler");
+        arrayList3=dbh.Packdetail("pack");
+        MaterialButton btn_pack_h_send =  dialog.findViewById(R.id.pack_header_send);
+        MaterialButton btn_pack_h_1 =  dialog.findViewById(R.id.pack_header_btn1);
+        MaterialButton btn_pack_h_2 =  dialog.findViewById(R.id.pack_header_btn2);
+        MaterialButton btn_pack_h_3 =  dialog.findViewById(R.id.pack_header_btn3);
+        MaterialButton btn_pack_h_5 =  dialog.findViewById(R.id.pack_header_btn5);
+        Spinner sp_pack_h_1 = dialog.findViewById(R.id.pack_header_spinner1);
+        Spinner sp_pack_h_2 = dialog.findViewById(R.id.pack_header_spinner2);
+        Spinner sp_pack_h_3 = dialog.findViewById(R.id.pack_header_spinner3);
+        ArrayAdapter<String> sp_adapter_1 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, arrayList1);
+        ArrayAdapter<String> sp_adapter_2 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item,arrayList2);
+        ArrayAdapter<String> sp_adapter_3 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item,arrayList3);
+        sp_adapter_1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_adapter_2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_adapter_3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_pack_h_1.setAdapter(sp_adapter_1);
+        sp_pack_h_2.setAdapter(sp_adapter_2);
+        sp_pack_h_3.setAdapter(sp_adapter_3);
+
+        LinearLayoutCompat ll_pack_h_new_1 = dialog.findViewById(R.id.pack_new_reader);
+        LinearLayoutCompat ll_pack_h_new_2 = dialog.findViewById(R.id.pack_new_control);
+        LinearLayoutCompat ll_pack_h_new_3 = dialog.findViewById(R.id.pack_new_pack);
+        MaterialButton btn_pack_h_new_1 = dialog.findViewById(R.id.pack_new_btn1);
+        MaterialButton btn_pack_h_new_2 = dialog.findViewById(R.id.pack_new_btn2);
+        MaterialButton btn_pack_h_new_3 = dialog.findViewById(R.id.pack_new_btn3);
+        EditText ed_pack_h_new_1 = dialog.findViewById(R.id.pack_new_ed1);
+        EditText ed_pack_h_new_2 = dialog.findViewById(R.id.pack_new_ed2);
+        EditText ed_pack_h_new_3 = dialog.findViewById(R.id.pack_new_ed3);
+        EditText ed_pack_h_amount = dialog.findViewById(R.id.pack_header_packamount);
+        TextView ed_pack_h_date = dialog.findViewById(R.id.pack_header_senddate);
+
+
+
+        PersianCalendar persianCalendar = new PersianCalendar();
+        String tmonthOfYear,tdayOfMonth;
+        tmonthOfYear="0"+ persianCalendar.getPersianMonth();
+        tdayOfMonth ="0"+ persianCalendar.getPersianDay();
+        String date = persianCalendar.getPersianYear()+"-"
+                + tmonthOfYear.substring(tmonthOfYear.length()-2)+"-"
+                + tdayOfMonth.substring(tdayOfMonth.length()-2);
+
+        ed_pack_h_date.setText(date);
+
+        final String[] reader_s = {""};
+        final String[] coltrol_s = {""};
+        final String[] pack_s = {""};
+        final String[] packCount = {""};
+
+        btn_pack_h_send.setOnClickListener(v -> {
+
+            int pack_r =sp_pack_h_1.getSelectedItemPosition();
+            int pack_c =sp_pack_h_2.getSelectedItemPosition();
+            int pack_d =sp_pack_h_3.getSelectedItemPosition();
+
+
+            reader_s[0] =arrayList1.get(pack_r);
+            coltrol_s[0] =arrayList2.get(pack_c);
+            pack_s[0] =arrayList3.get(pack_d);
+            packCount[0] =ed_pack_h_amount.getText().toString();
+
+            if(reader_s[0].length()<1){
+                reader_s[0] =" ";
+            }
+            if(coltrol_s[0].length()<1){
+                coltrol_s[0] =" ";
+            }
+            if(pack_s[0].length()<1){
+                pack_s[0] =" ";
+            }
+            if(packCount[0].length()<1){
+                packCount[0] ="1";
+            }
+
+
+            Call<RetrofitResponse> call2 =apiInterface.SetPackDetail("SetPackDetail",FactorOcrCode, reader_s[0], coltrol_s[0], pack_s[0],date, packCount[0]);
+            call2.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    dialog.dismiss();
+                    ((Activity) mContext).finish();
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Log.e("",t.getMessage()); }
+            });
+
+        });
+        btn_pack_h_new_1.setOnClickListener(v -> {
+            dbh.Insert_Packdetail("Reader",ed_pack_h_new_1.getText().toString());
+            dialog.dismiss();
+            Pack_detail(FactorOcrCode);
+        });
+        btn_pack_h_new_2.setOnClickListener(v -> {
+            dbh.Insert_Packdetail("Controler",ed_pack_h_new_2.getText().toString());
+            dialog.dismiss();
+            Pack_detail(FactorOcrCode);
+        });
+        btn_pack_h_new_3.setOnClickListener(v -> {
+            dbh.Insert_Packdetail("pack",ed_pack_h_new_3.getText().toString());
+            dialog.dismiss();
+            Pack_detail(FactorOcrCode);
+        });
+
+
+        btn_pack_h_1.setOnClickListener(v -> ll_pack_h_new_1.setVisibility(View.VISIBLE));
+        btn_pack_h_2.setOnClickListener(v -> ll_pack_h_new_2.setVisibility(View.VISIBLE));
+        btn_pack_h_3.setOnClickListener(v -> ll_pack_h_new_3.setVisibility(View.VISIBLE));
+
+
+        btn_pack_h_5.setOnClickListener(v -> {
+
+            PersianCalendar persianCalendar1 = new PersianCalendar();
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                    (DatePickerDialog.OnDateSetListener) this,
+                    persianCalendar1.getPersianYear(),
+                    persianCalendar1.getPersianMonth(),
+                    persianCalendar1.getPersianDay()
+            );
+            datePickerDialog.show(datePickerDialog.getFragmentManager(), "Datepickerdialog");
+        });
+
+        dialog.show();
+
+    }
+
 
 
 }
