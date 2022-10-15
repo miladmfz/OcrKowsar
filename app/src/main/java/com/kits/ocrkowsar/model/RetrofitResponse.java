@@ -14,6 +14,13 @@ public class RetrofitResponse {
 
     @SerializedName("Factors")
     private ArrayList<Factor> Factors;
+
+    @SerializedName("Jobs")
+    private ArrayList<Job> Jobs;
+
+    @SerializedName("JobPersons")
+    private ArrayList<JobPerson> JobPersons;
+
     @SerializedName("Activation")
     private Activation activation;
 
@@ -21,6 +28,16 @@ public class RetrofitResponse {
     private Good good;
     @SerializedName("Factor")
     private Factor Factor;
+
+    @SerializedName("Job")
+    private Job Job;
+
+    @SerializedName("JobPerson")
+    private JobPerson JobPerson;
+
+
+
+
     @SerializedName("ErrCode")
     private String ErrCode;
     @SerializedName("ErrMessage")
@@ -119,5 +136,37 @@ public class RetrofitResponse {
 
     public void setActivation(Activation activation) {
         this.activation = activation;
+    }
+
+    public ArrayList<Job> getJobs() {
+        return Jobs;
+    }
+
+    public void setJobs(ArrayList<Job> jobs) {
+        Jobs = jobs;
+    }
+
+    public ArrayList<com.kits.ocrkowsar.model.JobPerson> getJobPersons() {
+        return JobPersons;
+    }
+
+    public void setJobPersons(ArrayList<com.kits.ocrkowsar.model.JobPerson> jobPersons) {
+        JobPersons = jobPersons;
+    }
+
+    public com.kits.ocrkowsar.model.Job getJob() {
+        return Job;
+    }
+
+    public void setJob(Job job) {
+        Job = job;
+    }
+
+    public com.kits.ocrkowsar.model.JobPerson getJobPerson() {
+        return JobPerson;
+    }
+
+    public void setJobPerson(JobPerson jobPerson) {
+        JobPerson = jobPerson;
     }
 }

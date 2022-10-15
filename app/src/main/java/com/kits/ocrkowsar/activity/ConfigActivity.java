@@ -1,6 +1,7 @@
 package com.kits.ocrkowsar.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,10 +19,13 @@ import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
+import com.kits.ocrkowsar.model.Job;
+import com.kits.ocrkowsar.model.JobPerson;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
+import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
 
@@ -29,17 +33,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ConfigActivity extends AppCompatActivity {
+public class ConfigActivity extends AppCompatActivity  {
 
     APIInterface apiInterface;
     CallMethod callMethod;
     DatabaseHelper dbh;
-    Spinner spinnerPath,spinnercategory;
+    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson;
     String stackcategory="همه";
     String workcategory="0";
+    ArrayList<String> jobsstr=new ArrayList<>();
+    ArrayList<String> jobpersonsstr=new ArrayList<>();
     ArrayList<String> stacks=new ArrayList<>();
     ArrayList<String> works=new ArrayList<>();
-    EditText ed_Deliverer;
+    TextView ed_Deliverer;
     TextView tv_laststack;
     LinearLayoutCompat ll_Stack;
     MaterialButton btn_config;
@@ -47,7 +53,7 @@ public class ConfigActivity extends AppCompatActivity {
     SwitchMaterial sm_arabictext;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
@@ -72,6 +78,8 @@ public class ConfigActivity extends AppCompatActivity {
 
         spinnerPath=findViewById(R.id.configactivity_spinnerstacks);
         spinnercategory =findViewById(R.id.configactivity_spinnercategory);
+        spinnerjob =findViewById(R.id.configactivity_spinnerjob);
+        spinnerjobperson =findViewById(R.id.configactivity_spinnerjobperson);
         ed_Deliverer =findViewById(R.id.configactivity_Deliverer);
         tv_laststack =findViewById(R.id.configactivity_laststack);
         ll_Stack=findViewById(R.id.configactivity_line_stack);
@@ -103,22 +111,6 @@ public class ConfigActivity extends AppCompatActivity {
         spinnercategory.setSelection(Integer.parseInt(callMethod.ReadString("Category")));
 
 
-        spinnercategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                workcategory=String.valueOf(position);
-                if(position==2){
-                    ll_Stack.setVisibility(View.VISIBLE);
-                }else {
-                    ll_Stack.setVisibility(View.GONE);
-                }
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
         call.enqueue(new Callback<>() {
@@ -146,10 +138,28 @@ public class ConfigActivity extends AppCompatActivity {
             }
         });
 
+        spinnercategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                workcategory=String.valueOf(position);
+                if(position==2){
+                    ll_Stack.setVisibility(View.VISIBLE);
+                }else {
+                    ll_Stack.setVisibility(View.GONE);
+                }
+                GetJob("Ocr"+position);
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         spinnerPath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 stackcategory=stacks.get(position);
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -157,20 +167,109 @@ public class ConfigActivity extends AppCompatActivity {
             }
         });
 
-        sm_arabictext.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (callMethod.ReadBoolan("ArabicText")) {
-                callMethod.EditBoolan("ArabicText", false);
-                callMethod.showToast( "خیر");
+        spinnerjob.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position>0) {
+                    GetJobPerson(jobsstr.get(position));
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-            } else {
-                callMethod.EditBoolan("ArabicText", true);
-                callMethod.showToast( "بله");
             }
         });
 
+        spinnerjobperson.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position>0) {
+                    ed_Deliverer.setText(jobpersonsstr.get(position));
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
     }
 
 
+    public void GetJob(String where) {
+        jobsstr.clear();
+        jobpersonsstr.clear();
+        spinnerjob.setAdapter(null);
+        spinnerjobperson.setAdapter(null);
+
+        Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    ArrayList<Job> jobs=response.body().getJobs();
+                    jobsstr.add("برای انتخاب کلیک کنید");
+
+                    for(Job job:jobs){
+                        jobsstr.add(job.getTitle());
+                    }
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                            android.R.layout.simple_spinner_item,jobsstr );
+                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerjob.setAdapter(spinner_adapter);
+                    spinnerjob.setSelection(0);
+
+                }
+
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
+
+    public void GetJobPerson(String where) {
+        Call<RetrofitResponse> call =apiInterface.GetJobPerson("TestJobPerson",where);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    ArrayList<JobPerson> jobPersons=response.body().getJobPersons();
+
+                    jobpersonsstr.add("برای انتخاب کلیک کنید");
+
+                    for(JobPerson jobPerson:jobPersons){
+                        jobpersonsstr.add(jobPerson.getName());
+                    }
+
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                            android.R.layout.simple_spinner_item,jobpersonsstr);
+                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerjobperson.setAdapter(spinner_adapter);
+                    spinnerjobperson.setSelection(0);
+
+                }
+
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                Log.e("test_",t.getMessage());
+
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 }

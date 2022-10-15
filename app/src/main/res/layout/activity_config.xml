@@ -46,23 +46,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="3dp"
+            android:layout_margin="5dp"
             android:weightSum="1">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="نام تحویل دهنده:"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_weight="0.5"/>
-            <EditText
+            <TextView
                 android:id="@+id/configactivity_Deliverer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_weight="0.5"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="@color/Black"/>
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -154,6 +155,57 @@
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="انتخاب سمت :"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <Spinner
+                android:id="@+id/configactivity_spinnerjob"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+                />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:weightSum="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="انتخاب شخص :"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+            <Spinner
+                android:id="@+id/configactivity_spinnerjobperson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"
+                android:scrollbarSize="25sp"
+                />
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -207,7 +259,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"

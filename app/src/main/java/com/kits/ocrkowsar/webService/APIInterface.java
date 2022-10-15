@@ -43,9 +43,6 @@ public interface APIInterface {
             , @Field("PageNo") String PageNo);
 
 
-
-
-
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> SetPackDetail(@Field("tag") String tag
@@ -55,8 +52,6 @@ public interface APIInterface {
             , @Field("Packer") String Packer
             , @Field("PackDeliverDate") String PackDeliverDate
             , @Field("PackCount") String PackCount);
-
-
 
 
     @POST("index.php")
@@ -72,6 +67,22 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> GetJob(
+            @Field("tag") String tag
+            , @Field("Where") String where
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> GetJobPerson(
+            @Field("tag") String tag
+            , @Field("Where") String where
+    );
+
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<String> test(@Field("tag") String test);
 
 
@@ -79,7 +90,8 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<String> SendImage(@Field("tag") String tag
             , @Field("barcode") String barcode
-            , @Field("image") String image);
+            , @Field("image") String image
+    );
 
 
     @POST("index.php")
@@ -102,28 +114,28 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
-    Call <RetrofitResponse> GetImage(@Field("tag") String tag,
-                                     @Field("GoodCode") String GoodCode,
-                                     @Field("IX") Integer IX,
-                                     @Field("Scale") Integer Scale);
+    Call<RetrofitResponse> GetImage(@Field("tag") String tag,
+                                    @Field("GoodCode") String GoodCode,
+                                    @Field("IX") Integer IX,
+                                    @Field("Scale") Integer Scale);
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> Activation(
-            @Field("tag")             String tag
-            , @Field("ActivationCode")  String ActivationCode
+            @Field("tag") String tag
+            , @Field("ActivationCode") String ActivationCode
     );
 
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> Errorlog(
-            @Field("tag")         String tag
-            , @Field("ErrorLog")    String ErrorLog
-            , @Field("Broker")      String Broker
-            , @Field("DeviceId")    String DeviceId
-            , @Field("ServerName")  String ServerName
-            , @Field("StrDate")     String StrDate
+            @Field("tag") String tag
+            , @Field("ErrorLog") String ErrorLog
+            , @Field("Broker") String Broker
+            , @Field("DeviceId") String DeviceId
+            , @Field("ServerName") String ServerName
+            , @Field("StrDate") String StrDate
             , @Field("VersionName") String VersionName
     );
 

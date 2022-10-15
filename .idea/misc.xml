@@ -9,7 +9,6 @@
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_factor.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_factor_list.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_local_factor_list.xml" value="0.14322916666666666" />
-        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/activity_ocr_factor_list.xml" value="0.152" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/factor_header.xml" value="0.14322916666666666" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/factor_list.xml" value="0.176" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/fragment_collect.xml" value="0.14322916666666666" />
@@ -18,12 +17,12 @@
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/goods_scan_item.xml" value="0.22" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/header.xml" value="0.1765625" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/image_zoom.xml" value="0.14322916666666666" />
-        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/pack_header.xml" value="0.16259057971014493" />
+        <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/pack_header.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/milad/AndroidStudioProjects/OcrKowsar/app/src/main/res/layout/rep_prog.xml" value="0.115625" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
