@@ -29,6 +29,7 @@ import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
+import com.kits.ocrkowsar.model.Good;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
@@ -126,6 +127,8 @@ public void Config() {
             Pack();
         }else if(state_category==4){ //state 2
             Delivery();
+        }else if(state_category==5){ //state 2
+            Manage();
         }
 
     }
@@ -261,6 +264,7 @@ public void Config() {
 
     }
 
+
     public void Delivery(){
 
         btn1.setText("فاکتور های آماده");
@@ -297,6 +301,21 @@ public void Config() {
 
 
 
+    public void Manage(){
+
+        btn1.setText("وضعیت فاکتورها");
+        btn2.setVisibility(View.GONE);
+        btn3.setVisibility(View.GONE);
+
+        btn1.setOnClickListener(view -> {
+            callMethod.EditString("Last_search", "");
+            intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
+            intent.putExtra("State", "4");
+            startActivity(intent);
+        });
+
+
+    }
 
 
 

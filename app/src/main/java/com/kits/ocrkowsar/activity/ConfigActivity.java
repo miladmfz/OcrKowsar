@@ -75,6 +75,7 @@ public class ConfigActivity extends AppCompatActivity  {
         works.add("انبار");
         works.add("بسته بندی");
         works.add("تحویل");
+        works.add("مدیریت");
 
         spinnerPath=findViewById(R.id.configactivity_spinnerstacks);
         spinnercategory =findViewById(R.id.configactivity_spinnercategory);

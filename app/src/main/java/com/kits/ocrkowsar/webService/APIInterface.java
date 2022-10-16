@@ -62,6 +62,12 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> GetOcrFactorDetail(@Field("tag") String tag,
+                                         @Field("OCRFactorCode") String OCRFactorCode);
+
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> GetCustomerPath(@Field("tag") String tag);
 
 

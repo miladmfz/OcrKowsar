@@ -970,30 +970,30 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
                 }
             });
 
-//            Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
-//            call3.enqueue(new Callback<>() {
-//                @Override
-//                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-//                    Call<RetrofitResponse> call2 = apiInterface.SetPackDetail("SetPackDetail", FactorOcrCode, reader_s, coltrol_s, pack_s, date, packCount[0]);
-//                    call2.enqueue(new Callback<>() {
-//                        @Override
-//                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-//                            dialog.dismiss();
-//                            requireActivity().finish();
-//                        }
-//
-//                        @Override
-//                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-//                            Log.e("", t.getMessage());
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-//                    Log.e("", t.getMessage());
-//                }
-//            });
+            Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
+            call3.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    Call<RetrofitResponse> call2 = apiInterface.SetPackDetail("SetPackDetail", FactorOcrCode, reader_s, coltrol_s, pack_s, date, packCount);
+                    call2.enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            dialog.dismiss();
+                            requireActivity().finish();
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            Log.e("", t.getMessage());
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    Log.e("", t.getMessage());
+                }
+            });
 
 
         });

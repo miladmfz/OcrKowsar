@@ -29,6 +29,7 @@ import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.FactorActivity;
 import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.model.AppOcrFactor;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.NumberFunctions;
@@ -51,6 +52,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
     Intent intent;
     ArrayList<Factor> factors ;
 
+    Action action;
     String state ;
     String filter;
     String path;
@@ -61,6 +63,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
     public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);
+        this.action=new Action(context);
         this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         this.state = State;
         this.factors = retrofitFactors;
@@ -148,29 +151,57 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
         if(state.equals("4")){
             holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
-
             holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
         }
 
+
+
+        if(callMethod.ReadString("Category").equals("5")){
+            holder.fac_factor_btn.setText("اصلاح اطلاعات");
+            holder.fac_factor_btn.setVisibility(View.VISIBLE);
+
+        }
+
+
+
         holder.fac_factor_btn.setOnClickListener(v -> {
 
             if(factors.get(position).getStackClass().substring(1).length()>0){
 
-                    if(position<5){
+                if(callMethod.ReadString("Category").equals("5")) {
+                    Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
+                            "GetOcrFactorDetail",
+                            factors.get(position).getAppOCRFactorCode()
+                            );
+                    call.enqueue(new Callback<>() {
+                        @Override
+                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                            if(response.isSuccessful()) {
+                                assert response.body() != null;
+                                AppOcrFactor appOcrFactor=response.body().getAppOcrFactors().get(0);
+                                action.factor_detail(appOcrFactor);
+                            }
+                        }
+                        @Override
+                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+                    });
 
-                        if(callMethod.ReadString("Category").equals("4")) {
-                            callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                }else {
+                    if (position < 5) {
 
-                            Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+                        if (callMethod.ReadString("Category").equals("4")) {
+                            callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+
+                            Call<RetrofitResponse> call = apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                             call.enqueue(new Callback<>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                    if(response.isSuccessful()) {
-                                        Log.e("test","0");
+                                    if (response.isSuccessful()) {
+                                        Log.e("test", "0");
                                         assert response.body() != null;
-                                        if (response.body().getFactors().get(0).getErrCode().equals("0")){
+                                        if (response.body().getFactors().get(0).getErrCode().equals("0")) {
                                             intent = new Intent(mContext, FactorActivity.class);
                                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                                             intent.putExtra("FactorImage", "");
@@ -178,29 +209,30 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                         }
                                     }
                                 }
+
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                    Log.e("test","1");
+                                    Log.e("test", "1");
 
-                                    Log.e("test",t.getMessage());
+                                    Log.e("test", t.getMessage());
                                 }
                             });
 
 
-                        }else {
+                        } else {
 
-                            callMethod.EditString("LastTcPrint",factors.get(position).getAppTcPrintRef());
+                            callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
                             intent = new Intent(mContext, ConfirmActivity.class);
                             intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                            intent.putExtra("State",state);
+                            intent.putExtra("State", state);
                             mContext.startActivity(intent);
                         }
-                    }else{
+                    } else {
                         Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
                     }
 
-
+                }
             }else{
                 Toast.makeText(mContext, "فاکتور خالی می باشد", Toast.LENGTH_SHORT).show();
             }

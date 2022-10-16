@@ -29,6 +29,7 @@ import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfigActivity;
 import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.model.AppOcrFactor;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
 import com.kits.ocrkowsar.model.NumberFunctions;
@@ -59,6 +60,69 @@ public class Action extends Activity {
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+    }
+
+
+    public void factor_detail(AppOcrFactor appOcrFactor){
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_factor_detail);
+
+
+        TextView tv_AppOCRFactorCode=dialog.findViewById(R.id.dialog_factor_AppOCRFactorCode);
+        TextView tv_AppTcPrintRef=dialog.findViewById(R.id.dialog_factor_AppTcPrintRef);
+        TextView tv_AppFactorRef=dialog.findViewById(R.id.dialog_factor_AppFactorRef);
+        TextView tv_AppIsControled=dialog.findViewById(R.id.dialog_factor_AppIsControled);
+        TextView tv_AppIsPacked=dialog.findViewById(R.id.dialog_factor_AppIsPacked);
+        TextView tv_AppIsDelivered=dialog.findViewById(R.id.dialog_factor_AppIsDelivered);
+        TextView tv_AppControlDate=dialog.findViewById(R.id.dialog_factor_AppControlDate);
+        TextView tv_AppPackDate=dialog.findViewById(R.id.dialog_factor_AppPackDate);
+        TextView tv_AppDeliverDate=dialog.findViewById(R.id.dialog_factor_AppDeliverDate);
+        TextView tv_AppReader=dialog.findViewById(R.id.dialog_factor_AppReader);
+        TextView tv_AppControler=dialog.findViewById(R.id.dialog_factor_AppControler);
+        TextView tv_AppPacker=dialog.findViewById(R.id.dialog_factor_AppPacker);
+        TextView tv_AppPackDeliverDate=dialog.findViewById(R.id.dialog_factor_AppPackDeliverDate);
+        TextView tv_AppPackCount=dialog.findViewById(R.id.dialog_factor_AppPackCount);
+        TextView tv_AppDeliverer=dialog.findViewById(R.id.dialog_factor_AppDeliverer);
+        TextView tv_BrokerRef=dialog.findViewById(R.id.dialog_factor_BrokerRef);
+        TextView tv_IsEdited=dialog.findViewById(R.id.dialog_factor_IsEdited);
+        TextView tv_HasSignature=dialog.findViewById(R.id.dialog_factor_HasSignature);
+        TextView tv_CreationDate=dialog.findViewById(R.id.dialog_factor_CreationDate);
+        TextView tv_ReformDate=dialog.findViewById(R.id.dialog_factor_ReformDate);
+
+
+        tv_AppOCRFactorCode.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppOCRFactorCode()));
+        tv_AppTcPrintRef.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppTcPrintRef()));
+        tv_AppFactorRef.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppFactorRef()));
+        tv_AppIsControled.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppIsControled()));
+        tv_AppIsPacked.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppIsPacked()));
+        tv_AppIsDelivered.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppIsDelivered()));
+        tv_AppControlDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppControlDate()));
+        tv_AppPackDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackDate()));
+        tv_AppDeliverDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppDeliverDate()));
+        tv_AppReader.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppReader()));
+        tv_AppControler.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppControler()));
+        tv_AppPacker.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPacker()));
+        tv_AppPackDeliverDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackDeliverDate()));
+        tv_AppPackCount.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackCount()));
+        tv_AppDeliverer.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppDeliverer()));
+        tv_BrokerRef.setText(NumberFunctions.PerisanNumber(appOcrFactor.getBrokerRef()));
+        tv_IsEdited.setText(NumberFunctions.PerisanNumber(appOcrFactor.getIsEdited()));
+        tv_HasSignature.setText(NumberFunctions.PerisanNumber(appOcrFactor.getHasSignature()));
+        tv_CreationDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getCreationDate()));
+        tv_ReformDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getReformDate()));
+
+        dialog.show();
+
+
+
+
+
+
+
+
+
+
     }
 
 
