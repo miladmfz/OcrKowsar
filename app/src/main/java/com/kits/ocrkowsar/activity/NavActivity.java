@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,11 +29,17 @@ import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.model.AppOcrFactor;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
+import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class NavActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
@@ -304,14 +311,52 @@ public void Config() {
     public void Manage(){
 
         btn1.setText("وضعیت فاکتورها");
-        btn2.setVisibility(View.GONE);
-        btn3.setVisibility(View.GONE);
+        btn2.setText("24066");
+        btn3.setText("27044");
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
             intent = new Intent(NavActivity.this, OcrFactorListActivity.class);
             intent.putExtra("State", "4");
             startActivity(intent);
+        });
+
+        btn2.setOnClickListener(view -> {
+            Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
+                    "GetOcrFactorDetail",
+                    "24066"
+            );
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if(response.isSuccessful()) {
+                        assert response.body() != null;
+                        AppOcrFactor appOcrFactor=response.body().getAppOcrFactors().get(0);
+                        action.factor_detail(appOcrFactor);
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+            });
+        });
+
+        btn3.setOnClickListener(view -> {
+            Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
+                    "GetOcrFactorDetail",
+                    "27044"
+            );
+            call.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    if(response.isSuccessful()) {
+                        assert response.body() != null;
+                        AppOcrFactor appOcrFactor=response.body().getAppOcrFactors().get(0);
+                        action.factor_detail(appOcrFactor);
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+            });
         });
 
 

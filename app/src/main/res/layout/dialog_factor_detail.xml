@@ -3,7 +3,9 @@
     android:id="@+id/dialog_factor_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -27,63 +29,166 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:weightSum="2">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppOCRFactorCode : "
+                        android:text="کد فاکتور : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+
+                        android:id="@+id/dialog_factor_FactorPrivateCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="تاریخ : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_factor_FactorDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/Black"
+                        android:textSize="20sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد بایگانی: "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppOCRFactorCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppTcPrintRef : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="کد پرینت : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppTcPrintRef"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="منطقه : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_factor_Ersall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/Black"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="کد مشتری : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_factor_customercode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/Black"
+                        android:textSize="22sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -97,25 +202,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppFactorRef : "
+                        android:text="نام مشتری : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_factor_CustName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
 
-                    <TextView
-                        android:id="@+id/dialog_factor_AppFactorRef"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -129,15 +239,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppIsControled : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="بازایاب : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/dialog_factor_AppIsControled"
+                        android:id="@+id/dialog_factor_BrokerName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -147,7 +260,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -161,15 +274,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppIsPacked : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="وضعیت فاکتور : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/dialog_factor_AppIsPacked"
+                        android:id="@+id/dialog_factor_AppFactorState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -179,9 +295,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -193,47 +310,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppIsDelivered : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/dialog_factor_AppIsDelivered"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="AppControlDate : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="تاریخ اتمام انبار : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppControlDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -241,9 +329,8 @@
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -257,15 +344,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppPackDate : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="تاریخ اتمام بسته بندی : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppPackDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -275,7 +365,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -289,47 +379,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppDeliverDate : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/dialog_factor_AppDeliverDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="AppReader : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="اعلام کننده : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppReader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -339,7 +400,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -353,15 +414,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppControler : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="کنترل کننده : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppControler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -371,7 +435,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -385,17 +449,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppPacker : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="بسته بند  : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppPacker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -403,7 +471,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -417,81 +485,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="AppPackDeliverDate : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/dialog_factor_AppPackDeliverDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="AppPackCount : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/dialog_factor_AppPackCount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="AppDeliverer : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="تحویل دهنده: "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_AppDeliverer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -499,7 +507,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -507,31 +515,56 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
-
+                    android:weightSum="2">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="BrokerRef : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="تعداد : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/dialog_factor_BrokerRef"
+                        android:id="@+id/dialog_factor_AppPackCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
+                        android:textColor="@color/Black"
+                        android:textSize="22sp" />
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
+                        android:text="خروج : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/dialog_factor_AppPackDeliverDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
+
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -539,63 +572,52 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
-
+                    android:weightSum="2">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="IsEdited : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="اصلاحی : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_IsEdited"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:text="HasSignature : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:text="امضا : "
+                        android:textColor="@color/grey_800"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_HasSignature"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
                         android:layout_weight="0.5"
+                        android:background="@drawable/bg_round_greylight"
+                        android:gravity="center"
                         android:textColor="@color/Black"
                         android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -605,53 +627,31 @@
                     android:orientation="horizontal"
                     android:weightSum="1">
 
-                    <TextView
+
+                    <Button
+                        android:id="@+id/dialog_factor_btn1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="CreationDate : "
+                        android:text="مرحله قبلی"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:textSize="18sp"
+                        android:layout_margin="4dp"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_round_selected"
+                        android:layout_weight="0.5"/>
 
-                    <TextView
-                        android:id="@+id/dialog_factor_CreationDate"
+                    <Button
+                        android:id="@+id/dialog_factor_btn2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:text="اصلاح اطلاعات"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                        android:textSize="18sp"
+                        android:layout_margin="4dp"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_round_selected"
+                        android:layout_weight="0.5"/>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="ReformDate : "
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/dialog_factor_ReformDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:textColor="@color/Black"
-                        android:textSize="22sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 

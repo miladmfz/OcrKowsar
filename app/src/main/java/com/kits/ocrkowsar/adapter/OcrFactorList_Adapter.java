@@ -159,7 +159,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
 
         if(callMethod.ReadString("Category").equals("5")){
-            holder.fac_factor_btn.setText("اصلاح اطلاعات");
+            holder.fac_factor_btn.setText("نمایش جزئیات فاکتور");
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
 
         }

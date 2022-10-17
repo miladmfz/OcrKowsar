@@ -5,47 +5,80 @@ import com.google.gson.annotations.SerializedName;
 public class AppOcrFactor {
 
 
-    @SerializedName("AppOCRFactorCode")
-    private String AppOCRFactorCode;
-    @SerializedName("AppTcPrintRef")
-    private String AppTcPrintRef;
-    @SerializedName("AppFactorRef")
-    private String AppFactorRef;
-    @SerializedName("AppIsControled")
-    private String AppIsControled;
-    @SerializedName("AppIsPacked")
-    private String AppIsPacked;
-    @SerializedName("AppIsDelivered")
-    private String AppIsDelivered;
-    @SerializedName("AppControlDate")
-    private String AppControlDate;
-    @SerializedName("AppPackDate")
-    private String AppPackDate;
-    @SerializedName("AppDeliverDate")
-    private String AppDeliverDate;
-    @SerializedName("AppReader")
-    private String AppReader;
-    @SerializedName("AppControler")
-    private String AppControler;
-    @SerializedName("AppPacker")
-    private String AppPacker;
-    @SerializedName("AppPackDeliverDate")
-    private String AppPackDeliverDate;
-    @SerializedName("AppPackCount")
-    private String AppPackCount;
-    @SerializedName("AppDeliverer")
-    private String AppDeliverer;
-    @SerializedName("BrokerRef")
-    private String BrokerRef;
-    @SerializedName("IsEdited")
-    private String IsEdited;
-    @SerializedName("HasSignature")
-    private String HasSignature;
-    @SerializedName("CreationDate")
-    private String CreationDate;
-    @SerializedName("ReformDate")
-    private String ReformDate;
+    @SerializedName("FactorPrivateCode") private String FactorPrivateCode;
+    @SerializedName("FactorDate") private String FactorDate;
+    @SerializedName("CustName") private String CustName;
+    @SerializedName("customercode") private String customercode;
+    @SerializedName("Ersall") private String Ersall;
+    @SerializedName("BrokerName") private String BrokerName;
+    @SerializedName("AppOCRFactorCode") private String AppOCRFactorCode;
+    @SerializedName("AppTcPrintRef") private String AppTcPrintRef;
+    @SerializedName("AppFactorRef") private String AppFactorRef;
+    @SerializedName("AppIsControled") private String AppIsControled;
+    @SerializedName("AppIsPacked") private String AppIsPacked;
+    @SerializedName("AppIsDelivered") private String AppIsDelivered;
+    @SerializedName("AppControlDate") private String AppControlDate;
+    @SerializedName("AppPackDate") private String AppPackDate;
+    @SerializedName("AppDeliverDate") private String AppDeliverDate;
+    @SerializedName("AppReader") private String AppReader;
+    @SerializedName("AppControler") private String AppControler;
+    @SerializedName("AppPacker") private String AppPacker;
+    @SerializedName("AppPackDeliverDate") private String AppPackDeliverDate;
+    @SerializedName("AppPackCount") private String AppPackCount;
+    @SerializedName("AppDeliverer") private String AppDeliverer;
+    @SerializedName("AppBrokerRef") private String AppBrokerRef;
+    @SerializedName("IsEdited") private String IsEdited;
+    @SerializedName("HasSignature") private String HasSignature;
+    @SerializedName("AppFactorState") private String AppFactorState;
 
+
+    public String getFactorPrivateCode() {
+        return FactorPrivateCode;
+    }
+
+    public void setFactorPrivateCode(String factorPrivateCode) {
+        FactorPrivateCode = factorPrivateCode;
+    }
+
+    public String getFactorDate() {
+        return FactorDate;
+    }
+
+    public void setFactorDate(String factorDate) {
+        FactorDate = factorDate;
+    }
+
+    public String getCustName() {
+        return CustName;
+    }
+
+    public void setCustName(String custName) {
+        CustName = custName;
+    }
+
+    public String getCustomercode() {
+        return customercode;
+    }
+
+    public void setCustomercode(String customercode) {
+        this.customercode = customercode;
+    }
+
+    public String getErsall() {
+        return Ersall;
+    }
+
+    public void setErsall(String ersall) {
+        Ersall = ersall;
+    }
+
+    public String getBrokerName() {
+        return BrokerName;
+    }
+
+    public void setBrokerName(String brokerName) {
+        BrokerName = brokerName;
+    }
 
     public String getAppOCRFactorCode() {
         return AppOCRFactorCode;
@@ -167,12 +200,12 @@ public class AppOcrFactor {
         AppDeliverer = appDeliverer;
     }
 
-    public String getBrokerRef() {
-        return BrokerRef;
+    public String getAppBrokerRef() {
+        return AppBrokerRef;
     }
 
-    public void setBrokerRef(String brokerRef) {
-        BrokerRef = brokerRef;
+    public void setAppBrokerRef(String appBrokerRef) {
+        AppBrokerRef = appBrokerRef;
     }
 
     public String getIsEdited() {
@@ -191,19 +224,11 @@ public class AppOcrFactor {
         HasSignature = hasSignature;
     }
 
-    public String getCreationDate() {
-        return CreationDate;
+    public String getAppFactorState() {
+        return AppFactorState;
     }
 
-    public void setCreationDate(String creationDate) {
-        CreationDate = creationDate;
-    }
-
-    public String getReformDate() {
-        return ReformDate;
-    }
-
-    public void setReformDate(String reformDate) {
-        ReformDate = reformDate;
+    public void setAppFactorState(String appFactorState) {
+        AppFactorState = appFactorState;
     }
 }
