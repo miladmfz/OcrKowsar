@@ -383,6 +383,7 @@ public class CollectFragment extends Fragment {
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
         btn_shortage.setTextColor(requireActivity().getColor(R.color.Black));
     }
+
     public void setPadding(){
         tv_company.setPadding(0, 0, 30, 20);
         tv_customername.setPadding(0, 0, 30, 20);
@@ -548,7 +549,7 @@ public class CollectFragment extends Fragment {
             }
         }
         if(goods.size() == ConfirmCounter){
-            Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+            Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

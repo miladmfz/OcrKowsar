@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.kits.ocrkowsar.BuildConfig;
@@ -311,8 +314,9 @@ public void Config() {
     public void Manage(){
 
         btn1.setText("وضعیت فاکتورها");
-        btn2.setText("24066");
-        btn3.setText("27044");
+        btn2.setVisibility(View.GONE);
+        btn3.setVisibility(View.GONE);
+
 
         btn1.setOnClickListener(view -> {
             callMethod.EditString("Last_search", "");
@@ -321,43 +325,6 @@ public void Config() {
             startActivity(intent);
         });
 
-        btn2.setOnClickListener(view -> {
-            Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
-                    "GetOcrFactorDetail",
-                    "24066"
-            );
-            call.enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        AppOcrFactor appOcrFactor=response.body().getAppOcrFactors().get(0);
-                        action.factor_detail(appOcrFactor);
-                    }
-                }
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
-            });
-        });
-
-        btn3.setOnClickListener(view -> {
-            Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
-                    "GetOcrFactorDetail",
-                    "27044"
-            );
-            call.enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    if(response.isSuccessful()) {
-                        assert response.body() != null;
-                        AppOcrFactor appOcrFactor=response.body().getAppOcrFactors().get(0);
-                        action.factor_detail(appOcrFactor);
-                    }
-                }
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
-            });
-        });
 
 
     }

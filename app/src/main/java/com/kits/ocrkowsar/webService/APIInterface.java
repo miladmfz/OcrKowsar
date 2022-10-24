@@ -87,6 +87,15 @@ public interface APIInterface {
     );
 
 
+
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> ExitDelivery(
+            @Field("tag") String tag
+            , @Field("Where") String where
+    );
+
+
     @POST("index.php")
     @FormUrlEncoded
     Call<String> test(@Field("tag") String test);

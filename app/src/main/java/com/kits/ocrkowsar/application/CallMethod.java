@@ -30,7 +30,7 @@ public class CallMethod extends Application {
     private final SharedPreferences shPref;
     private SharedPreferences.Editor sEdit;
     Context context;
-
+Toast toast;
 
     public CallMethod(Context mContext) {
         this.context = mContext;
@@ -64,8 +64,11 @@ public class CallMethod extends Application {
     }
 
     public void showToast(String string) {
+        if (toast!=null)
+            toast.cancel();
+        toast = Toast.makeText(context, string, Toast.LENGTH_LONG);
+        toast.show();
 
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
     }
 
     public void saveArrayList(ArrayList<String> list, String key) {

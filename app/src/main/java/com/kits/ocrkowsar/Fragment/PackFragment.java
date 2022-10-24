@@ -58,13 +58,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PackFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class PackFragment extends Fragment{
 
 
     APIInterface apiInterface;
     String date = "";
     TextView ed_pack_h_date;
     DatabaseHelper dbh;
+    Action action;
     ArrayList<String> GoodCodeCheck = new ArrayList<>();
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
     Dialog dialog;
@@ -119,6 +120,7 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         callMethod = new CallMethod(requireActivity());
         dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
+        action=new Action(requireActivity());
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler = new Handler();
         for (final String[] ignored : arraygood_shortage) {
@@ -210,7 +212,7 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
 
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
 
-        btn_send.setOnClickListener(v -> Pack_detail(factor.getAppOCRFactorCode()));
+        btn_send.setOnClickListener(v -> action.Pack_detail(factor.getAppOCRFactorCode()));
 
 
         btn_confirm.setOnClickListener(v -> {
@@ -420,6 +422,7 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
         btn_confirm.setText("ارسال کسری");
         btn_send.setText("بازگشت");
         btn_shortage.setText("اعلام کسر موجودی");
+        btn_shortage.setTextSize(20);
 
 
         int countergood = 0;
@@ -475,10 +478,6 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
                         if (response.isSuccessful()) {
                             lastCunter++;
 
-                            Log.e("123", "---------");
-                            Log.e("123", "" + lastCunter);
-                            Log.e("123", "" + arraygood_shortage.size());
-
                             if (lastCunter == arraygood_shortage.size()) {
                                 requireActivity().finish();
                             }
@@ -510,7 +509,7 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
     }
 
     @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForshortage(Good good, int j) {
+    public View CreateGoodViewForshortage(@NonNull Good good, int j) {
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -751,7 +750,7 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
         tv_phone.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         btn_confirm.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_send.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-        btn_shortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+        btn_shortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(400, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
 
         tv_total_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_total_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -825,217 +824,6 @@ public class PackFragment extends Fragment implements DatePickerDialog.OnDateSet
         action.good_detail(GoodCode);
 
     }
-
-    @SuppressLint("NewApi")
-    public void Pack_detail(String FactorOcrCode) {
-        dialog = new Dialog(requireActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.pack_header);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-
-
-        MaterialButton btn_pack_h_send = dialog.findViewById(R.id.pack_header_send);
-        MaterialButton btn_pack_h_5 = dialog.findViewById(R.id.pack_header_btn5);
-        EditText ed_pack_h_amount = dialog.findViewById(R.id.pack_header_packamount);
-
-        ed_pack_h_date = dialog.findViewById(R.id.pack_header_senddate);
-
-        PersianCalendar persianCalendar = new PersianCalendar();
-        String tmonthOfYear, tdayOfMonth;
-        tmonthOfYear = "0" + (persianCalendar.getPersianMonth()+1);
-        tdayOfMonth = "0" + persianCalendar.getPersianDay();
-        date = persianCalendar.getPersianYear() + "/"
-                + tmonthOfYear.substring(tmonthOfYear.length() - 2) + "/"
-                + tdayOfMonth.substring(tdayOfMonth.length() - 2);
-
-        ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
-
-
-        LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.packheader_linejob);
-        Call<RetrofitResponse> call = apiInterface.GetJob("TestJob", "Ocr" + callMethod.ReadString("Category"));
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    jobs = response.body().getJobs();
-
-                    for (Job job : jobs) {
-
-                        LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                70
-                        );
-                        params.setMargins(30, 30, 30, 30);
-                        LinearLayoutCompat ll_new = new LinearLayoutCompat(requireActivity().getApplicationContext());
-                        ll_new.setLayoutParams(params);
-                        ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
-                        ll_new.setWeightSum(2);
-
-
-                        TextView Tv_new = new TextView(requireActivity().getApplicationContext());
-                        Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                        Tv_new.setText(job.getTitle());
-                        Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-
-                        ll_new.addView(Tv_new);
-
-                        Call<RetrofitResponse> call1 = apiInterface.GetJobPerson("TestJobPerson", job.getTitle());
-                        call1.enqueue(new Callback<>() {
-                            @Override
-                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                if (response.isSuccessful()) {
-                                    assert response.body() != null;
-                                    ArrayList<JobPerson> jobPersons = response.body().getJobPersons();
-                                    ArrayList<String> jobpersonsstr_new = new ArrayList<>();
-
-                                    jobpersonsstr_new.add("برای انتخاب کلیک کنید");
-
-                                    for (JobPerson jobPerson : jobPersons) {
-                                        jobpersonsstr_new.add(jobPerson.getName());
-                                    }
-
-                                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(requireActivity(),
-                                            android.R.layout.simple_spinner_item, jobpersonsstr_new);
-                                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    Spinner spinner_new = new Spinner(requireActivity().getApplicationContext());
-                                    spinner_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                                    spinner_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                                    spinner_new.setAdapter(spinner_adapter);
-                                    spinner_new.setSelection(0);
-
-                                    spinner_new.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                        @Override
-                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            if (position > 0) {
-                                                job.setText(jobpersonsstr_new.get(position));
-
-
-                                            }
-                                        }
-
-
-                                        @Override
-                                        public void onNothingSelected(AdapterView<?> parent) {
-
-                                        }
-                                    });
-
-
-                                    ll_new.addView(spinner_new);
-
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                Log.e("test_", t.getMessage());
-
-                            }
-                        });
-
-
-                        ll_pack_h_main.addView(ll_new);
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
-            }
-        });
-
-
-        btn_pack_h_send.setOnClickListener(v -> {
-
-
-            if (ed_pack_h_amount.getText().toString().equals("")) {
-                packCount = "1";
-            }
-
-            jobs.forEach(job -> {
-                if (job.getJobCode().equals("1")) {
-                    coltrol_s = job.getText();
-                }
-                if (job.getJobCode().equals("2")) {
-                    reader_s = job.getText();
-                }
-                if (job.getJobCode().equals("3")) {
-                    pack_s = job.getText();
-                }
-            });
-
-            Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
-            call3.enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    Call<RetrofitResponse> call2 = apiInterface.SetPackDetail("SetPackDetail", FactorOcrCode, reader_s, coltrol_s, pack_s, date, packCount);
-                    call2.enqueue(new Callback<>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                            dialog.dismiss();
-                            requireActivity().finish();
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                            Log.e("", t.getMessage());
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    Log.e("", t.getMessage());
-                }
-            });
-
-
-        });
-
-
-        btn_pack_h_5.setOnClickListener(v -> {
-
-            PersianCalendar persianCalendar1 = new PersianCalendar();
-            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                    this,
-                    persianCalendar1.getPersianYear(),
-                    persianCalendar1.getPersianMonth(),
-                    persianCalendar1.getPersianDay()
-            );
-
-            datePickerDialog.show(requireActivity().getFragmentManager(),"Datepickerdialog");
-        });
-
-
-        dialog.show();
-
-
-    }
-
-
-
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        String tmonthOfYear, tdayOfMonth;
-        tmonthOfYear = "0" + (monthOfYear+1);
-        tdayOfMonth = "0" + dayOfMonth;
-
-        date = year + "/"
-                + tmonthOfYear.substring(tmonthOfYear.length() - 2) + "/"
-                + tdayOfMonth.substring(tdayOfMonth.length() - 2);
-
-        ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
-    }
-
-
-
-
 
     public Factor getFactor() {
         return factor;

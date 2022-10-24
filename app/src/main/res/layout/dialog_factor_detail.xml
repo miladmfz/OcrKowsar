@@ -632,7 +632,7 @@
                         android:id="@+id/dialog_factor_btn1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="مرحله قبلی"
+                        android:text="لغو تحویل"
                         android:textColor="@color/Black"
                         android:textSize="18sp"
                         android:layout_margin="4dp"
