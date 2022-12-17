@@ -148,8 +148,8 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
             }
-        }catch (Exception e){
-            Log.e("test",e.getMessage());
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
     @Override

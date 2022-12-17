@@ -578,7 +578,6 @@ public class CollectFragment extends Fragment {
 
     public void image_zome_view(String GoodCode) {
 
-        Log.e("test",GoodCode);
         Action action=new Action(requireActivity());
         action.good_detail(GoodCode);
 

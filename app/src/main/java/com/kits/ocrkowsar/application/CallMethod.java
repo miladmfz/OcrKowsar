@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kits.ocrkowsar.model.DatabaseHelper;
+import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
@@ -30,7 +31,7 @@ public class CallMethod extends Application {
     private final SharedPreferences shPref;
     private SharedPreferences.Editor sEdit;
     Context context;
-Toast toast;
+    Toast toast;
 
     public CallMethod(Context mContext) {
         this.context = mContext;
@@ -39,13 +40,13 @@ Toast toast;
 
     public void EditString(String Key, String Value) {
         sEdit = shPref.edit();
-        sEdit.putString(Key, Value);
+        sEdit.putString(Key, NumberFunctions.EnglishNumber(Value));
         sEdit.apply();
     }
 
     public String ReadString(String Key) {
 
-        return shPref.getString(Key, "");
+        return NumberFunctions.EnglishNumber(shPref.getString(Key, ""));
     }
 
     public boolean ReadBoolan(String Key) {
@@ -64,7 +65,7 @@ Toast toast;
     }
 
     public void showToast(String string) {
-        if (toast!=null)
+        if (toast != null)
             toast.cancel();
         toast = Toast.makeText(context, string, Toast.LENGTH_LONG);
         toast.show();
@@ -100,7 +101,7 @@ Toast toast;
 
 
         PersianCalendar calendar1 = new PersianCalendar();
-        String version= BuildConfig.VERSION_NAME;
+        String version = BuildConfig.VERSION_NAME;
 
 
         APIInterface apiInterface = APIClient.getCleint("http://87.107.78.234:60005/login/").create(APIInterface.class);
@@ -111,10 +112,11 @@ Toast toast;
                 , ReadString("PersianCompanyNameUse")
                 , calendar1.getPersianShortDateTime()
                 , version);
-        cl.enqueue(new Callback<RetrofitResponse>() {@Override
-        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
-            assert response.body() != null; }
-
+        cl.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
+                assert response.body() != null;
+            }
 
 
             @Override

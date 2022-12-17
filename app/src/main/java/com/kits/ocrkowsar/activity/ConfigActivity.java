@@ -260,7 +260,6 @@ public class ConfigActivity extends AppCompatActivity  {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("test_",t.getMessage());
 
             }
         });

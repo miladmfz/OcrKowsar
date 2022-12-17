@@ -213,9 +213,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
         holder.fac_rltv.setOnLongClickListener(view -> {
-            Log.e("test1",mContext.getClass().getName());
             LocalFactorListActivity activity = (LocalFactorListActivity) mContext;
-            Log.e("test1",activity.getPackageName());
 
             multi_select = true;
             holder.fac_rltv.setChecked(!holder.fac_rltv.isChecked());

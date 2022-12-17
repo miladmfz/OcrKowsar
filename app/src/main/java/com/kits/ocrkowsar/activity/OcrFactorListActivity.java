@@ -309,8 +309,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("teat11_33PageN",""+PageNo);
-                Log.e("teat11_0","2");
+
 
                 PageNo--;
                 callMethod.showToast("فاکتور بیشتری موجود نیست");

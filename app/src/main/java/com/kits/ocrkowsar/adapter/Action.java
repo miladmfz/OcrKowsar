@@ -281,7 +281,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                Log.e("test_", t.getMessage());
                             }
                         });
                         ll_pack_h_main.addView(ll_new);
@@ -451,7 +450,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                         Currctgoods.add(good);
                     }
             }
-            Log.e("test_size", Currctgoods.size() + "");
             if (Currctgoods.size() > 0) {
                 GoodScan_Adapter goodscanadapter = new GoodScan_Adapter(Currctgoods, mContext, state, barcodescan);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 1);//grid
@@ -501,7 +499,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                Log.e("testocr", "1");
 
                 callMethod.showToast("فاکتور ارسال گردید");
 
@@ -519,7 +516,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
 
-                Log.e("testocr", t.getMessage());
 
             }
         });

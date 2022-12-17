@@ -199,7 +199,6 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                     if (response.isSuccessful()) {
-                                        Log.e("test", "0");
                                         assert response.body() != null;
                                         if (response.body().getFactors().get(0).getErrCode().equals("0")) {
                                             intent = new Intent(mContext, FactorActivity.class);
@@ -212,9 +211,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
                                 @Override
                                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                    Log.e("test", "1");
 
-                                    Log.e("test", t.getMessage());
                                 }
                             });
 
