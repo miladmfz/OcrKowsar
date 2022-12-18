@@ -43,6 +43,7 @@ public class ConfigActivity extends AppCompatActivity  {
     String workcategory="0";
     ArrayList<String> jobsstr=new ArrayList<>();
     ArrayList<String> jobpersonsstr=new ArrayList<>();
+    ArrayList<Integer> jobpersonsref_int=new ArrayList<>();
     ArrayList<String> stacks=new ArrayList<>();
     ArrayList<String> works=new ArrayList<>();
     TextView ed_Deliverer;
@@ -185,6 +186,8 @@ public class ConfigActivity extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position>0) {
+
+                    callMethod.EditString("JobPersonRef",String.valueOf(jobpersonsref_int.get(position)));
                     ed_Deliverer.setText(jobpersonsstr.get(position));
                 }
             }
@@ -201,6 +204,7 @@ public class ConfigActivity extends AppCompatActivity  {
     public void GetJob(String where) {
         jobsstr.clear();
         jobpersonsstr.clear();
+        jobpersonsref_int.clear();
         spinnerjob.setAdapter(null);
         spinnerjobperson.setAdapter(null);
 
@@ -244,9 +248,10 @@ public class ConfigActivity extends AppCompatActivity  {
                     ArrayList<JobPerson> jobPersons=response.body().getJobPersons();
 
                     jobpersonsstr.add("برای انتخاب کلیک کنید");
-
+                    jobpersonsref_int.add(0);
                     for(JobPerson jobPerson:jobPersons){
                         jobpersonsstr.add(jobPerson.getName());
+                        jobpersonsref_int.add(Integer.parseInt(jobPerson.getJobPersonCode()));
                     }
 
                     ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(ConfigActivity.this,

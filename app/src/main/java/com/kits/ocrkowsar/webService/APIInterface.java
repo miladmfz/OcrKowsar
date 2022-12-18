@@ -25,6 +25,13 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> OcrControlled(@Field("tag") String tag
+            , @Field("AppOCRCode") String AppOCRCode
+            , @Field("State") String State
+            , @Field("JobPersonRef") String JobPersonRef);
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> GoodShortage(@Field("tag") String tag
             , @Field("OCRFactorRowCode") String OCRFactorRowCode
             , @Field("Shortage") String Shortage);
@@ -51,7 +58,9 @@ public interface APIInterface {
             , @Field("Controler") String Controler
             , @Field("Packer") String Packer
             , @Field("PackDeliverDate") String PackDeliverDate
-            , @Field("PackCount") String PackCount);
+            , @Field("PackCount") String PackCount
+            , @Field("AppDeliverDate") String AppDeliverDate
+    );
 
 
     @POST("index.php")

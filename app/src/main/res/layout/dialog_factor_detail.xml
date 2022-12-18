@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_factor_detail"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layoutDirection="rtl"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_factor_detail"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
     >
 
     <ScrollView
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/dialog_factor_detail_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -58,7 +59,7 @@
                         android:layout_weight="0.5"
                         android:text="تاریخ : "
                         android:textColor="@color/grey_800"
-                        android:textSize="20sp" />
+                        android:textSize="19sp" />
 
                     <TextView
                         android:id="@+id/dialog_factor_FactorDate"
@@ -69,7 +70,7 @@
                         android:background="@drawable/bg_round_greylight"
                         android:gravity="center"
                         android:textColor="@color/Black"
-                        android:textSize="20sp" />
+                        android:textSize="19sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -215,7 +216,7 @@
                         android:background="@drawable/bg_round_greylight"
                         android:gravity="center"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:textSize="18sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -252,7 +253,7 @@
                         android:background="@drawable/bg_round_greylight"
                         android:gravity="center"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:textSize="18sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -551,7 +552,7 @@
                         android:background="@drawable/bg_round_greylight"
                         android:gravity="center"
                         android:textColor="@color/Black"
-                        android:textSize="22sp" />
+                        android:textSize="19sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -659,4 +660,4 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</LinearLayout>

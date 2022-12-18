@@ -11,10 +11,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -70,11 +72,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     String coltrol_s = "";
     String reader_s = "";
     String pack_s = "";
+    String sendtime = "";
     String packCount = "";
     ArrayList<Job> jobs;
     String date = "";
     TextView ed_pack_h_date;
     Dialog dialog;
+    ArrayList<String> sendtimearray = new ArrayList<>();
 
 
     public Action(Context mcontxt) {
@@ -152,9 +156,9 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             tv_HasSignature.setText("ندارد");
         }
 
-        if (appOcrFactor.getAppIsDelivered().equals("0")){
+        if (appOcrFactor.getAppIsDelivered().equals("0")) {
             btn_1.setVisibility(View.GONE);
-        }else {
+        } else {
             btn_1.setVisibility(View.VISIBLE);
 
         }
@@ -178,7 +182,10 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         });
 
-        btn_2.setOnClickListener(v -> Pack_detail(appOcrFactor.getAppOCRFactorCode()));
+        btn_2.setOnClickListener(v -> {
+            Pack_detail(appOcrFactor.getAppOCRFactorCode());
+            dialog.dismiss();
+        });
 
 
         dialog.show();
@@ -261,14 +268,19 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                                     spinner_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
                                     spinner_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                                     spinner_new.setAdapter(spinner_adapter);
-                                    spinner_new.setSelection(0);
+
+                                    try {
+                                        spinner_new.setSelection(Integer.parseInt(callMethod.ReadString(job.getTitle())));
+                                    } catch (Exception e) {
+                                        spinner_new.setSelection(0);
+
+                                    }
 
                                     spinner_new.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            if (position > 0) {
-                                                job.setText(jobpersonsstr_new.get(position));
-                                            }
+                                            callMethod.EditString(job.getTitle(), String.valueOf(position));
+                                            job.setText(jobpersonsstr_new.get(position));
                                         }
 
                                         @Override
@@ -276,6 +288,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                                         }
                                     });
                                     ll_new.addView(spinner_new);
+
                                 }
                             }
 
@@ -285,6 +298,52 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                         });
                         ll_pack_h_main.addView(ll_new);
                     }
+
+                    sendtimearray.clear();
+                    sendtimearray.add("");
+                    sendtimearray.add("صبح");
+
+                    LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
+                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                            70
+                    );
+                    params.setMargins(30, 30, 30, 30);
+                    LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
+                    ll_new.setLayoutParams(params);
+                    ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                    ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                    ll_new.setWeightSum(2);
+
+
+                    TextView Tv_new = new TextView(mContext.getApplicationContext());
+                    Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                    Tv_new.setText("نحوه ارسال :");
+                    Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+
+
+                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
+                            android.R.layout.simple_spinner_item, sendtimearray);
+                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
+                    spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                    spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                    spinner_sendtime.setAdapter(spinner_adapter);
+                    spinner_sendtime.setSelection(0);
+
+                    spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            sendtime = sendtimearray.get(position);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                        }
+                    });
+                    ll_new.addView(Tv_new);
+                    ll_new.addView(spinner_sendtime);
+                    ll_pack_h_main.addView(ll_new);
+
                 }
             }
 
@@ -293,57 +352,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             }
         });
-
-
-        btn_pack_h_send.setOnClickListener(v -> {
-
-
-            if (ed_pack_h_amount.getText().toString().equals("")) {
-                packCount = "1";
-            } else
-                packCount = NumberFunctions.EnglishNumber(ed_pack_h_amount.getText().toString());
-
-
-            for (Job job : jobs) {
-                if (job.getJobCode().equals("1")) {
-                    coltrol_s = job.getText();
-                }
-                if (job.getJobCode().equals("2")) {
-                    reader_s = job.getText();
-                }
-                if (job.getJobCode().equals("3")) {
-                    pack_s = job.getText();
-                }
-            }
-
-            Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
-            call3.enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                    assert response.body() != null;
-                    Call<RetrofitResponse> call2 = apiInterface.SetPackDetail("SetPackDetail", FactorOcrCode, reader_s, coltrol_s, pack_s, NumberFunctions.EnglishNumber(date), packCount);
-                    call2.enqueue(new Callback<>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                            dialog.dismiss();
-                            ((Activity) mContext).finish();
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    Log.e("", t.getMessage());
-                }
-            });
-
-
-        });
-
 
         btn_pack_h_5.setOnClickListener(v -> {
 
@@ -357,6 +365,86 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
             datePickerDialog.show(((Activity) mContext).getFragmentManager(), "Datepickerdialog");
+        });
+
+
+        btn_pack_h_send.setOnClickListener(v -> {
+            coltrol_s = "";
+            reader_s = "";
+            pack_s = "";
+
+            if (ed_pack_h_amount.getText().toString().equals("")) {
+                packCount = "1";
+            } else
+                packCount = NumberFunctions.EnglishNumber(ed_pack_h_amount.getText().toString());
+
+            boolean falt = false;
+            String falt_message = "";
+
+            for (Job job : jobs) {
+
+                if (!job.getText().equals("برای انتخاب کلیک کنید")) {
+                    if (job.getJobCode().equals("1")) {
+                        coltrol_s = job.getText();
+                    }
+                    if (job.getJobCode().equals("2")) {
+                        reader_s = job.getText();
+                    }
+                    if (job.getJobCode().equals("3")) {
+                        pack_s = job.getText();
+                    }
+                } else {
+                    falt = true;
+                    falt_message = job.getTitle();
+                    break;
+                }
+            }
+
+
+            if (!falt) {
+
+                Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
+                call3.enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                        assert response.body() != null;
+                        Call<RetrofitResponse> call2 = apiInterface.SetPackDetail(
+                                "SetPackDetail",
+                                FactorOcrCode,
+                                reader_s,
+                                coltrol_s,
+                                pack_s,
+                                NumberFunctions.EnglishNumber(date),
+                                packCount,
+                                sendtime
+                        );
+                        call2.enqueue(new Callback<>() {
+                            @Override
+                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                dialog.dismiss();
+                                if (!callMethod.ReadString("Category").equals("5")) {
+                                    ((Activity) mContext).finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        Log.e("", t.getMessage());
+                    }
+                });
+
+
+            } else {
+                callMethod.showToast(falt_message + " را تکمیل کنید");
+            }
+
+
         });
 
 

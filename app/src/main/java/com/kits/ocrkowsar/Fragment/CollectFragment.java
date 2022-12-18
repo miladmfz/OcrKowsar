@@ -229,7 +229,12 @@ public class CollectFragment extends Fragment {
 
             for (String goodchecks : GoodCodeCheck) {
 
-                Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",goodchecks,"0","");
+                Call<RetrofitResponse> call =apiInterface.OcrControlled(
+                        "OcrControlled",
+                        goodchecks,
+                        "0",
+                        callMethod.ReadString("JobPersonRef")
+                );
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

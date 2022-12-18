@@ -1,127 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layoutDirection="rtl"
     android:background="@drawable/bg_round_selected"
-
-    >
+    android:layoutDirection="rtl">
 
     <androidx.appcompat.widget.LinearLayoutCompat
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="2dp"
-        >
+        android:orientation="vertical">
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/packheader_linejob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_margin="2dp"
-            android:id="@+id/packheader_linejob"
-            >
+            android:orientation="vertical">
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_gravity="center"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
-            >
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="22sp"
-                android:textColor="@color/Black"
-                android:text="تعداد بسته :"
-                android:gravity="center_vertical"
                 android:layout_weight="0.5"
+                android:gravity="center_vertical"
                 android:paddingLeft="20dp"
-                />
+                android:text="تعداد بسته :"
+                android:textColor="@color/Black"
+                android:textSize="22sp" />
+
             <EditText
                 android:id="@+id/pack_header_packamount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/Black"
-                android:hint="1"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                />
+                android:hint="1"
+                android:textColor="@color/Black"
+                android:textSize="20sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_gravity="center"
-            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="1"
-            android:layout_margin="5dp"
 
             >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:textColor="@color/Black"
-                android:text="تاریخ تحویل :"
-                android:gravity="center_vertical"
                 android:layout_weight="0.7"
-                />
+                android:gravity="center_vertical"
+                android:text="تاریخ تحویل :"
+                android:textColor="@color/Black"
+                android:textSize="18sp" />
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3">
+
                 <TextView
                     android:id="@+id/pack_header_senddate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="20sp"
-                    android:textColor="@color/Black"
-                    android:text=""
                     android:layout_weight="0.4"
                     android:gravity="center"
-                    />
+                    android:text=""
+                    android:textColor="@color/Black"
+                    android:textSize="20sp" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/pack_header_btn5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:layout_weight="0.6"
+                    android:background="@drawable/bg_round_selected"
                     android:text="تغییر"
                     android:textColor="@color/Black"
                     android:textSize="18sp"
-                    android:layout_margin="4dp"
-                    app:backgroundTint="@null"
-                    android:background="@drawable/bg_round_selected"
-                    />
+                    app:backgroundTint="@null" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/pack_header_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_round_red"
             android:text="ارسال بسته بندی فاکتور"
             android:textColor="@color/Black"
-            android:layout_margin="5dp"
-            app:backgroundTint="@null"
-            android:background="@drawable/bg_round_red"
-            />
+            android:textSize="30sp"
+            app:backgroundTint="@null" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
