@@ -113,7 +113,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.ErrorLog(t.getMessage());
+                    callMethod.showToast(t.getMessage());
                 }
             });
 

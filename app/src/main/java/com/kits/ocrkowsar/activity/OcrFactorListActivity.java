@@ -464,6 +464,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_ListCount() {
+
         Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
                 "GetFactorListCount",
                 state,
@@ -483,7 +484,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                Log.e("test_+",t.getMessage());
+            }
         });
     }
 

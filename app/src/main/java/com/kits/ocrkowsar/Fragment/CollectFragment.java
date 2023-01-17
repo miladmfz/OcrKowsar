@@ -2,6 +2,7 @@ package com.kits.ocrkowsar.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -468,9 +469,11 @@ public class CollectFragment extends Fragment {
         tv_amount.setGravity(Gravity.CENTER);
         tv_price.setGravity(Gravity.CENTER);
 
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))-10);
         tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
-        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
+        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
+        tv_amount.setTypeface(null, Typeface.BOLD);
+
         tv_price.setTextSize(TypedValue.COMPLEX_UNIT_SP,Integer.parseInt(callMethod.ReadString("TitleSize")));
 
         checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(j)));

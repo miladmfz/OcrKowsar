@@ -165,7 +165,6 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
 
 
-
         holder.fac_factor_btn.setOnClickListener(v -> {
 
             if(factors.get(position).getStackClass().substring(1).length()>0){
