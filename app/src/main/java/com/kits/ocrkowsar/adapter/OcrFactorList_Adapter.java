@@ -167,7 +167,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
         holder.fac_factor_btn.setOnClickListener(v -> {
 
-            if(factors.get(position).getStackClass().substring(1).length()>0){
+            if(factors.get(position).getStackClass().length()>1){
 
                 if(callMethod.ReadString("Category").equals("5")) {
                     Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(

@@ -326,6 +326,7 @@ public class PackFragment extends Fragment{
         tv_price.setGravity(Gravity.CENTER);
 
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize"))-10);
+        checkBox.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
         tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize"))+3);
         tv_amount.setTypeface(null, Typeface.BOLD);

@@ -93,6 +93,7 @@ public class  FactorActivity extends AppCompatActivity {
         BarcodeScan=bundle.getString("ScanResponse");
         bitmap_factor_base64=bundle.getString("FactorImage");
     }
+
     public void Config() {
 
         callMethod = new CallMethod(this);
@@ -104,6 +105,8 @@ public class  FactorActivity extends AppCompatActivity {
         width =metrics.widthPixels;
 
     }
+
+
     public void init(){
 
 
