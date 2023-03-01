@@ -42,8 +42,16 @@ public class RetrofitResponse {
     @SerializedName("AppOcrFactor")
     private AppOcrFactor AppOcrFactor;
 
+    @SerializedName("AppPrinters")
+    private ArrayList<AppPrinter> AppPrinters;
 
+    public ArrayList<AppPrinter> getAppPrinters() {
+        return AppPrinters;
+    }
 
+    public void setAppPrinters(ArrayList<AppPrinter> appPrinters) {
+        AppPrinters = appPrinters;
+    }
 
     @SerializedName("ErrCode")
     private String ErrCode;

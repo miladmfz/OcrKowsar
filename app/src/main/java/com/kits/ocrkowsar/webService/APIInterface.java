@@ -72,7 +72,7 @@ public interface APIInterface {
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GetOcrFactorDetail(@Field("tag") String tag,
-                                         @Field("OCRFactorCode") String OCRFactorCode);
+                                              @Field("OCRFactorCode") String OCRFactorCode);
 
 
     @POST("index.php")
@@ -94,7 +94,6 @@ public interface APIInterface {
             @Field("tag") String tag
             , @Field("Where") String where
     );
-
 
 
     @POST("index.php")
@@ -163,6 +162,19 @@ public interface APIInterface {
             , @Field("VersionName") String VersionName
     );
 
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> OrderGetAppPrinter(@Field("tag") String tag);
+
+
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> OcrSendImage(@Field("tag") String tag
+            , @Field("Image") String image
+            , @Field("Code") String barcode
+            , @Field("PrinterName") String PrinterName
+            , @Field("PrintCount") String PrintCount
+    );
 
 }
 

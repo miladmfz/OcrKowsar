@@ -77,16 +77,23 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     ArrayList<Job> jobs;
     String date = "";
     TextView ed_pack_h_date;
-    Dialog dialog;
+    Dialog dialog, dialogProg;
     ArrayList<String> sendtimearray = new ArrayList<>();
-
-
+    TextView tv_rep;
     public Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         dialog = new Dialog(mcontxt);
+        dialogProg = new Dialog(mContext);
+
+    }
+    public void dialogProg() {
+        dialogProg.setContentView(R.layout.rep_prog);
+        tv_rep = dialogProg.findViewById(R.id.rep_prog_text);
+        tv_rep.setVisibility(View.GONE);
+        dialogProg.show();
     }
 
     public void factor_detail(AppOcrFactor appOcrFactor) {
@@ -165,12 +172,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         btn_1.setOnClickListener(v -> {
 
-
+            dialogProg();
             Call<RetrofitResponse> call1 = apiInterface.ExitDelivery("ExitDelivery", appOcrFactor.getAppOCRFactorCode());
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                     dialog.dismiss();
+                    dialogProg.dismiss();
                 }
 
                 @Override
@@ -217,6 +225,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         ed_pack_h_date.setText(NumberFunctions.PerisanNumber(date));
 
         LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.packheader_linejob);
+
         Call<RetrofitResponse> call = apiInterface.GetJob("TestJob", "Ocr3");
         call.enqueue(new Callback<>() {
             @Override
@@ -402,7 +411,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
             if (!falt) {
-
+                dialogProg();
                 Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
                 call3.enqueue(new Callback<>() {
                     @Override
@@ -423,7 +432,9 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
                                 if (!callMethod.ReadString("Category").equals("5")) {
+                                    dialogProg.dismiss();
                                     ((Activity) mContext).finish();
+
                                 }
                             }
 
@@ -579,15 +590,16 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
     public void sendfactor(final String factor_code, String signatureimage) {
-
+        Log.e("test","0");
 
         app_info();
+        dialogProg();
         Call<String> call = apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
 
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-
+                Log.e("test","1");
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
@@ -595,6 +607,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                 Intent bag = new Intent(mContext, LocalFactorListActivity.class);
                 bag.putExtra("IsSent", "0");
                 bag.putExtra("signature", "0");
+                dialogProg.dismiss();
                 ((Activity) mContext).finish();
                 ((Activity) mContext).overridePendingTransition(0, 0);
                 mContext.startActivity(bag);
@@ -604,7 +617,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
 
-
+                Log.e("test","2");
+                Log.e("test",t.getMessage());
             }
         });
 
