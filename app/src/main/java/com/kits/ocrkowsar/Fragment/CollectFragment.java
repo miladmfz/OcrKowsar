@@ -1,6 +1,7 @@
 package com.kits.ocrkowsar.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.NavActivity;
 import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.application.Print;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
@@ -79,8 +81,9 @@ public class CollectFragment extends Fragment {
     TextView tv_phone;
     TextView tv_total_amount;
     TextView tv_total_price;
-
+    Print print;
     View view;
+    Dialog dialogProg;
 
     public Factor getFactor() {
         return factor;
@@ -117,10 +120,13 @@ public class CollectFragment extends Fragment {
         dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         handler=new Handler();
-
+        print=new Print(requireActivity());
         DisplayMetrics metrics = new DisplayMetrics();
         view.getDisplay().getMetrics(metrics);
         width =metrics.widthPixels;
+        dialogProg = new Dialog(requireActivity());
+        dialogProg.setContentView(R.layout.rep_prog);
+        dialogProg.findViewById(R.id.rep_prog_text).setVisibility(View.GONE);
         CreateView_Control();
 
     }
@@ -207,14 +213,16 @@ public class CollectFragment extends Fragment {
 
 
         btn_send.setOnClickListener(v -> {
+
+
+            dialogProg.show();
             Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
-
-                        requireActivity().finish();
-
+                        dialogProg.dismiss();
+                        print.Printing(factor);
                     }
                 }
                 @Override
@@ -227,7 +235,7 @@ public class CollectFragment extends Fragment {
 
             int b=GoodCodeCheck.size();
             final int[] conter = {0};
-
+            dialogProg.show();
             for (String goodchecks : GoodCodeCheck) {
 
                 Call<RetrofitResponse> call =apiInterface.OcrControlled(
@@ -249,19 +257,23 @@ public class CollectFragment extends Fragment {
                                 intent.putExtra("ScanResponse", BarcodeScan);
                                 intent.putExtra("State", "0");
                                 intent.putExtra("FactorImage", "");
+                                dialogProg.dismiss();
                                 startActivity(intent);
                                 requireActivity().finish();
+
 
                             }
                         }
                     }
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        dialogProg.dismiss();
                         Log.e("",t.getMessage()); }
                 });
 
 
             }
+
 
         });
 
@@ -557,17 +569,21 @@ public class CollectFragment extends Fragment {
             }
         }
         if(goods.size() == ConfirmCounter){
+            dialogProg.show();
             Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         callMethod.showToast("تاییده ارسال شد.");
-                        requireActivity().finish();
+                        dialogProg.dismiss();
+                        print.Printing(factor);
+
                     }
                 }
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                    dialogProg.dismiss();
                     Log.e("",t.getMessage()); }
             });
 

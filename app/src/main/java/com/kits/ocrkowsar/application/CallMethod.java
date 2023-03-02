@@ -40,8 +40,7 @@ public class CallMethod extends Application {
     }
 
     public void EditString(String Key, String Value) {
-        Log.e("test)))",Key);
-        Log.e("test)))",Value);
+
         sEdit = shPref.edit();
         sEdit.putString(Key, NumberFunctions.EnglishNumber(Value));
         sEdit.apply();

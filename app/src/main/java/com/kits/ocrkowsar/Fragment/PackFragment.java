@@ -213,7 +213,7 @@ public class PackFragment extends Fragment{
 
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
 
-        btn_send.setOnClickListener(v -> action.Pack_detail(factor.getAppOCRFactorCode()));
+        btn_send.setOnClickListener(v -> action.Pack_detail(factor));
 
 
         btn_confirm.setOnClickListener(v -> {

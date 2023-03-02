@@ -15,8 +15,7 @@ public class RetrofitResponse {
     @SerializedName("Factors")
     private ArrayList<Factor> Factors;
 
-    @SerializedName("AppOcrFactors")
-    private ArrayList<AppOcrFactor> appOcrFactors;
+
 
     @SerializedName("Jobs")
     private ArrayList<Job> Jobs;
@@ -39,8 +38,7 @@ public class RetrofitResponse {
     private JobPerson JobPerson;
 
 
-    @SerializedName("AppOcrFactor")
-    private AppOcrFactor AppOcrFactor;
+
 
     @SerializedName("AppPrinters")
     private ArrayList<AppPrinter> AppPrinters;
@@ -63,21 +61,6 @@ public class RetrofitResponse {
     @SerializedName("Text")
     private String Text;
 
-    public ArrayList<com.kits.ocrkowsar.model.AppOcrFactor> getAppOcrFactors() {
-        return appOcrFactors;
-    }
-
-    public void setAppOcrFactors(ArrayList<com.kits.ocrkowsar.model.AppOcrFactor> appOcrFactors) {
-        this.appOcrFactors = appOcrFactors;
-    }
-
-    public com.kits.ocrkowsar.model.AppOcrFactor getAppOcrFactor() {
-        return AppOcrFactor;
-    }
-
-    public void setAppOcrFactor(com.kits.ocrkowsar.model.AppOcrFactor appOcrFactor) {
-        AppOcrFactor = appOcrFactor;
-    }
 
     public String getText() {
         return Text;

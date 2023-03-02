@@ -4,30 +4,25 @@ package com.kits.ocrkowsar.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.QuickContactBadge;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -38,8 +33,9 @@ import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfigActivity;
 import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.AppOcrFactor;
+import com.kits.ocrkowsar.application.Print;
 import com.kits.ocrkowsar.model.DatabaseHelper;
+import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
 import com.kits.ocrkowsar.model.Job;
 import com.kits.ocrkowsar.model.JobPerson;
@@ -50,8 +46,6 @@ import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,6 +74,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     Dialog dialog, dialogProg;
     ArrayList<String> sendtimearray = new ArrayList<>();
     TextView tv_rep;
+    Print print;
     public Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
@@ -87,6 +82,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         dialog = new Dialog(mcontxt);
         dialogProg = new Dialog(mContext);
+        print = new Print(mContext);
 
     }
     public void dialogProg() {
@@ -96,7 +92,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         dialogProg.show();
     }
 
-    public void factor_detail(AppOcrFactor appOcrFactor) {
+    public void factor_detail(Factor factor) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_factor_detail);
@@ -126,44 +122,44 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         Button btn_1 = dialog.findViewById(R.id.dialog_factor_btn1);
         Button btn_2 = dialog.findViewById(R.id.dialog_factor_btn2);
 
-        tv_AppOCRFactorCode.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppOCRFactorCode()));
-        tv_AppTcPrintRef.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppTcPrintRef()));
-        tv_AppControlDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppControlDate()));
-        tv_AppPacker.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPacker()));
-        tv_AppPackDeliverDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackDeliverDate()));
-        tv_AppPackCount.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackCount()));
-        tv_AppDeliverer.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppDeliverer()));
+        tv_AppOCRFactorCode.setText(NumberFunctions.PerisanNumber(factor.getAppOCRFactorCode()));
+        tv_AppTcPrintRef.setText(NumberFunctions.PerisanNumber(factor.getAppTcPrintRef()));
+        tv_AppControlDate.setText(NumberFunctions.PerisanNumber(factor.getAppControlDate()));
+        tv_AppPacker.setText(NumberFunctions.PerisanNumber(factor.getAppPacker()));
+        tv_AppPackDeliverDate.setText(NumberFunctions.PerisanNumber(factor.getAppPackDeliverDate()));
+        tv_AppPackCount.setText(NumberFunctions.PerisanNumber(factor.getAppPackCount()));
+        tv_AppDeliverer.setText(NumberFunctions.PerisanNumber(factor.getAppDeliverer()));
 
-        tv_FactorPrivateCode.setText(NumberFunctions.PerisanNumber(appOcrFactor.getFactorPrivateCode()));
-        tv_FactorDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getFactorDate()));
-        tv_CustName.setText(NumberFunctions.PerisanNumber(appOcrFactor.getCustName()));
-        tv_customercode.setText(NumberFunctions.PerisanNumber(appOcrFactor.getCustomercode()));
-        tv_Ersall.setText(NumberFunctions.PerisanNumber(appOcrFactor.getErsall()));
-        if (appOcrFactor.getBrokerName().length() > 20)
-            tv_BrokerName.setText(NumberFunctions.PerisanNumber(appOcrFactor.getBrokerName().substring(0, 20) + "..."));
+        tv_FactorPrivateCode.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
+        tv_FactorDate.setText(NumberFunctions.PerisanNumber(factor.getFactorDate()));
+        tv_CustName.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
+        tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
+        tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
+        if (factor.getBrokerName().length() > 20)
+            tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName().substring(0, 20) + "..."));
         else
-            tv_BrokerName.setText(NumberFunctions.PerisanNumber(appOcrFactor.getBrokerName()));
+            tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName()));
 
-        tv_AppFactorState.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppFactorState()));
-
-
-        tv_AppPackDate.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppPackDate()));
-        tv_AppReader.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppReader()));
-        tv_AppControler.setText(NumberFunctions.PerisanNumber(appOcrFactor.getAppControler()));
+        tv_AppFactorState.setText(NumberFunctions.PerisanNumber(factor.getAppFactorState()));
 
 
-        if (appOcrFactor.getIsEdited().equals("1")) {
+        tv_AppPackDate.setText(NumberFunctions.PerisanNumber(factor.getAppPackDate()));
+        tv_AppReader.setText(NumberFunctions.PerisanNumber(factor.getAppReader()));
+        tv_AppControler.setText(NumberFunctions.PerisanNumber(factor.getAppControler()));
+
+
+        if (factor.getIsEdited().equals("1")) {
             tv_IsEdited.setText("دارد");
         } else {
             tv_IsEdited.setText("ندارد");
         }
-        if (appOcrFactor.getIsEdited().equals("1")) {
+        if (factor.getIsEdited().equals("1")) {
             tv_HasSignature.setText("دارد");
         } else {
             tv_HasSignature.setText("ندارد");
         }
 
-        if (appOcrFactor.getAppIsDelivered().equals("0")) {
+        if (factor.getAppIsDelivered().equals("0")) {
             btn_1.setVisibility(View.GONE);
         } else {
             btn_1.setVisibility(View.VISIBLE);
@@ -173,7 +169,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         btn_1.setOnClickListener(v -> {
 
             dialogProg();
-            Call<RetrofitResponse> call1 = apiInterface.ExitDelivery("ExitDelivery", appOcrFactor.getAppOCRFactorCode());
+            Call<RetrofitResponse> call1 = apiInterface.ExitDelivery("ExitDelivery", factor.getAppOCRFactorCode());
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
@@ -191,7 +187,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         });
 
         btn_2.setOnClickListener(v -> {
-            Pack_detail(appOcrFactor.getAppOCRFactorCode());
+            Pack_detail(factor);
             dialog.dismiss();
         });
 
@@ -202,7 +198,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     }
 
 
-    public void Pack_detail(String FactorOcrCode) {
+    public void Pack_detail(Factor factor) {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.pack_header);
@@ -412,14 +408,14 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             if (!falt) {
                 dialogProg();
-                Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", FactorOcrCode, "3", "");
+                Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
                 call3.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         assert response.body() != null;
                         Call<RetrofitResponse> call2 = apiInterface.SetPackDetail(
                                 "SetPackDetail",
-                                FactorOcrCode,
+                                factor.getAppOCRFactorCode(),
                                 reader_s,
                                 coltrol_s,
                                 pack_s,
@@ -432,6 +428,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
                                 if (!callMethod.ReadString("Category").equals("5")) {
+                                    print.Printing(factor);
+
                                     dialogProg.dismiss();
                                     ((Activity) mContext).finish();
 
