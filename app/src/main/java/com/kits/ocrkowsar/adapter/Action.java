@@ -428,11 +428,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
                                 if (!callMethod.ReadString("Category").equals("5")) {
-                                    print.Printing(factor);
-
-                                    dialogProg.dismiss();
-                                    ((Activity) mContext).finish();
-
+                                    print.Printing(factor,packCount);
                                 }
                             }
 

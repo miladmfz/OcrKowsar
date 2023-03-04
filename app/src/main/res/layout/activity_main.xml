@@ -15,8 +15,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/NavActivity_appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/NavActivity_toolbar"
@@ -24,9 +23,9 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_weight="1"
                 android:background="?attr/colorPrimary"
-                app:titleTextColor="@color/white"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/app_name">
+                app:title="@string/app_name"
+                app:titleTextColor="@color/white">
 
 
             </androidx.appcompat.widget.Toolbar>
@@ -35,52 +34,52 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
 
 
-                    <com.google.android.material.button.MaterialButton
-                        android:layout_width="match_parent"
-                        android:id="@+id/mainactivity_btn1"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:textColor="#ffffff"
-                        app:rippleColor="@color/deep_purple_300"
-                        app:strokeColor="@color/grey_1000"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/green_700"
-                        android:textSize="42sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mainactivity_btn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="#ffffff"
+                android:textSize="42sp"
+                app:backgroundTint="@color/green_700"
+                app:rippleColor="@color/deep_purple_300"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp" />
 
-                <com.google.android.material.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
 
-                    android:id="@+id/mainactivity_btn2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textColor="@color/grey_1000"
-                    android:textSize="42sp"
-                    app:strokeColor="@color/grey_1000"
-                    app:strokeWidth="1dp"
-                    app:backgroundTint="@color/green_100"
-                    app:rippleColor="@color/deep_purple_300" />
+                android:id="@+id/mainactivity_btn2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="@color/grey_1000"
+                android:textSize="42sp"
+                app:backgroundTint="@color/green_100"
+                app:rippleColor="@color/deep_purple_300"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/mainactivity_btn3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:clickable="true"
-                    app:backgroundTint="@color/white"
-                    app:strokeColor="@color/grey_1000"
-                    app:strokeWidth="1dp"
-                    android:focusable="true"
-                    android:textColor="@color/grey_1000"
-                    app:rippleColor="@color/deep_purple_300"
-                    android:textSize="42sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mainactivity_btn3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/grey_1000"
+                android:textSize="42sp"
+                app:backgroundTint="@color/white"
+                app:rippleColor="@color/deep_purple_300"
+                app:strokeColor="@color/grey_1000"
+                app:strokeWidth="1dp" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

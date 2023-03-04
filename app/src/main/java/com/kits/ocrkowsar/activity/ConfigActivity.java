@@ -1,22 +1,32 @@
 package com.kits.ocrkowsar.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.application.ImageInfo;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Good;
 import com.kits.ocrkowsar.model.Job;
@@ -52,6 +62,7 @@ public class ConfigActivity extends AppCompatActivity  {
     MaterialButton btn_config;
     EditText ed_titlesize;
     SwitchMaterial sm_arabictext;
+    ImageInfo imageInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +80,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        imageInfo = new ImageInfo(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
 
         works.add("برای انتخاب کلیک کنید");
@@ -88,6 +100,30 @@ public class ConfigActivity extends AppCompatActivity  {
         btn_config =findViewById(R.id.configactivity_btn);
         ed_titlesize = findViewById(R.id.config_titlesize);
         sm_arabictext = findViewById(R.id.config_arabictext);
+        ImageView img_logo = findViewById(R.id.configactivity_logo);
+
+        Glide.with(img_logo)
+                .asBitmap()
+                .load(callMethod.ReadString("ServerURLUse")+"SlideImage/logo.jpg")
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .fitCenter()
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        Log.e("test","Failed");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        Log.e("test","Ready");
+                        imageInfo.SaveLogo(resource);
+                        return false;
+                    }
+                })
+                .into(img_logo);
+
+
 
     }
 

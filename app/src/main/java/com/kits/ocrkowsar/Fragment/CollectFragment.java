@@ -222,7 +222,7 @@ public class CollectFragment extends Fragment {
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
                         dialogProg.dismiss();
-                        print.Printing(factor);
+                        print.Printing(factor,"0");
                     }
                 }
                 @Override
@@ -577,7 +577,7 @@ public class CollectFragment extends Fragment {
                     if(response.isSuccessful()) {
                         callMethod.showToast("تاییده ارسال شد.");
                         dialogProg.dismiss();
-                        print.Printing(factor);
+                        print.Printing(factor,"0");
 
                     }
                 }

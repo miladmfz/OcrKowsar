@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.util.Base64;
@@ -20,12 +21,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.model.AppPrinter;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -54,7 +60,6 @@ public class Print {
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
     DatabaseHelper dbh;
-    Intent intent;
     Integer il;
     Integer packCounter;
     String packs = "0";
@@ -71,6 +76,7 @@ public class Print {
     Bitmap bitmap_factor;
     String bitmap_factor_base64 = "";
     TextView tv_rep;
+    ImageInfo imageInfo;
 
     public Print(Context mContext) {
         this.mContext = mContext;
@@ -82,6 +88,7 @@ public class Print {
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);
         this.AppPrinters = new ArrayList<>();
+        this.imageInfo = new ImageInfo(mContext);
         printerconter = 0;
 
     }
@@ -94,14 +101,11 @@ public class Print {
 
     }
 
-    public void Printing(Factor factor) {
+    public void Printing(Factor factor ,String packCount) {
         factorData=factor;
+        packs=packCount;
         GetAppPrinterList();
     }
-
-
-
-
 
     public void GetAppPrinterList() {
         dialogProg();
@@ -113,9 +117,6 @@ public class Print {
                     assert response.body() != null;
                     printerconter = 0;
                     AppPrinters = response.body().getAppPrinters();
-                    Log.e("test_size",AppPrinters.size()+"");
-                    Log.e("test_size","sdsdsdsd");
-                    Log.e("test_cat",callMethod.ReadString("StackCategory"));
 
                     if (callMethod.ReadString("Category").equals("2")){
                         for (AppPrinter appPrinter:AppPrinters){
@@ -154,11 +155,8 @@ public class Print {
         });
     }
 
-
-
     @SuppressLint("RtlHardcoded")
     public void printDialogView() {
-        Log.e("test_view","view");
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(displayMetrics);
@@ -168,36 +166,31 @@ public class Print {
         dialogprint.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogprint.setContentView(R.layout.print_layout_view);
         main_layout = dialogprint.findViewById(R.id.print_layout_view_ll);
-        Log.e("test_StackCategory",callMethod.ReadString("StackCategory"));
+        main_layout.setGravity(Gravity.CENTER);
+
         if (callMethod.ReadString("Category").equals("2")){
 
             CreateViewConfirm();
         }else if (callMethod.ReadString("Category").equals("3")){
             packCounter=1;
-            packs=factorData.getAppPackCount();
             CreateViewPack();
         }
-
-
     }
 
 
     public void CreateViewConfirm() {
-        Log.e("test_Confirm","0");
-
 
 
         LinearLayoutCompat Tag_layout = new LinearLayoutCompat(mContext);
         Tag_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width - 8, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         Tag_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         Tag_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        Tag_layout.setGravity(Gravity.CENTER);
 
         LinearLayoutCompat Body_Tag_layout = new LinearLayoutCompat(mContext);
         Body_Tag_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width - 8, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         Body_Tag_layout.setOrientation(LinearLayoutCompat.HORIZONTAL);
         Body_Tag_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-
 
 
         ViewPager ViewPagertop = new ViewPager(mContext);
@@ -219,14 +212,12 @@ public class Print {
         ViewPager_rast.setPadding(50, 0, 0, 0);
 
 
+
         ImageView img_explain = new ImageView(mContext);
         img_explain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, width));
-        Glide.with(img_explain)
-                .asBitmap()
-                .load(targetprinter.getPrinterName())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .fitCenter()
-                .into(img_explain);
+        img_explain.setPadding(0, 0, 0, 100);
+        img_explain.setImageBitmap(imageInfo.LoadLogo());
+
 
 
 
@@ -237,7 +228,7 @@ public class Print {
         CustName.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
         CustName.setGravity(Gravity.CENTER);
         CustName.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        CustName.setPadding(0, width, 0, 15);
+        CustName.setPadding(0, 0, 0, 15);
 
         TextView FactorPrivateCode = new TextView(mContext);
         FactorPrivateCode.setText(NumberFunctions.PerisanNumber(factorData.getFactorPrivateCode()));
@@ -264,7 +255,7 @@ public class Print {
         Stack.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
         Stack.setGravity(Gravity.CENTER);
         Stack.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        Stack.setPadding(0, 0, 0, 15);
+        Stack.setPadding(0, 0, 0, 30);
 
 
         Tag_layout.addView(CustName);
@@ -319,22 +310,18 @@ public class Print {
     }
 
     public void CreateViewPack() {
-        Log.e("test_Pack","0");
-
-
 
         LinearLayoutCompat Gap_layout = new LinearLayoutCompat(mContext);
         Gap_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, 400));
         Gap_layout.setOrientation(LinearLayoutCompat.VERTICAL);
 
-        ImageView img_explain = new ImageView(mContext);
-        img_explain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
 
 
         LinearLayoutCompat Tag_layout = new LinearLayoutCompat(mContext);
         Tag_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width - 8, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         Tag_layout.setOrientation(LinearLayoutCompat.VERTICAL);
         Tag_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        Tag_layout.setGravity(Gravity.CENTER);
 
         LinearLayoutCompat Body_Tag_layout = new LinearLayoutCompat(mContext);
         Body_Tag_layout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width - 8, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -361,6 +348,12 @@ public class Print {
         ViewPager_chap.setBackgroundResource(R.color.colorPrimaryDark);
 
 
+
+        ImageView img_explain = new ImageView(mContext);
+        img_explain.setLayoutParams(new LinearLayoutCompat.LayoutParams(300, 300));
+        img_explain.setPadding(0, 0, 0, 20);
+        img_explain.setImageBitmap(imageInfo.LoadLogo());
+
         TextView CustName = new TextView(mContext);
         CustName.setText(NumberFunctions.PerisanNumber(factorData.getCustName()));
         CustName.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -380,28 +373,21 @@ public class Print {
         FactorPrivateCode.setPadding(0, 0, 0, 15);
 
         TextView tv_Count = new TextView(mContext);
-        tv_Count.setText(NumberFunctions.PerisanNumber("نعداد "+packCounter+" از "+packs));
+        tv_Count.setText(NumberFunctions.PerisanNumber("تعداد "+packCounter+" از "+packs));
         tv_Count.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_Count.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
         tv_Count.setTextColor(mContext.getColor(R.color.colorPrimaryDark));
         tv_Count.setGravity(Gravity.CENTER);
         tv_Count.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        tv_Count.setPadding(0, 0, 0, 15);
+        tv_Count.setPadding(0, 0, 0, 30);
 
 
-
-
-        Glide.with(img_explain)
-                .asBitmap()
-                .load(targetprinter.getPrinterName())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .fitCenter()
-                .into(img_explain);
 
 
         Tag_layout.addView(img_explain);
         Tag_layout.addView(CustName);
         Tag_layout.addView(FactorPrivateCode);
+        Tag_layout.addView(tv_Count);
 
 
         Body_Tag_layout.addView(Tag_layout);
@@ -433,7 +419,6 @@ public class Print {
                 if (response.body().getText().equals("Done")) {
                     packCounter++;
                     if (Integer.parseInt(packs) < packCounter) {
-                        dialogProg.dismiss();
                         ((Activity) mContext).finish();
                     } else {
                         main_layout.removeAllViews();
