@@ -388,7 +388,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             for (Job job : jobs) {
 
-                if (!job.getText().equals("برای انتخاب کلیک کنید")) {
+                 if (!job.getText().equals("برای انتخاب کلیک کنید")) {
                     if (job.getJobCode().equals("1")) {
                         coltrol_s = job.getText();
                     }

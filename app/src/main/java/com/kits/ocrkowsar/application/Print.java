@@ -108,12 +108,15 @@ public class Print {
     }
 
     public void GetAppPrinterList() {
+        Log.e("test","0");
         dialogProg();
         call = apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                Log.e("test","1");
                 if (response.isSuccessful()) {
+                    Log.e("test","2");
                     assert response.body() != null;
                     printerconter = 0;
                     AppPrinters = response.body().getAppPrinters();
@@ -148,11 +151,13 @@ public class Print {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                Log.e("test_PrinterList",t.getMessage());
-                GetAppPrinterList();
+                Log.e("test","3");
+                dialogProg.dismiss();
+                ((Activity) mContext).finish();
 
             }
         });
+        Log.e("test","4");
     }
 
     @SuppressLint("RtlHardcoded")
