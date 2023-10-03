@@ -135,6 +135,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         tv_CustName.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
         tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
+        Log.e("kowsar",factor.getBrokerName());
         if (factor.getBrokerName().length() > 20)
             tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName().substring(0, 20) + "..."));
         else

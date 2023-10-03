@@ -34,7 +34,8 @@ public class SplashActivity extends AppCompatActivity {
     Handler handler;
     final int PERMISSION_CODE = 1;
     CallMethod callMethod;
-    final int PERMISSION_REQUEST_CODE = 1;
+
+   // final int PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +48,18 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
+
     @SuppressLint("SdCardPath")
     public void init() {
 
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         callMethod.EditString("Last_search", "");
-        callMethod.EditString("LastTcPrint","0");
-        callMethod.EditString("ConditionPosition","0");
+        callMethod.EditString("LastTcPrint", "0");
+        callMethod.EditString("ConditionPosition", "0");
 
         if (callMethod.firstStart()) {
-            callMethod.EditString("Deliverer",  "پیش فرض");
+            callMethod.EditString("Deliverer", "پیش فرض");
             callMethod.EditString("Category", "0");
             callMethod.EditString("StackCategory", "همه");
             callMethod.EditString("ConditionPosition", "0");
@@ -82,32 +84,17 @@ public class SplashActivity extends AppCompatActivity {
 
         }
 
-        requestPermission();
+
+
+
+      //  Startapplication();
+        //requestPermission();
+        runtimePermission();
 
     }
 
 
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                try {
-                    intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
-                    startActivityForResult(intent, 2296);
-                } catch (Exception e) {
-                    intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    startActivityForResult(intent, 2296);
-                }
-            } else {
-                runtimePermission();
-            }
 
-        } else {
-            runtimePermission();
-        }
-    }
     private void Startapplication() {
 
         if (callMethod.ReadString("DatabaseName").equals("")) {
@@ -122,7 +109,7 @@ public class SplashActivity extends AppCompatActivity {
 
             handler = new Handler();
             handler.postDelayed(() -> {
-//                try {
+       //         try {
 //                    dbh.DeleteLastWeek();
 //                } catch (Exception e) {
 //                    e.printStackTrace();
@@ -148,17 +135,59 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+    private void requestPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+
+                try {
+                    intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                    startActivityForResult(intent, 2296);
+                } catch (Exception e) {
+                    intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivityForResult(intent, 2296);
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                                    Startapplication();
+                                } else {
+                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_CODE);
+                                }
+                            } else {
+                                Startapplication();
+                            }
+
+                    } else {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
+                }
+            }
+        } else {
+            runtimePermission();
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2296) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {
-                    runtimePermission();
+                    requestPermission();
                     callMethod.showToast("مجوز صادر شد");
 
                 } else {
@@ -177,7 +206,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+
+        if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 callMethod.showToast("permission granted");
             } else {
@@ -193,7 +223,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
     }
-
 
 
 }

@@ -268,7 +268,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:padding="5dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"

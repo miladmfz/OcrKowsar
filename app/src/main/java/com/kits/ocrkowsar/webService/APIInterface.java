@@ -176,5 +176,12 @@ public interface APIInterface {
             , @Field("PrintCount") String PrintCount
     );
 
+    @FormUrlEncoded
+    @POST("index.php")
+    Call<RetrofitResponse> GetDataDbsetup(@Field("tag") String tag
+            , @Field("Where") String Where
+
+    );
+
 }
 

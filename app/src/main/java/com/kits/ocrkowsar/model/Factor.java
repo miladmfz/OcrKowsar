@@ -144,7 +144,13 @@ public class Factor {
     }
 
     public String getBrokerName() {
-        return BrokerName;
+
+        if (BrokerName != null)
+        {
+            return BrokerName;
+        }else {
+            return "";
+        }
     }
 
     public void setBrokerName(String brokerName) {

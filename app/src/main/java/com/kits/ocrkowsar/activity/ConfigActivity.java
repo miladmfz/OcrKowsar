@@ -128,12 +128,11 @@ public class ConfigActivity extends AppCompatActivity  {
     }
 
     public void init() {
-
+        GetDataIsPersian();
         ed_Deliverer.setText(callMethod.ReadString("Deliverer"));
         tv_laststack.setText(callMethod.ReadString("StackCategory"));
         ed_titlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
         sm_arabictext.setChecked(callMethod.ReadBoolan("ArabicText"));
-
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",ed_Deliverer.getText().toString());
             callMethod.EditString("Category",workcategory);
@@ -261,6 +260,29 @@ public class ConfigActivity extends AppCompatActivity  {
                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerjob.setAdapter(spinner_adapter);
                     spinnerjob.setSelection(0);
+
+                }
+
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void GetDataIsPersian() {
+
+        Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+
+                    assert response.body() != null;
+                    callMethod.EditBoolan("ArabicText", !response.body().getText().equals("1"));
+
 
                 }
 

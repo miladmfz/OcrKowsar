@@ -33,6 +33,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public class LocalFactorListActivity extends AppCompatActivity {
     private DatabaseHelper dbh;
     LocalFactorList_Adapter adapter;
