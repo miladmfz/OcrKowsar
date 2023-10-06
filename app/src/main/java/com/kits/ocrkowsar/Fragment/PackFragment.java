@@ -63,6 +63,7 @@ public class PackFragment extends Fragment{
 
 
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     String date = "";
     TextView ed_pack_h_date;
     DatabaseHelper dbh;
@@ -123,6 +124,7 @@ public class PackFragment extends Fragment{
         dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
         action=new Action(requireActivity());
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         handler = new Handler();
         for (final String[] ignored : arraygood_shortage) {
             arraygood_shortage.add(new String[]{"goodcode", "amount "});

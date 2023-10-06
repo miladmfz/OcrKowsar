@@ -59,7 +59,8 @@ import retrofit2.Response;
 
 public class Action extends Activity implements DatePickerDialog.OnDateSetListener {
 
-    APIInterface apiInterface;
+        APIInterface apiInterface;
+    APIInterface secendApiInterface;
     DatabaseHelper dbh;
     private final Context mContext;
     CallMethod callMethod;
@@ -80,6 +81,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         dialog = new Dialog(mcontxt);
         dialogProg = new Dialog(mContext);
         print = new Print(mContext);
@@ -571,16 +573,38 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         dialog.setContentView(R.layout.loginconfig);
         EditText ed_password = dialog.findViewById(R.id.edloginconfig);
         MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
-
-
         btn_login.setOnClickListener(v -> {
-            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1922")) {
-                Intent intent = new Intent(mContext, ConfigActivity.class);
-                mContext.startActivity(intent);
+            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+                Intent intent = new Intent(this, ConfigActivity.class);
+                startActivity(intent);
+            }else {
+                callMethod.showToast("رمز عبور صیحیح نیست");
             }
-
         });
         dialog.show();
+    }
+
+    public void GetOcrFactorDetail(Factor factor) {
+        
+        
+        Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
+                "GetOcrFactorDetail",
+                factor.getAppOCRFactorCode()
+        );
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    Factor Factor=response.body().getFactors().get(0);
+                    factor_detail(Factor);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
+        });
+
+        
     }
 
 
@@ -589,8 +613,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         app_info();
         dialogProg();
-        Call<String> call = apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
 
+        Call<String> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+        }else {
+            call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
+        }
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {

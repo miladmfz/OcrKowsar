@@ -262,6 +262,10 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
             callMethod.EditString("PersianCompanyNameUse", singleactive.getPersianCompanyName());
             callMethod.EditString("EnglishCompanyNameUse",singleactive.getEnglishCompanyName());
             callMethod.EditString("ServerURLUse", singleactive.getServerURL());
+            callMethod.EditString("ActivationCode", singleactive.getActivationCode());
+            callMethod.EditString("SecendServerURL", singleactive.getSecendServerURL());
+            callMethod.EditString("DbName", singleactive.getDbName());
+
             if (!databasefile.exists()) {
                 DownloadRequesttest(singleactive.getSQLiteURL(),singleactive.getEnglishCompanyName(),databasedir,databasefile);
             } else {

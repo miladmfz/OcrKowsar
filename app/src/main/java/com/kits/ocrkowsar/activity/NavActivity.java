@@ -54,6 +54,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     CallMethod callMethod;
     DatabaseHelper dbh;
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     Toolbar toolbar;
     Action action;
     NavigationView navigationView;
@@ -78,6 +79,7 @@ public void Config() {
     action = new Action(this);
     dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
     apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+    secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
     toolbar = findViewById(R.id.NavActivity_toolbar);
     setSupportActionBar(toolbar);
@@ -112,6 +114,10 @@ public void Config() {
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("ServerURLUse", "");
             callMethod.EditString("DatabaseName", "");
+            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("DbName", "");
+            callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, SplashActivity.class);
             finish();
             startActivity(intent);

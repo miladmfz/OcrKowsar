@@ -44,6 +44,7 @@ import retrofit2.Response;
 
 public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorList_Adapter.facViewHolder> {
     APIInterface apiInterface ;
+    APIInterface secendApiInterface;
 
     private final Context mContext;
     Intent intent;
@@ -67,6 +68,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         dialog.setContentView(R.layout.signature);
         this.width =metrics;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
 
     }
@@ -103,6 +105,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         }
 
         holder.fac_factor.setOnClickListener(v -> {
+            callMethod.EditString("FactorDbName", factors.get(position).getDbname());
             intent = new Intent(mContext, FactorActivity.class);
             intent.putExtra("ScanResponse", factors.get(position).getFactorBarcode());
             intent.putExtra("FactorImage", "hasimage");
@@ -113,7 +116,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
 
 
         holder.fac_view.setOnClickListener(v -> {
-
+            callMethod.EditString("FactorDbName", factors.get(position).getDbname());
             if (!factors.get(position).getSignatureImage().equals("")) {
                 ImageView imageView=dialog.findViewById(R.id.imageview_fromfactor);
                 byte[] imageByteArray1;
@@ -171,10 +174,20 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
             MaterialButton btn_login =  dialog.findViewById(R.id.btnloginconfig);
 
             btn_login.setOnClickListener(v -> {
-                if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals("1922"))
+                if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode")))
                 {
+
+                    callMethod.EditString("FactorDbName", factors.get(position).getDbname());
                     if (factors.get(position).getIsSent().equals("0")) {
-                        Call<RetrofitResponse> call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                        Call<RetrofitResponse> call;
+
+                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                            call =apiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                        }else {
+                            call =secendApiInterface.CheckState("OcrDeliverd",factors.get(position).getAppOCRFactorCode(),"0",callMethod.ReadString("Deliverer"));
+                        }
+
+
                         call.enqueue(new Callback<>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -202,6 +215,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
 
         holder.fac_send.setOnClickListener(view -> {
             if (!factors.get(position).getSignatureImage().equals("")) {
+                callMethod.EditString("FactorDbName", factors.get(position).getDbname());
                 Log.e("test__","yes_getSignatureImag");
                 new AlertDialog.Builder(mContext)
                         .setTitle("توجه")

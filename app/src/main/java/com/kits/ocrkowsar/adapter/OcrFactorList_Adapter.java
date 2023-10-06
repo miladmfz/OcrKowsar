@@ -35,6 +35,7 @@ import retrofit2.Response;
 
 public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Adapter.facViewHolder> {
     APIInterface apiInterface ;
+    APIInterface secendApiInterface ;
 
     private final Context mContext;
     Intent intent;
@@ -56,6 +57,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         this.state = State;
         this.factors = retrofitFactors;
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
     }
 
@@ -154,34 +156,29 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
 
         holder.fac_factor_btn.setOnClickListener(v -> {
-
+            callMethod.EditString("FactorDbName", factors.get(position).getDbname());
+            
+            
             if(factors.get(position).getStackClass().length()>1){
 
                 if(callMethod.ReadString("Category").equals("5")) {
-                    Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
-                            "GetOcrFactorDetail",
-                            factors.get(position).getAppOCRFactorCode()
-                            );
-                    call.enqueue(new Callback<>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                            if(response.isSuccessful()) {
-                                assert response.body() != null;
-                                Factor Factor=response.body().getFactors().get(0);
-                                action.factor_detail(Factor);
-                            }
-                        }
-                        @Override
-                        public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {}
-                    });
-
+                    
+                    action.GetOcrFactorDetail(factors.get(position));
+                    
                 }else {
                     if (position < 5) {
 
                         if (callMethod.ReadString("Category").equals("4")) {
                             callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
-                            Call<RetrofitResponse> call = apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                            Call<RetrofitResponse> call;
+                            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                call =apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                            }else {
+                                call =secendApiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                            }
+
+
                             call.enqueue(new Callback<>() {
                                 @Override
                                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -268,141 +265,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
     }
 
-//
-//    public void Pack_detail(String FactorOcrCode){
-//
-//        dialog = new Dialog(mContext);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.pack_header);
-//
-//        ArrayList<String> arrayList1,arrayList2,arrayList3;
-//        arrayList1=dbh.Packdetail("Reader");
-//        arrayList2=dbh.Packdetail("Controler");
-//        arrayList3=dbh.Packdetail("pack");
-//        MaterialButton btn_pack_h_send =  dialog.findViewById(R.id.pack_header_send);
-//        MaterialButton btn_pack_h_1 =  dialog.findViewById(R.id.pack_header_btn1);
-//        MaterialButton btn_pack_h_2 =  dialog.findViewById(R.id.pack_header_btn2);
-//        MaterialButton btn_pack_h_3 =  dialog.findViewById(R.id.pack_header_btn3);
-//        MaterialButton btn_pack_h_5 =  dialog.findViewById(R.id.pack_header_btn5);
-//        Spinner sp_pack_h_1 = dialog.findViewById(R.id.pack_header_spinner1);
-//        Spinner sp_pack_h_2 = dialog.findViewById(R.id.pack_header_spinner2);
-//        Spinner sp_pack_h_3 = dialog.findViewById(R.id.pack_header_spinner3);
-//        ArrayAdapter<String> sp_adapter_1 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, arrayList1);
-//        ArrayAdapter<String> sp_adapter_2 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item,arrayList2);
-//        ArrayAdapter<String> sp_adapter_3 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item,arrayList3);
-//        sp_adapter_1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        sp_adapter_2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        sp_adapter_3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        sp_pack_h_1.setAdapter(sp_adapter_1);
-//        sp_pack_h_2.setAdapter(sp_adapter_2);
-//        sp_pack_h_3.setAdapter(sp_adapter_3);
-//
-//        LinearLayoutCompat ll_pack_h_new_1 = dialog.findViewById(R.id.pack_new_reader);
-//        LinearLayoutCompat ll_pack_h_new_2 = dialog.findViewById(R.id.pack_new_control);
-//        LinearLayoutCompat ll_pack_h_new_3 = dialog.findViewById(R.id.pack_new_pack);
-//        MaterialButton btn_pack_h_new_1 = dialog.findViewById(R.id.pack_new_btn1);
-//        MaterialButton btn_pack_h_new_2 = dialog.findViewById(R.id.pack_new_btn2);
-//        MaterialButton btn_pack_h_new_3 = dialog.findViewById(R.id.pack_new_btn3);
-//        EditText ed_pack_h_new_1 = dialog.findViewById(R.id.pack_new_ed1);
-//        EditText ed_pack_h_new_2 = dialog.findViewById(R.id.pack_new_ed2);
-//        EditText ed_pack_h_new_3 = dialog.findViewById(R.id.pack_new_ed3);
-//        EditText ed_pack_h_amount = dialog.findViewById(R.id.pack_header_packamount);
-//        TextView ed_pack_h_date = dialog.findViewById(R.id.pack_header_senddate);
-//
-//
-//
-//        PersianCalendar persianCalendar = new PersianCalendar();
-//        String tmonthOfYear,tdayOfMonth;
-//        tmonthOfYear="0"+ persianCalendar.getPersianMonth();
-//        tdayOfMonth ="0"+ persianCalendar.getPersianDay();
-//        String date = persianCalendar.getPersianYear()+"-"
-//                + tmonthOfYear.substring(tmonthOfYear.length()-2)+"-"
-//                + tdayOfMonth.substring(tdayOfMonth.length()-2);
-//
-//        ed_pack_h_date.setText(date);
-//
-//        final String[] reader_s = {""};
-//        final String[] coltrol_s = {""};
-//        final String[] pack_s = {""};
-//        final String[] packCount = {""};
-//
-//        btn_pack_h_send.setOnClickListener(v -> {
-//
-//            int pack_r =sp_pack_h_1.getSelectedItemPosition();
-//            int pack_c =sp_pack_h_2.getSelectedItemPosition();
-//            int pack_d =sp_pack_h_3.getSelectedItemPosition();
-//
-//
-//            reader_s[0] =arrayList1.get(pack_r);
-//            coltrol_s[0] =arrayList2.get(pack_c);
-//            pack_s[0] =arrayList3.get(pack_d);
-//            packCount[0] =ed_pack_h_amount.getText().toString();
-//
-//            if(reader_s[0].length()<1){
-//                reader_s[0] =" ";
-//            }
-//            if(coltrol_s[0].length()<1){
-//                coltrol_s[0] =" ";
-//            }
-//            if(pack_s[0].length()<1){
-//                pack_s[0] =" ";
-//            }
-//            if(packCount[0].length()<1){
-//                packCount[0] ="1";
-//            }
-//
-//
-//            Call<RetrofitResponse> call2 =apiInterface.SetPackDetail("SetPackDetail",FactorOcrCode, reader_s[0], coltrol_s[0], pack_s[0],date, packCount[0]);
-//            call2.enqueue(new Callback<>() {
-//                @Override
-//                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-//                    dialog.dismiss();
-//                    ((Activity) mContext).finish();
-//                }
-//                @Override
-//                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-//                    Log.e("",t.getMessage()); }
-//            });
-//
-//        });
-//        btn_pack_h_new_1.setOnClickListener(v -> {
-//            dbh.Insert_Packdetail("Reader",ed_pack_h_new_1.getText().toString());
-//            dialog.dismiss();
-//            Pack_detail(FactorOcrCode);
-//        });
-//        btn_pack_h_new_2.setOnClickListener(v -> {
-//            dbh.Insert_Packdetail("Controler",ed_pack_h_new_2.getText().toString());
-//            dialog.dismiss();
-//            Pack_detail(FactorOcrCode);
-//        });
-//        btn_pack_h_new_3.setOnClickListener(v -> {
-//            dbh.Insert_Packdetail("pack",ed_pack_h_new_3.getText().toString());
-//            dialog.dismiss();
-//            Pack_detail(FactorOcrCode);
-//        });
-//
-//
-//        btn_pack_h_1.setOnClickListener(v -> ll_pack_h_new_1.setVisibility(View.VISIBLE));
-//        btn_pack_h_2.setOnClickListener(v -> ll_pack_h_new_2.setVisibility(View.VISIBLE));
-//        btn_pack_h_3.setOnClickListener(v -> ll_pack_h_new_3.setVisibility(View.VISIBLE));
-//
-//
-//        btn_pack_h_5.setOnClickListener(v -> {
-//
-//            PersianCalendar persianCalendar1 = new PersianCalendar();
-//            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-//                    (DatePickerDialog.OnDateSetListener) this,
-//                    persianCalendar1.getPersianYear(),
-//                    persianCalendar1.getPersianMonth(),
-//                    persianCalendar1.getPersianDay()
-//            );
-//            datePickerDialog.show(datePickerDialog.getFragmentManager(), "Datepickerdialog");
-//        });
-//
-//        dialog.show();
-//
-//    }
-//
+
 
 
 }

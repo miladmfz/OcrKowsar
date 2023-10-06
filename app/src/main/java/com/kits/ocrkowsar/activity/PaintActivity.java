@@ -70,6 +70,7 @@ public class PaintActivity extends AppCompatActivity {
     Button button;
     CallMethod callMethod;
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     EditText ed_signexplain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,6 +289,7 @@ public class PaintActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         action =new Action(PaintActivity.this);
 
         main_layout= findViewById(R.id.signature_mainlayout);

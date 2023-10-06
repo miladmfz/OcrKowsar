@@ -46,6 +46,7 @@ import retrofit2.Response;
 public class ConfigActivity extends AppCompatActivity  {
 
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     CallMethod callMethod;
     DatabaseHelper dbh;
     Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson;
@@ -82,6 +83,7 @@ public class ConfigActivity extends AppCompatActivity  {
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         imageInfo = new ImageInfo(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
         works.add("برای انتخاب کلیک کنید");
         works.add("اسکن بارکد");

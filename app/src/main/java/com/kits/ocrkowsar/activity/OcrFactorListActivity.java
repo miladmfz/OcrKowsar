@@ -53,7 +53,8 @@ import retrofit2.Response;
 
 public class OcrFactorListActivity extends AppCompatActivity {
 
-    APIInterface apiInterface;
+        APIInterface apiInterface;
+    APIInterface secendApiInterface;
     OcrFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
     RecyclerView factor_list_recycler;
@@ -137,6 +138,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         handler=new Handler();
         prog = findViewById(R.id.factor_listActivity_prog);
 

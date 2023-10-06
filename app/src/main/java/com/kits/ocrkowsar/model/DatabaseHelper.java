@@ -281,8 +281,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             callMethod.showToast("فاکتور اسکن شده است");
         } else {
-            getWritableDatabase().execSQL("INSERT INTO FactorScan(AppOCRFactorCode,FactorBarcode, FactorPrivateCode, SignatureImage, FactorImage, CameraImage,IsSent, FactorDate, ScanDate, CustomerName, CustomerCode,Deliverer)" +
-                    " VALUES ('"+AppOCRFactorCode+"','"+factorbarcode+"', '"+factorprivatecode+"', '','','', '0', '"+FactorDate+"', '"+Date+"', '"+customername+"', '"+customercode+"','"+callMethod.ReadString("Deliverer")+"')");
+            getWritableDatabase().execSQL("INSERT INTO FactorScan(AppOCRFactorCode,FactorBarcode, FactorPrivateCode, SignatureImage, FactorImage, CameraImage,IsSent, FactorDate, ScanDate, CustomerName, CustomerCode,Deliverer,DbName)" +
+                    " VALUES ('"+AppOCRFactorCode+"','"+factorbarcode+"', '"+factorprivatecode+"', '','','', '0', '"+FactorDate+"', '"+Date+"', '"+customername+"', '"+customercode+"', '"+callMethod.ReadString("Deliverer")+"','"+callMethod.ReadString("FactorDbName")+"')");
 
         }
         cursor.close();

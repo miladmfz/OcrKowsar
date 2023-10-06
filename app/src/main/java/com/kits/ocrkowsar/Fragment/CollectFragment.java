@@ -48,6 +48,7 @@ import retrofit2.Response;
 
 public class CollectFragment extends Fragment {
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
 
     DatabaseHelper dbh ;
     ArrayList<String> GoodCodeCheck=new ArrayList<>();
@@ -119,6 +120,7 @@ public class CollectFragment extends Fragment {
         callMethod = new CallMethod(requireActivity());
         dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         handler=new Handler();
         print=new Print(requireActivity());
         DisplayMetrics metrics = new DisplayMetrics();

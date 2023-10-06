@@ -45,6 +45,7 @@ import retrofit2.Response;
 public class  FactorActivity extends AppCompatActivity {
 
     APIInterface apiInterface ;
+    APIInterface secendApiInterface ;
     DatabaseHelper dbh ;
     LinearLayoutCompat main_layout;
     LinearLayoutCompat title_layout;
@@ -99,6 +100,7 @@ public class  FactorActivity extends AppCompatActivity {
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         main_layout = findViewById(R.id.factor_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -112,7 +114,14 @@ public class  FactorActivity extends AppCompatActivity {
 
 
         if(bitmap_factor_base64.equals("")){
-            Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+
+
+            Call<RetrofitResponse> call;
+            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+            }else {
+                call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
+            }
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

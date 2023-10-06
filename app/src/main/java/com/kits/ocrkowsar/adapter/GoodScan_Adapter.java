@@ -45,6 +45,7 @@ import retrofit2.Response;
 
 public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facViewHolder> {
     APIInterface apiInterface ;
+    APIInterface secendApiInterface ;
 
     private final Context mContext;
     private final ArrayList<Good> goods;
@@ -63,6 +64,7 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
         this.action = new Action(context);
         this.callMethod = new CallMethod(context);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
 
     }

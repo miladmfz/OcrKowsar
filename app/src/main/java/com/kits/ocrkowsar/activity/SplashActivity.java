@@ -57,6 +57,7 @@ public class SplashActivity extends AppCompatActivity {
         callMethod.EditString("Last_search", "");
         callMethod.EditString("LastTcPrint", "0");
         callMethod.EditString("ConditionPosition", "0");
+        callMethod.EditString("FactorDbName", "");
 
         if (callMethod.firstStart()) {
             callMethod.EditString("Deliverer", "پیش فرض");
@@ -74,10 +75,14 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("PersianCompanyNameUse", "");
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("DatabaseName", "");
-            callMethod.saveArrayList(new ArrayList<>(), "ServerURLs");
-            callMethod.saveArrayList(new ArrayList<>(), "SQLiteURLs");
-            callMethod.saveArrayList(new ArrayList<>(), "PersianCompanyNames");
-            callMethod.saveArrayList(new ArrayList<>(), "EnglishCompanyNames");
+            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("SecendServerURL", "");
+            callMethod.EditString("DbName", "");
+
+            callMethod.EditString("FactorDbName", "");
+
+
+
             dbhbase = new DatabaseHelper(App.getContext(), "/data/data/com.kits.ocrkowsar/databases/KowsarDb.sqlite");
             dbhbase.CreateActivationDb();
 
@@ -87,9 +92,9 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-      //  Startapplication();
+        Startapplication();
         //requestPermission();
-        runtimePermission();
+        //runtimePermission();
 
     }
 

@@ -10,5 +10,14 @@
     <string name="SERVERIP">84.241.32.119:60005</string>
     <string name="Kowsar_log">87.107.78.234:60005</string>
     <string name="ArabicText">حروف عربی (ي , ك) :</string>
+    <string name="textvalue_allert">توجه</string>
+    <string name="textvalue_yes">بله</string>
+    <string name="textvalue_no">خیر</string>
 
+    <string name="aboutus">درباره ما</string>
+    <string name="aboutus_address">نشانی :میدان توحید خیابان پرچم پلاک 37</string>
+    <string name="aboutus_number">تلفن :3—66569320</string>
+    <string name="aboutus_localnumber">داخلی : 409 </string>
+    <string name="aboutus_email">پست الکترونیک :info@Kits.ir</string>
+    <string name="aboutus_downpage">تمامی حقوق این نرم افزار متعلق به گروه نرم افزاری کوثر می باشد</string>
 </resources>

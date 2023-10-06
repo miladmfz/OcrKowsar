@@ -42,6 +42,7 @@ import retrofit2.Response;
 
 public class ConfirmActivity extends AppCompatActivity {
     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     EditText ed_barcode;
     DatabaseHelper dbh ;
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
@@ -59,9 +60,7 @@ public class ConfirmActivity extends AppCompatActivity {
     String BarcodeScan;
     String OrderBy;
     String State;
-    String Step;
-    int correctgood=0;
-    Intent intent;
+
     int width=1;
     Action action;
     Handler handler;
@@ -110,6 +109,8 @@ public class ConfirmActivity extends AppCompatActivity {
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
         action = new Action(this);
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+
         handler=new Handler();
         for (final String[] ignored : arraygood_shortage) {
             arraygood_shortage.add(new String[]{"goodcode","amount "});
@@ -175,6 +176,10 @@ public class ConfirmActivity extends AppCompatActivity {
                     }
 
                 });
+
+
+
+
 
         if(State.equals("0")){
             OrderBy="GoodExplain1";

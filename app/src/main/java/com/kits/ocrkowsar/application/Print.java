@@ -56,7 +56,8 @@ public class Print {
 
 
     private final Context mContext;
-    public APIInterface apiInterface;
+    public     APIInterface apiInterface;
+    APIInterface secendApiInterface;
     public Call<RetrofitResponse> call;
     CallMethod callMethod;
     DatabaseHelper dbh;
@@ -84,6 +85,7 @@ public class Print {
         this.callMethod = new CallMethod(mContext);
         this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);

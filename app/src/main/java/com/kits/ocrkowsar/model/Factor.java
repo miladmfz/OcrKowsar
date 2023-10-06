@@ -54,6 +54,18 @@ public class Factor {
     @SerializedName("TotalRow")
     private String TotalRow;
 
+    @SerializedName("dbname")
+    private String dbname;
+
+
+    public String getDbname() {
+        return dbname;
+    }
+
+    public void setDbname(String dbname) {
+        this.dbname = dbname;
+    }
+
     public String getTotalRow() {
         return TotalRow;
     }
