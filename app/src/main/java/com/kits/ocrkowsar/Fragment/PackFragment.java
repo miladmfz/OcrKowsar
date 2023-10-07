@@ -64,13 +64,10 @@ public class PackFragment extends Fragment{
 
     APIInterface apiInterface;
     APIInterface secendApiInterface;
-    String date = "";
-    TextView ed_pack_h_date;
     DatabaseHelper dbh;
     Action action;
     ArrayList<String> GoodCodeCheck = new ArrayList<>();
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
-    Dialog dialog;
     LinearLayoutCompat ll_main;
     LinearLayoutCompat ll_title;
     LinearLayoutCompat ll_good_body_detail;
@@ -98,14 +95,7 @@ public class PackFragment extends Fragment{
     TextView tv_phone;
     TextView tv_total_amount;
     TextView tv_total_price;
-    ArrayList<Job> jobs;
-
     View view;
-
-    String coltrol_s = "";
-    String reader_s = "";
-    String pack_s = "";
-    String packCount = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -225,8 +215,18 @@ public class PackFragment extends Fragment{
 
             for (String goodchecks : GoodCodeCheck) {
 
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.CheckState("OcrControlled", goodchecks, "2", "");
+                }else{
+                    call=secendApiInterface.CheckState("OcrControlled", goodchecks, "2", "");
+                }
 
-                Call<RetrofitResponse> call = apiInterface.CheckState("OcrControlled", goodchecks, "2", "");
+
+
+
+
+
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -475,9 +475,15 @@ public class PackFragment extends Fragment{
 
 
             for (String[] goodchecks : arraygood_shortage) {
-                Log.e("123", "start");
 
-                Call<RetrofitResponse> call = apiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
+                }else{
+                    call=secendApiInterface.GoodShortage("ocrShortage", goodchecks[0], goodchecks[1]);
+                }
+
+
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

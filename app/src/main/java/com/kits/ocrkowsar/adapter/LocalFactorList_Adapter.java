@@ -216,15 +216,12 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         holder.fac_send.setOnClickListener(view -> {
             if (!factors.get(position).getSignatureImage().equals("")) {
                 callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-                Log.e("test__","yes_getSignatureImag");
                 new AlertDialog.Builder(mContext)
                         .setTitle("توجه")
                         .setMessage("آیا رسید ارسال گردد؟")
                         .setPositiveButton("بله", (dialogInterface, i) -> action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage()))
                         .setNegativeButton("خیر", (dialogInterface, i) -> {                   })
                         .show();
-            }else{
-                Log.e("test__","no_getSignatureImag");
             }
         });
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));

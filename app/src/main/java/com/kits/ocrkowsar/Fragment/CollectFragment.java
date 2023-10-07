@@ -47,9 +47,9 @@ import retrofit2.Response;
 
 
 public class CollectFragment extends Fragment {
+
     APIInterface apiInterface;
     APIInterface secendApiInterface;
-
     DatabaseHelper dbh ;
     ArrayList<String> GoodCodeCheck=new ArrayList<>();
     LinearLayoutCompat ll_main;
@@ -218,7 +218,13 @@ public class CollectFragment extends Fragment {
 
 
             dialogProg.show();
-            Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+
+            Call<RetrofitResponse> call;
+            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+            }else{
+                call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+            }
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -240,12 +246,28 @@ public class CollectFragment extends Fragment {
             dialogProg.show();
             for (String goodchecks : GoodCodeCheck) {
 
-                Call<RetrofitResponse> call =apiInterface.OcrControlled(
-                        "OcrControlled",
-                        goodchecks,
-                        "0",
-                        callMethod.ReadString("JobPersonRef")
-                );
+
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.OcrControlled(
+                            "OcrControlled",
+                            goodchecks,
+                            "0",
+                            callMethod.ReadString("JobPersonRef")
+                    );
+                }else{
+                    call=secendApiInterface.OcrControlled(
+                            "OcrControlled",
+                            goodchecks,
+                            "0",
+                            callMethod.ReadString("JobPersonRef")
+                    );
+                }
+
+
+
+
+
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -356,6 +378,7 @@ public class CollectFragment extends Fragment {
         ll_factor_summary.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ll_send_confirm.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
+    @SuppressLint("RtlHardcoded")
     public void setGravity(){
         tv_company.setGravity(Gravity.CENTER);
         tv_customername.setGravity(Gravity.RIGHT);
@@ -572,7 +595,17 @@ public class CollectFragment extends Fragment {
         }
         if(goods.size() == ConfirmCounter){
             dialogProg.show();
-            Call<RetrofitResponse> call =apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+
+            Call<RetrofitResponse> call;
+            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+            }else{
+                call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1",callMethod.ReadString("Deliverer"));
+            }
+
+
+
+
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

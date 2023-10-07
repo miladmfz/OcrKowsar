@@ -47,20 +47,17 @@ public class ConfirmActivity extends AppCompatActivity {
     DatabaseHelper dbh ;
     ArrayList<String[]> arraygood_shortage = new ArrayList<>();
     LinearLayoutCompat ll_main;
-
     CallMethod callMethod;
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
     CollectFragment collectFragment;
     PackFragment packFragment;
-
     ArrayList<Good> goods;
     ArrayList<Good> goods_scan=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
     String OrderBy;
     String State;
-
     int width=1;
     Action action;
     Handler handler;
@@ -187,7 +184,14 @@ public class ConfirmActivity extends AppCompatActivity {
             OrderBy="GoodName";
         }
 
-        Call<RetrofitResponse> call =apiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+        }else{
+            call=secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
+        }
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

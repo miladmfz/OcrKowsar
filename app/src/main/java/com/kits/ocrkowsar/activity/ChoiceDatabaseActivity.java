@@ -43,7 +43,6 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     APIInterface apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface.class);
     CallMethod callMethod;
     Activation activation;
-    boolean getdb=true;
     DatabaseHelper dbh;
     DatabaseHelper dbhbase;
     TextView tv_rep;

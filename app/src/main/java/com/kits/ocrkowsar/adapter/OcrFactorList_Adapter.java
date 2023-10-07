@@ -43,12 +43,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
     Action action;
     String state ;
-    String filter;
-    String path;
     CallMethod callMethod;
 
     DatabaseHelper dbh;
-    Dialog dialog;
     public OcrFactorList_Adapter(ArrayList<Factor> retrofitFactors,String State, Context context) {
         this.mContext = context;
         this.callMethod = new CallMethod(context);

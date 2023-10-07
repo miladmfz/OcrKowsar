@@ -53,7 +53,7 @@ import retrofit2.Response;
 
 public class OcrFactorListActivity extends AppCompatActivity {
 
-        APIInterface apiInterface;
+    APIInterface apiInterface;
     APIInterface secendApiInterface;
     OcrFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
@@ -281,16 +281,35 @@ public class OcrFactorListActivity extends AppCompatActivity {
     private void MoreFactor() {
 
         prog.setVisibility(View.VISIBLE);
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
-                "GetFactorList",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                String.valueOf(PageNo));
+
+
+
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorList",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    String.valueOf(PageNo));
+        }else{
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorList",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    String.valueOf(PageNo));
+        }
+
 
         call.enqueue(new Callback<>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -354,7 +373,15 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void RetrofitRequset_Path() {
 
-        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetCustomerPath");
+
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetCustomerPath("GetCustomerPath");
+        }else{
+            call=secendApiInterface.GetCustomerPath("GetCustomerPath");
+        }
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -406,16 +433,32 @@ public class OcrFactorListActivity extends AppCompatActivity {
         PageNo=0;
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
-        Call<RetrofitResponse>  call = apiInterface.GetOcrFactorList(
-                "GetFactorList",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                "0");
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorList",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    "0");
+        }else{
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorList",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    "0");
+        }
+
 
         call.enqueue(new Callback<>() {
             @Override
@@ -467,16 +510,33 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     public void RetrofitRequset_ListCount() {
 
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
-                state,
-                srch,
-                callMethod.ReadString("StackCategory"),
-                path,
-                StateShortage,
-                StateEdited,
-                Row,
-                "0");
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    "0");
+        }else{
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    srch,
+                    callMethod.ReadString("StackCategory"),
+                    path,
+                    StateShortage,
+                    StateEdited,
+                    Row,
+                    "0");
+        }
+
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -493,16 +553,33 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_EditeCount() {
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
-                state,
-                "0",
-                "همه",
-                "همه",
-                "0",
-                "1",
-                "10000",
-                "0");
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "0",
+                    "همه",
+                    "همه",
+                    "0",
+                    "1",
+                    "10000",
+                    "0");
+        }else{
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "0",
+                    "همه",
+                    "همه",
+                    "0",
+                    "1",
+                    "10000",
+                    "0");
+        }
+
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -517,16 +594,33 @@ public class OcrFactorListActivity extends AppCompatActivity {
     }
 
     public void RetrofitRequset_shortageCount() {
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorList(
-                "GetFactorListCount",
-                state,
-                "",
-                "همه",
-                "همه",
-                "1",
-                "0",
-                "10000",
-                "0");
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "",
+                    "همه",
+                    "همه",
+                    "1",
+                    "0",
+                    "10000",
+                    "0");
+        }else{
+            call=secendApiInterface.GetOcrFactorList(
+                    "GetFactorListCount",
+                    state,
+                    "",
+                    "همه",
+                    "همه",
+                    "1",
+                    "0",
+                    "10000",
+                    "0");
+        }
+
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

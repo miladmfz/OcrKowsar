@@ -53,8 +53,7 @@ public class NavActivity extends AppCompatActivity implements NavigationView.OnN
     Handler handler;
     CallMethod callMethod;
     DatabaseHelper dbh;
-    APIInterface apiInterface;
-    APIInterface secendApiInterface;
+
     Toolbar toolbar;
     Action action;
     NavigationView navigationView;
@@ -78,8 +77,6 @@ public void Config() {
     callMethod = new CallMethod(this);
     action = new Action(this);
     dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
-    apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-    secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
     toolbar = findViewById(R.id.NavActivity_toolbar);
     setSupportActionBar(toolbar);

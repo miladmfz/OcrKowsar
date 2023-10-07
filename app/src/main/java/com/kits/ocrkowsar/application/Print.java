@@ -56,9 +56,8 @@ public class Print {
 
 
     private final Context mContext;
-    public     APIInterface apiInterface;
+    APIInterface apiInterface;
     APIInterface secendApiInterface;
-    public Call<RetrofitResponse> call;
     CallMethod callMethod;
     DatabaseHelper dbh;
     Integer il;
@@ -85,7 +84,7 @@ public class Print {
         this.callMethod = new CallMethod(mContext);
         this.dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
         this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        this.secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         this.persianCalendar = new PersianCalendar();
         this.dialog = new Dialog(mContext);
         this.dialogProg = new Dialog(mContext);
@@ -112,39 +111,46 @@ public class Print {
     public void GetAppPrinterList() {
         Log.e("test","0");
         dialogProg();
-        call = apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
-        call.enqueue(new Callback<RetrofitResponse>() {
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
+        }else{
+            call=secendApiInterface.OrderGetAppPrinter("OrderGetAppPrinter");
+        }
+
+
+
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
-                Log.e("test","1");
                 if (response.isSuccessful()) {
-                    Log.e("test","2");
                     assert response.body() != null;
                     printerconter = 0;
                     AppPrinters = response.body().getAppPrinters();
 
-                    if (callMethod.ReadString("Category").equals("2")){
-                        for (AppPrinter appPrinter:AppPrinters){
-                            Log.e("test_name",appPrinter.getPrinterName());
-                            if (appPrinter.getWhereClause().equals(callMethod.ReadString("StackCategory"))){
+                    if (callMethod.ReadString("Category").equals("2")) {
+                        for (AppPrinter appPrinter : AppPrinters) {
+                            Log.e("test_name", appPrinter.getPrinterName());
+                            if (appPrinter.getWhereClause().equals(callMethod.ReadString("StackCategory"))) {
                                 printerconter++;
-                                targetprinter=appPrinter;
+                                targetprinter = appPrinter;
                                 printDialogView();
                             }
 
                         }
-                    }else if (callMethod.ReadString("Category").equals("3")){
-                        for (AppPrinter appPrinter:AppPrinters){
-                            if (appPrinter.getWhereClause().equals("")){
+                    } else if (callMethod.ReadString("Category").equals("3")) {
+                        for (AppPrinter appPrinter : AppPrinters) {
+                            if (appPrinter.getWhereClause().equals("")) {
                                 printerconter++;
-                                targetprinter=appPrinter;
+                                targetprinter = appPrinter;
                                 printDialogView();
                             }
 
                         }
                     }
 
-                    if (printerconter==0){
+                    if (printerconter == 0) {
                         dialogProg.dismiss();
                         ((Activity) mContext).finish();
                     }
@@ -153,7 +159,7 @@ public class Print {
 
             @Override
             public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
-                Log.e("test","3");
+                Log.e("test", "3");
                 dialogProg.dismiss();
                 ((Activity) mContext).finish();
 
@@ -284,21 +290,35 @@ public class Print {
 
         bitmap_factor_base64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.OcrSendImage("OrderSendImage",
+                    bitmap_factor_base64,
+                    factorData.getFactorPrivateCode(),
+                    targetprinter.getPrinterName(),
+                    targetprinter.getPrintCount()
 
-        Call<RetrofitResponse> call = apiInterface.OcrSendImage("OrderSendImage",
-                bitmap_factor_base64,
-                factorData.getFactorPrivateCode(),
-                targetprinter.getPrinterName(),
-                targetprinter.getPrintCount()
+            );
+        }else{
+            call=secendApiInterface.OcrSendImage("OrderSendImage",
+                    bitmap_factor_base64,
+                    factorData.getFactorPrivateCode(),
+                    targetprinter.getPrinterName(),
+                    targetprinter.getPrintCount()
 
-        );
+            );
+        }
 
-        call.enqueue(new Callback<RetrofitResponse>() {
+
+
+
+
+
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 assert response.body() != null;
-                Log.e("test_Confirm","2");
-                Log.e("test_Confirm",response.body().getText());
+
                 if (response.body().getText().equals("Done")) {
                     dialogProg.dismiss();
                     ((Activity) mContext).finish();
@@ -307,7 +327,7 @@ public class Print {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("test_Confirm",t.getMessage());
+                Log.e("test_Confirm", t.getMessage());
                 dialogProg.dismiss();
                 ((Activity) mContext).finish();
             }
@@ -411,14 +431,24 @@ public class Print {
         bitmap_factor_base64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
 
-        Call<RetrofitResponse> call = apiInterface.OcrSendImage("OrderSendImage",
-                bitmap_factor_base64,
-                factorData.getFactorPrivateCode(),
-                targetprinter.getPrinterName(),
-                targetprinter.getPrintCount()
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.OcrSendImage("OrderSendImage",
+                    bitmap_factor_base64,
+                    factorData.getFactorPrivateCode(),
+                    targetprinter.getPrinterName(),
+                    targetprinter.getPrintCount()
 
-        );
+            );
+        }else{
+            call=secendApiInterface.OcrSendImage("OrderSendImage",
+                    bitmap_factor_base64,
+                    factorData.getFactorPrivateCode(),
+                    targetprinter.getPrinterName(),
+                    targetprinter.getPrintCount()
 
+            );
+        }
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

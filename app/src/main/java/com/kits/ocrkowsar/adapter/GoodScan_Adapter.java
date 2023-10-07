@@ -63,8 +63,8 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
         this.barcodescan = barcodescan;
         this.action = new Action(context);
         this.callMethod = new CallMethod(context);
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+        this.apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+        this.secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
 
     }
@@ -85,7 +85,13 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
         holder.goodscan_factoramount.setText(goods.get(position).getFacAmount());
         holder.goodscan_goodsellprice.setText(goods.get(position).getGoodMaxSellPrice());
 
-        Call<RetrofitResponse> call2 = apiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
+        Call<RetrofitResponse> call2;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call2=apiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
+        }else{
+            call2=secendApiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
+        }
+
         call2.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
@@ -105,7 +111,14 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
 
         holder.goodscan_btn.setOnClickListener(view -> {
             if (state.equals("0")){
-                Call<RetrofitResponse> call = apiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", "");
+
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", "");
+                }else{
+                    call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", "");
+                }
+
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -125,7 +138,13 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
                 });
 
             }else if (state.equals("1")) {
-                Call<RetrofitResponse> call = apiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", "");
+
+                Call<RetrofitResponse> call;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call=apiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", "");
+                }else{
+                    call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", "");
+                }
                 call.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {

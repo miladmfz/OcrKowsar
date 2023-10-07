@@ -303,7 +303,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ", IsSent TEXT" +
                 ", CustomerName TEXT" +
                 ", CustomerCode TEXT" +
-                ", Deliverer TEXT)");
+                ", Deliverer TEXT" +
+                ", DbName TEXT)");
 
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailReader (PackDetailReader INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Reader TEXT )");
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS PackDetailControler (PackDetailControler INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE , Controler TEXT)");

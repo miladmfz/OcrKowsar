@@ -59,7 +59,7 @@ import retrofit2.Response;
 
 public class Action extends Activity implements DatePickerDialog.OnDateSetListener {
 
-        APIInterface apiInterface;
+    APIInterface apiInterface;
     APIInterface secendApiInterface;
     DatabaseHelper dbh;
     private final Context mContext;
@@ -172,7 +172,20 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         btn_1.setOnClickListener(v -> {
 
             dialogProg();
-            Call<RetrofitResponse> call1 = apiInterface.ExitDelivery("ExitDelivery", factor.getAppOCRFactorCode());
+
+            Call<RetrofitResponse> call1;
+            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                call1=apiInterface.ExitDelivery("ExitDelivery", factor.getAppOCRFactorCode());
+            }else{
+                call1=secendApiInterface.ExitDelivery("ExitDelivery", factor.getAppOCRFactorCode());
+            }
+
+
+
+
+
+
+
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
@@ -225,7 +238,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         LinearLayoutCompat ll_pack_h_main = dialog.findViewById(R.id.packheader_linejob);
 
-        Call<RetrofitResponse> call = apiInterface.GetJob("TestJob", "Ocr3");
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetJob("TestJob", "Ocr3");
+        }else{
+            call=secendApiInterface.GetJob("TestJob", "Ocr3");
+        }
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -254,7 +273,14 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
                         ll_new.addView(Tv_new);
 
-                        Call<RetrofitResponse> call1 = apiInterface.GetJobPerson("TestJobPerson", job.getTitle());
+
+                        Call<RetrofitResponse> call1;
+                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                            call1=apiInterface.GetJobPerson("TestJobPerson", job.getTitle());
+                        }else{
+                            call1=secendApiInterface.GetJobPerson("TestJobPerson", job.getTitle());
+                        }
+
                         call1.enqueue(new Callback<>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -411,21 +437,44 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             if (!falt) {
                 dialogProg();
-                Call<RetrofitResponse> call3 = apiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
+
+                Call<RetrofitResponse> call3;
+                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                    call3=apiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
+                }else{
+                    call3=secendApiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
+                }
+
                 call3.enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         assert response.body() != null;
-                        Call<RetrofitResponse> call2 = apiInterface.SetPackDetail(
-                                "SetPackDetail",
-                                factor.getAppOCRFactorCode(),
-                                reader_s,
-                                coltrol_s,
-                                pack_s,
-                                NumberFunctions.EnglishNumber(date),
-                                packCount,
-                                sendtime
-                        );
+
+                        Call<RetrofitResponse> call2;
+                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                            call2=apiInterface.SetPackDetail(
+                                    "SetPackDetail",
+                                    factor.getAppOCRFactorCode(),
+                                    reader_s,
+                                    coltrol_s,
+                                    pack_s,
+                                    NumberFunctions.EnglishNumber(date),
+                                    packCount,
+                                    sendtime
+                            );
+                        }else{
+                            call2=secendApiInterface.SetPackDetail(
+                                    "SetPackDetail",
+                                    factor.getAppOCRFactorCode(),
+                                    reader_s,
+                                    coltrol_s,
+                                    pack_s,
+                                    NumberFunctions.EnglishNumber(date),
+                                    packCount,
+                                    sendtime
+                            );
+                        }
+
                         call2.enqueue(new Callback<>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -471,7 +520,12 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         TextView tv_good_3 = dialog.findViewById(R.id.imagezoome_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.imagezoome_tv4);
 
-        Call<RetrofitResponse> call = apiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+        }else{
+            call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
+        }
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -497,7 +551,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         BaseImageByte = Base64.decode(mContext.getString(R.string.no_photo), Base64.DEFAULT);
         iv_good.setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length), BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getWidth() * 2, BitmapFactory.decodeByteArray(BaseImageByte, 0, BaseImageByte.length).getHeight() * 2, false));
 
-        Call<RetrofitResponse> call2 = apiInterface.GetImage("getImage", GoodCode, 0, 400);
+        Call<RetrofitResponse> call2;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call2=apiInterface.GetImage("getImage", GoodCode, 0, 400);
+        }else{
+            call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 400);
+        }
+
         call2.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
@@ -552,7 +612,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                 goodscan_recycler.setLayoutManager(gridLayoutManager);
                 goodscan_recycler.setAdapter(goodscanadapter);
                 goodscan_recycler.setItemAnimator(new DefaultItemAnimator());
-                //Currctgoods.clear();
             } else {
                 goodscan_tvstatus.setText("اسکن شده");
             }
@@ -585,12 +644,20 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     }
 
     public void GetOcrFactorDetail(Factor factor) {
-        
-        
-        Call<RetrofitResponse> call = apiInterface.GetOcrFactorDetail(
-                "GetOcrFactorDetail",
-                factor.getAppOCRFactorCode()
-        );
+
+        Call<RetrofitResponse> call;
+        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+            call=apiInterface.GetOcrFactorDetail(
+                    "GetOcrFactorDetail",
+                    factor.getAppOCRFactorCode()
+            );
+        }else{
+            call=secendApiInterface.GetOcrFactorDetail(
+                    "GetOcrFactorDetail",
+                    factor.getAppOCRFactorCode()
+            );
+        }
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -609,7 +676,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
     public void sendfactor(final String factor_code, String signatureimage) {
-        Log.e("test","0");
 
         app_info();
         dialogProg();
@@ -623,7 +689,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                Log.e("test","1");
                 callMethod.showToast("فاکتور ارسال گردید");
 
                 dbh.Insert_IsSent(factor_code);
