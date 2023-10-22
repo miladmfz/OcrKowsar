@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -264,6 +265,8 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
             callMethod.EditString("ActivationCode", singleactive.getActivationCode());
             callMethod.EditString("SecendServerURL", singleactive.getSecendServerURL());
             callMethod.EditString("DbName", singleactive.getDbName());
+            callMethod.EditString("AppType", singleactive.getAppType());
+
 
             if (!databasefile.exists()) {
                 DownloadRequesttest(singleactive.getSQLiteURL(),singleactive.getEnglishCompanyName(),databasedir,databasefile);

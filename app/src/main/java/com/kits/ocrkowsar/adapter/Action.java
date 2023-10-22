@@ -43,6 +43,7 @@ import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.model.Utilities;
 import com.kits.ocrkowsar.webService.APIClient;
+import com.kits.ocrkowsar.webService.APIClientSecond;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
@@ -80,8 +81,11 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+
         dialog = new Dialog(mcontxt);
         dialogProg = new Dialog(mContext);
         print = new Print(mContext);
@@ -634,8 +638,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
         btn_login.setOnClickListener(v -> {
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-                Intent intent = new Intent(this, ConfigActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(mContext, ConfigActivity.class);
+                mContext.startActivity(intent);
             }else {
                 callMethod.showToast("رمز عبور صیحیح نیست");
             }

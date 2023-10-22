@@ -78,6 +78,7 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
+            callMethod.EditString("AppType", "");
 
             callMethod.EditString("FactorDbName", "");
 
@@ -92,8 +93,8 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-        Startapplication();
-        //requestPermission();
+        //Startapplication();
+        requestPermission();
         //runtimePermission();
 
     }
@@ -126,103 +127,237 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+//    private void runtimePermission() {
+//        try {
+//
+//
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+//                    Startapplication();
+//
+//                } else {
+//                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+//                }
+//            } else {
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//    private void requestPermission() {
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            if (!Environment.isExternalStorageManager()) {
+//
+//                try {
+//                    intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+//                    intent.addCategory("android.intent.category.DEFAULT");
+//                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+//                    startActivityForResult(intent, 2296);
+//                } catch (Exception e) {
+//                    intent = new Intent();
+//                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                    startActivityForResult(intent, 2296);
+//                }
+//            } else {
+//                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+//                                    Startapplication();
+//                                } else {
+//                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_CODE);
+//                                }
+//                            } else {
+//                                Startapplication();
+//                            }
+//
+//                    } else {
+//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+//                    }
+//                } else {
+//                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
+//                }
+//            }
+//        } else {
+//            runtimePermission();
+//        }
+//    }
+//
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 2296) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                if (Environment.isExternalStorageManager()) {
+//                    requestPermission();
+//                    callMethod.showToast("مجوز صادر شد");
+//
+//                } else {
+//                    handler = new Handler();
+//                    handler.postDelayed(() -> {
+//                        intent = new Intent(this, SplashActivity.class);
+//                        finish();
+//                        startActivity(intent);
+//                    }, 2000);
+//                    callMethod.showToast("مجوز مربوطه را فعال نمایید");
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if (requestCode == PERMISSION_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                callMethod.showToast("permission granted");
+//            } else {
+//                callMethod.showToast("permission denied");
+//            }
+//            requestPermission();
+//        } else {
+//            throw new IllegalStateException("Unexpected value: " + requestCode);
+//        }
+//    }
+//
+
+
+
+
+
+
+
+
+
     private void runtimePermission() {
-        try {
-
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    Startapplication();
-
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
-                }
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+        } else {
+            Startapplication();
         }
-
     }
+
     private void requestPermission() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Log.e("kowsar_1","Build.VERSION.SDK_INT >= Build.VERSION_CODES.R");
             if (!Environment.isExternalStorageManager()) {
-
+                Log.e("kowsar_1","0");
                 try {
+                    Log.e("kowsar_1","1");
                     intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
                     startActivityForResult(intent, 2296);
                 } catch (Exception e) {
+                    Log.e("kowsar_1","2");
                     intent = new Intent();
                     intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     startActivityForResult(intent, 2296);
                 }
+                Log.e("kowsar_1","3");
+            } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("kowsar_1","4");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
+            } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("kowsar_1","5");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("kowsar_1","6");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_CODE);
             } else {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                                    Startapplication();
-                                } else {
-                                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_CODE);
-                                }
-                            } else {
-                                Startapplication();
-                            }
-
-                    } else {
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
-                    }
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE);
-                }
+                Startapplication();
             }
         } else {
+            Log.e("kowsar_1","not If");
             runtimePermission();
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2296) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    requestPermission();
-                    callMethod.showToast("مجوز صادر شد");
-
-                } else {
-                    handler = new Handler();
-                    handler.postDelayed(() -> {
-                        intent = new Intent(this, SplashActivity.class);
-                        finish();
-                        startActivity(intent);
-                    }, 2000);
-                    callMethod.showToast("مجوز مربوطه را فعال نمایید");
-                }
+        if (requestCode == 2296 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                requestPermission();
+                callMethod.showToast("مجوز صادر شد");
+            } else {
+                handler = new Handler();
+                handler.postDelayed(() -> {
+                    intent = new Intent(this, SplashActivity.class);
+                    finish();
+                    startActivity(intent);
+                }, 2000);
+                callMethod.showToast("مجوز مربوطه را فعال نمایید");
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
 
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                callMethod.showToast("permission granted");
+                callMethod.showToast("Permission granted");
             } else {
-                callMethod.showToast("permission denied");
+                callMethod.showToast("Permission denied");
             }
             requestPermission();
         } else {
             throw new IllegalStateException("Unexpected value: " + requestCode);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     protected void onRestart() {

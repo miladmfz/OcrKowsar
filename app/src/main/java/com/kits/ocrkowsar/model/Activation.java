@@ -23,17 +23,28 @@ public class Activation {
 
     @SerializedName("DbName")
     private String DbName;
+    @SerializedName("AppType")
+    private String AppType;
+
+    public String getAppType() {
+        if (AppType != null) {return AppType; }else {return "";}
+    }
+
+    public void setAppType(String appType) {
+        AppType = appType;
+    }
 
     public String getSecendServerURL() {
-        return SecendServerURL;
+        if (SecendServerURL != null) {return SecendServerURL; }else {return "";}
     }
+
 
     public void setSecendServerURL(String secendServerURL) {
         SecendServerURL = secendServerURL;
     }
 
     public String getDbName() {
-        return DbName;
+        if (DbName != null) {return DbName; }else {return "";}
     }
 
     public void setDbName(String dbName) {
