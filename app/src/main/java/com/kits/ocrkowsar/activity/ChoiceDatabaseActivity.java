@@ -17,6 +17,7 @@ import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
+import com.downloader.Status;
 import com.google.android.material.button.MaterialButton;
 import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
@@ -55,7 +56,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     Button active_btn;
     Intent intent;
     TextView tv_versionname;
-
+    int downloadId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,9 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
         active_btn.setOnClickListener(v -> {
 
-            Call<RetrofitResponse> call1 = apiInterface.Activation("ActivationCode", active_edt.getText().toString());
+            Call<RetrofitResponse> call1 = apiInterface.Activation( active_edt.getText().toString());
+
+            Log.e("kowsar",""+call1.request().toString());
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
@@ -114,6 +117,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                     callMethod.showToast(t.getMessage());
+                    Log.e("test",t.getMessage());
                 }
             });
 
@@ -122,9 +126,96 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
     }
 
+    public void DownloadRequesttest(Activation activation) {
 
-    public void DownloadRequesttest(String url,String dbname,File databasedir, File databasefile) {
 
+        String downloadurl="http://178.131.31.161:60005/api/kits/GetDb?Code="+activation.getActivationCode();
+
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(true)
+                .build();
+
+        PRDownloader.initialize(getApplicationContext(), config);
+
+        // Setting timeout globally for the download network requests:
+        PRDownloaderConfig config1 = PRDownloaderConfig.newBuilder()
+                .setReadTimeout(30_000)
+                .setConnectTimeout(30_000)
+                .build();
+        PRDownloader.initialize(getApplicationContext(), config1);
+
+
+        downloadId = PRDownloader.download(
+                        downloadurl,
+                        activation.getDatabaseFolderPath(),
+                        "KowsarDbTemp.sqlite"
+                )
+
+                .build()
+                .setOnStartOrResumeListener(() -> {
+                    dialog.show();
+                    dialog.setCancelable(false);
+                })
+                .setOnPauseListener(() -> {
+
+                })
+                .setOnCancelListener(() -> {
+                    File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+                    DownloadTemp.delete();
+                })
+
+                .setOnProgressListener(progress -> {
+                    tv_rep.setText("در حال بارگیری...");
+                    tv_step.setVisibility(View.VISIBLE);
+                    tv_step.setText(NumberFunctions.PerisanNumber((((progress.currentBytes) * 100) / progress.totalBytes) + "/100"));
+                })
+
+                .start(new OnDownloadListener() {
+                    @SuppressLint("SdCardPath")
+                    @Override
+
+                    public void onDownloadComplete() {
+                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+                        File CompletefILE = new File(activation.getDatabaseFolderPath() + "/KowsarDb.sqlite");
+                        DownloadTemp.renameTo(CompletefILE);
+                        callMethod.EditString("DatabaseName", activation.getDatabaseFilePath());
+                        dbh = new DatabaseHelper(App.getContext(), callMethod.ReadString("DatabaseName"));
+                        dbh.DatabaseCreate();
+                        File tempdb = new File(activation.getDatabaseFolderPath() + "/tempDb");
+
+                        if (tempdb.exists()) {
+                            dbh.GetLastDataFromOldDataBase(activation.getDatabaseFolderPath() + "/tempDb");
+                            dbh.InitialConfigInsert();
+                            tempdb.delete();
+                        } else {
+                            dbh.InitialConfigInsert();
+                        }
+
+                        callMethod.EditString("PersianCompanyNameUse", activation.getPersianCompanyName());
+                        callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
+                        callMethod.EditString("ServerURLUse", activation.getServerURL());
+                        callMethod.EditString("ActivationCode", activation.getActivationCode());
+                        intent = new Intent(App.getContext(), SplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                        dialog.dismiss();
+                    }
+
+
+                    @Override
+                    public void onError(Error error) {
+                        File DownloadTemp = new File(activation.getDatabaseFolderPath() + "/KowsarDbTemp.sqlite");
+                        DownloadTemp.delete();
+                        tv_step.setText("مشکل ارتباطی لطفا دوباره امتحان کنید");
+
+                    }
+                });
+
+    }
+
+
+    public void DownloadRequesttest1(String url,String dbname,File databasedir, File databasefile,Activation singleactive) {
+        String downloadurl="http://178.131.31.161:60005/api/kits/GetDb?Code="+singleactive.getActivationCode();
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
                 .build();
@@ -137,7 +228,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                 .build();
         PRDownloader.initialize(getApplicationContext(), config1);
 
-        PRDownloader.download(url, databasedir.getPath(), databasefile.getName())
+        PRDownloader.download(downloadurl, databasedir.getPath(), databasefile.getName())
                 .build()
                 .setOnStartOrResumeListener(() -> {
                     dialog.show();
@@ -168,6 +259,12 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                             dbh.InitialConfigInsert();
                         }
 
+
+
+                        callMethod.EditString("PersianCompanyNameUse", singleactive.getPersianCompanyName());
+                        callMethod.EditString("EnglishCompanyNameUse", singleactive.getEnglishCompanyName());
+                        callMethod.EditString("ServerURLUse", singleactive.getServerURL());
+                        callMethod.EditString("ActivationCode", singleactive.getActivationCode());
                         intent = new Intent(App.getContext(), SplashActivity.class);
                         startActivity(intent);
                         finish();
@@ -269,7 +366,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
 
             if (!databasefile.exists()) {
-                DownloadRequesttest(singleactive.getSQLiteURL(),singleactive.getEnglishCompanyName(),databasedir,databasefile);
+                DownloadRequesttest(singleactive);
             } else {
                 callMethod.EditString("DatabaseName", "/data/data/com.kits.ocrkowsar/databases/" + singleactive.getEnglishCompanyName() + "/KowsarDb.sqlite");
                 intent = new Intent(this, SplashActivity.class);
@@ -282,7 +379,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
         btn_update.setOnClickListener(v -> {
 
-            Call<RetrofitResponse> call1 = apiInterface.Activation("ActivationCode", singleactive.getActivationCode());
+            Call<RetrofitResponse> call1 = apiInterface.Activation( singleactive.getActivationCode());
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
@@ -322,6 +419,15 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
 
 
-
+    @Override
+    protected void onDestroy() {
+        cancelDownloadIfRunning(downloadId);
+        super.onDestroy();
+    }
+    private void cancelDownloadIfRunning(int downloadId) {
+        if (PRDownloader.getStatus(downloadId) == Status.RUNNING) {
+            PRDownloader.cancel(downloadId);
+        }
+    }
 
 }

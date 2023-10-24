@@ -82,6 +82,13 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
 
+        Log.e("kowsar",callMethod.ReadString("ServerURLUse"));
+        Log.e("kowsar",callMethod.ReadString("SecendServerURL"));
+        Log.e("kowsar","");
+        Log.e("kowsar","");
+        Log.e("kowsar","");
+
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
 
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
@@ -345,6 +352,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             LinearLayoutCompat.LayoutParams.MATCH_PARENT,
                             70
                     );
+
                     params.setMargins(30, 30, 30, 30);
                     LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
                     ll_new.setLayoutParams(params);

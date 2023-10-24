@@ -19,13 +19,17 @@ public class APIClient {
                     .baseUrl(apiBaseUrl)
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                     .build();
+
         } else {
+
             if (!retrofit.baseUrl().equals(BASE_URL)) {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(BASE_URL)
                         .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                         .build();
+
             }
+
         }
         return retrofit;
     }

@@ -1,7 +1,9 @@
 package com.kits.ocrkowsar.model;
 
-import com.google.gson.annotations.SerializedName;
+import android.annotation.SuppressLint;
 
+import com.google.gson.annotations.SerializedName;
+import com.kits.ocrkowsar.application.App;
 public class Activation {
     @SerializedName("AppBrokerCustomerCode")
     private String AppBrokerCustomerCode;
@@ -17,10 +19,8 @@ public class Activation {
     private String SQLiteURL;
     @SerializedName("MaxDevice")
     private String MaxDevice;
-
     @SerializedName("SecendServerURL")
     private String SecendServerURL;
-
     @SerializedName("DbName")
     private String DbName;
     @SerializedName("AppType")
@@ -106,4 +106,16 @@ public class Activation {
     public void setMaxDevice(String maxDevice) {
         MaxDevice = maxDevice;
     }
+
+    @SuppressLint("SdCardPath")
+    public String getDatabaseFolderPath() {
+        return "/data/data/" + App.getContext().getPackageName() + "/databases/" + EnglishCompanyName;
+    }
+
+
+    @SuppressLint("SdCardPath")
+    public String getDatabaseFilePath() {
+        return "/data/data/" + App.getContext().getPackageName() + "/databases/" + EnglishCompanyName + "/KowsarDb.sqlite";
+    }
+
 }

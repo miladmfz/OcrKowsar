@@ -5,15 +5,27 @@ import com.kits.ocrkowsar.model.RetrofitResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface APIInterface {
+
+
+    String Kits_Url="kits/";
 
     @POST("index.php")
     @FormUrlEncoded
     Call<RetrofitResponse> GetFactor(@Field("tag") String tag
             , @Field("barcode") String barcode
             , @Field("orderby") String orderby);
+
+
+    @GET(Kits_Url+"Activation")
+    Call<RetrofitResponse> Activation(
+            @Query("ActivationCode") String ActivationCode
+    );
+
 
 
     @POST("index.php")
@@ -142,12 +154,6 @@ public interface APIInterface {
                                     @Field("IX") Integer IX,
                                     @Field("Scale") Integer Scale);
 
-    @POST("index.php")
-    @FormUrlEncoded
-    Call<RetrofitResponse> Activation(
-            @Field("tag") String tag
-            , @Field("ActivationCode") String ActivationCode
-    );
 
 
 
