@@ -207,6 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 factor_detail.setCustName(cursor.getString(cursor.getColumnIndex("CustomerName")));
                 factor_detail.setCustomerCode(cursor.getString(cursor.getColumnIndex("CustomerCode")));
                 factor_detail.setDeliverer(cursor.getString(cursor.getColumnIndex("Deliverer")));
+                factor_detail.setDbname(cursor.getString(cursor.getColumnIndex("DbName")));
                 factor_detail.setCheck(false);
 
                 factors.add(factor_detail);

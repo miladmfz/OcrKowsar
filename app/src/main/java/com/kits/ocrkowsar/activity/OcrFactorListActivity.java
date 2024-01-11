@@ -101,9 +101,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
         dialog1.setContentView(R.layout.rep_prog);
         TextView repw = dialog1.findViewById(R.id.rep_prog_text);
         repw.setText("در حال خواندن اطلاعات");
-        dialog1.show();
-
-
 
 
         intent();
@@ -286,31 +283,42 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactorList(
-                    "GetFactorList",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    String.valueOf(PageNo));
-        }else{
-            call=secendApiInterface.GetOcrFactorList(
-                    "GetFactorList",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    String.valueOf(PageNo));
-        }
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call=apiInterface.GetOcrFactorList(
+//                    "GetFactorList",
+//                    state,
+//                    srch,
+//                    callMethod.ReadString("StackCategory"),
+//                    path,
+//                    StateShortage,
+//                    StateEdited,
+//                    Row,
+//                    String.valueOf(PageNo));
+//        }else{
+//            call=secendApiInterface.GetOcrFactorList(
+//                    "GetFactorList",
+//                    state,
+//                    srch,
+//                    callMethod.ReadString("StackCategory"),
+//                    path,
+//                    StateShortage,
+//                    StateEdited,
+//                    Row,
+//                    String.valueOf(PageNo));
+//        }
 
 
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                String.valueOf(PageNo));
+        Log.e("kowsar",call.request().toString());
         call.enqueue(new Callback<>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -374,14 +382,13 @@ public class OcrFactorListActivity extends AppCompatActivity {
     public void RetrofitRequset_Path() {
 
 
+        Log.e("kowsar",callMethod.ReadString("FactorDbName"));
+        Log.e("kowsar",callMethod.ReadString("DbName"));
 
         Call<RetrofitResponse> call;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetCustomerPath("GetCustomerPath");
-        }else{
-            call=secendApiInterface.GetCustomerPath("GetCustomerPath");
-        }
 
+        call=apiInterface.GetCustomerPath("GetCustomerPath");
+        Log.e("kowsar",call.request().toString());
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -435,31 +442,40 @@ public class OcrFactorListActivity extends AppCompatActivity {
         pastVisiblesItems=0;
 
         Call<RetrofitResponse> call;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactorList(
-                    "GetFactorList",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    "0");
-        }else{
-            call=secendApiInterface.GetOcrFactorList(
-                    "GetFactorList",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    "0");
-        }
+//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+//            call=apiInterface.GetOcrFactorList(
+//                    "GetFactorList",
+//                    state,
+//                    srch,
+//                    callMethod.ReadString("StackCategory"),
+//                    path,
+//                    StateShortage,
+//                    StateEdited,
+//                    Row,
+//                    "0");
+//        }else{
+//            call=secendApiInterface.GetOcrFactorList(
+//                    "GetFactorList",
+//                    state,
+//                    srch,
+//                    callMethod.ReadString("StackCategory"),
+//                    path,
+//                    StateShortage,
+//                    StateEdited,
+//                    Row,
+//                    "0");
+//        }
 
-
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorList",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -512,31 +528,18 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    "0");
-        }else{
-            call=secendApiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    srch,
-                    callMethod.ReadString("StackCategory"),
-                    path,
-                    StateShortage,
-                    StateEdited,
-                    Row,
-                    "0");
-        }
 
 
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                srch,
+                callMethod.ReadString("StackCategory"),
+                path,
+                StateShortage,
+                StateEdited,
+                Row,
+                "0");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -555,29 +558,17 @@ public class OcrFactorListActivity extends AppCompatActivity {
     public void RetrofitRequset_EditeCount() {
 
         Call<RetrofitResponse> call;
-        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call=apiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    "0",
-                    "همه",
-                    "همه",
-                    "0",
-                    "1",
-                    "10000",
-                    "0");
-        }else{
-            call=secendApiInterface.GetOcrFactorList(
-                    "GetFactorListCount",
-                    state,
-                    "0",
-                    "همه",
-                    "همه",
-                    "0",
-                    "1",
-                    "10000",
-                    "0");
-        }
+
+        call=apiInterface.GetOcrFactorList(
+                "GetFactorListCount",
+                state,
+                "0",
+                "همه",
+                "همه",
+                "0",
+                "1",
+                "10000",
+                "0");
 
 
         call.enqueue(new Callback<>() {

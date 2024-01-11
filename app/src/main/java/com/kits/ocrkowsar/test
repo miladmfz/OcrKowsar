@@ -1,0 +1,34 @@
+AppBasketColumnCode	
+ColumnName	
+ColumnDesc	
+ColumnDefinition	
+ObjectType	
+DetailVisible	
+ListVisible	
+BasketVisible	
+SearchVisible	
+ColumnType	
+OrderIndex	
+Condition	
+AppType
+
+
+
+
+
+
+
+
+<td>{{ item.AppBasketColumnCode }}</td>
+<td>{{ item.ColumnName }}</td>
+<td>{{ item.ColumnDesc }}</td>
+<td>{{ item.ColumnDefinition }}</td>
+<td>{{ item.ObjectType }}</td>
+<td>{{ item.DetailVisible }}</td>
+<td>{{ item.ListVisible }}</td>
+<td>{{ item.BasketVisible }}</td>
+<td>{{ item.SearchVisible }}</td>
+<td>{{ item.ColumnType }}</td>
+<td>{{ item.OrderIndex }}</td>
+<td>{{ item.Condition }}</td>
+<td>{{ item.AppType }}</td>

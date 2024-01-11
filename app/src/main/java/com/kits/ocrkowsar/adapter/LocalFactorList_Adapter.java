@@ -214,15 +214,23 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         });
 
         holder.fac_send.setOnClickListener(view -> {
+
+
+
             if (!factors.get(position).getSignatureImage().equals("")) {
                 callMethod.EditString("FactorDbName", factors.get(position).getDbname());
                 new AlertDialog.Builder(mContext)
                         .setTitle("توجه")
                         .setMessage("آیا رسید ارسال گردد؟")
-                        .setPositiveButton("بله", (dialogInterface, i) -> action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage()))
+                        .setPositiveButton("بله", (dialogInterface, i) -> {
+
+                            action.sendfactor(factors.get(position).getFactorBarcode(),factors.get(position).getSignatureImage());
+                        })
                         .setNegativeButton("خیر", (dialogInterface, i) -> {                   })
                         .show();
             }
+
+
         });
         holder.fac_rltv.setCheckedIcon(mContext.getDrawable(R.drawable.ic_baseline_attach_file_24));
         holder.fac_rltv.setChecked(factors.get(position).isCheck());
