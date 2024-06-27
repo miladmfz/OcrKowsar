@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -84,6 +85,13 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
     @Override
     public void onBindViewHolder(@NonNull final facViewHolder holder, @SuppressLint("RecyclerView") final int position) {
 
+        if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        }else {
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.purple_100));
+
+        }
 
         holder.fac_customer.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustName()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
@@ -289,6 +297,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
         private final Button fac_send;
         private final Button fac_dlt;
         MaterialCardView fac_rltv;
+        LinearLayoutCompat fac_rltv_ll;
 
         facViewHolder(View itemView) {
             super(itemView);
@@ -305,6 +314,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
             fac_send = itemView.findViewById(R.id.factor_header_send);
             fac_dlt = itemView.findViewById(R.id.factor_header_dlt);
 
+            fac_rltv_ll = itemView.findViewById(R.id.factor_header_ll_main);
             fac_rltv = itemView.findViewById(R.id.factor_header);
         }
     }

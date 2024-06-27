@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,10 +41,8 @@ import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -283,30 +280,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
 
         Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    String.valueOf(PageNo));
-//        }else{
-//            call=secendApiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    String.valueOf(PageNo));
-//        }
 
+
+        callMethod.ReadString("ActiveDatabase");
 
         call=apiInterface.GetOcrFactorList(
                 "GetFactorList",
@@ -317,7 +293,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateShortage,
                 StateEdited,
                 Row,
-                String.valueOf(PageNo));
+                String.valueOf(PageNo),
+                callMethod.ReadString("ActiveDatabase")
+        );
         Log.e("kowsar",call.request().toString());
         call.enqueue(new Callback<>() {
             @SuppressLint("NotifyDataSetChanged")
@@ -442,29 +420,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         pastVisiblesItems=0;
 
         Call<RetrofitResponse> call;
-//        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-//            call=apiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    "0");
-//        }else{
-//            call=secendApiInterface.GetOcrFactorList(
-//                    "GetFactorList",
-//                    state,
-//                    srch,
-//                    callMethod.ReadString("StackCategory"),
-//                    path,
-//                    StateShortage,
-//                    StateEdited,
-//                    Row,
-//                    "0");
-//        }
+
 
         call=apiInterface.GetOcrFactorList(
                 "GetFactorList",
@@ -475,7 +431,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateShortage,
                 StateEdited,
                 Row,
-                "0");
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -539,7 +497,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 StateShortage,
                 StateEdited,
                 Row,
-                "0");
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -568,7 +528,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 "0",
                 "1",
                 "10000",
-                "0");
+                "0",
+                callMethod.ReadString("ActiveDatabase")
+        );
 
 
         call.enqueue(new Callback<>() {
@@ -597,7 +559,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     "1",
                     "0",
                     "10000",
-                    "0");
+                    "0",
+                    callMethod.ReadString("ActiveDatabase")
+            );
+
         }else{
             call=secendApiInterface.GetOcrFactorList(
                     "GetFactorListCount",
@@ -608,7 +573,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     "1",
                     "0",
                     "10000",
-                    "0");
+                    "0",
+                    callMethod.ReadString("ActiveDatabase")
+
+            );
         }
 
 

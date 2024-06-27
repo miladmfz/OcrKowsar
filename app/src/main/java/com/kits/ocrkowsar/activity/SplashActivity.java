@@ -23,7 +23,6 @@ import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 
-import java.util.ArrayList;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -75,12 +74,13 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("PersianCompanyNameUse", "");
             callMethod.EditString("EnglishCompanyNameUse", "");
             callMethod.EditString("DatabaseName", "");
-            callMethod.EditString("ActivationCode", "");
+            callMethod.EditString("  ", "");
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
             callMethod.EditString("AppType", "");
 
             callMethod.EditString("FactorDbName", "");
+            callMethod.EditString("ActiveDatabase","0");
 
 
 
@@ -92,10 +92,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-
-        //Startapplication();
         requestPermission();
-        //runtimePermission();
 
     }
 

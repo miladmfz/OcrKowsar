@@ -16,13 +16,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,10 +27,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.activity.ConfigActivity;
 import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.NavActivity;
 import com.kits.ocrkowsar.adapter.Action;
@@ -42,18 +36,13 @@ import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.Job;
-import com.kits.ocrkowsar.model.JobPerson;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
-import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
-import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

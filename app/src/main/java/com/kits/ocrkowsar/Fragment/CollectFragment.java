@@ -222,6 +222,7 @@ public class CollectFragment extends Fragment {
             Call<RetrofitResponse> call;
             if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                 call=apiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
+
             }else{
                 call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
             }

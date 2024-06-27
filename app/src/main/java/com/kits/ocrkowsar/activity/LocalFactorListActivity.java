@@ -29,7 +29,6 @@ import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.NumberFunctions;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 

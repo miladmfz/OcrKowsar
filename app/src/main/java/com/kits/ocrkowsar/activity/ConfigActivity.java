@@ -35,7 +35,6 @@ import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;
-import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
 
@@ -49,7 +48,7 @@ public class ConfigActivity extends AppCompatActivity  {
     APIInterface secendApiInterface;
     CallMethod callMethod;
     DatabaseHelper dbh;
-    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson;
+    Spinner spinnerPath,spinnercategory,spinnerjob,spinnerjobperson,spinnerActiveDatabase;
     String stackcategory="همه";
     String workcategory="0";
     ArrayList<String> jobsstr=new ArrayList<>();
@@ -57,6 +56,7 @@ public class ConfigActivity extends AppCompatActivity  {
     ArrayList<Integer> jobpersonsref_int=new ArrayList<>();
     ArrayList<String> stacks=new ArrayList<>();
     ArrayList<String> works=new ArrayList<>();
+    ArrayList<String> ActiveDatabase_array=new ArrayList<>();
     TextView ed_Deliverer;
     TextView tv_laststack;
     LinearLayoutCompat ll_Stack;
@@ -85,6 +85,12 @@ public class ConfigActivity extends AppCompatActivity  {
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
+        ActiveDatabase_array.add("هر دو دیتابیس");
+        ActiveDatabase_array.add("دیتابیس اول");
+        ActiveDatabase_array.add("دیتابیس دوم");
+
+
+
         works.add("برای انتخاب کلیک کنید");
         works.add("اسکن بارکد");
         works.add("انبار");
@@ -94,6 +100,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
         spinnerPath=findViewById(R.id.configactivity_spinnerstacks);
         spinnercategory =findViewById(R.id.configactivity_spinnercategory);
+        spinnerActiveDatabase =findViewById(R.id.configactivity_spinneractivedatabase);
         spinnerjob =findViewById(R.id.configactivity_spinnerjob);
         spinnerjobperson =findViewById(R.id.configactivity_spinnerjobperson);
         ed_Deliverer =findViewById(R.id.configactivity_Deliverer);
@@ -150,6 +157,13 @@ public class ConfigActivity extends AppCompatActivity  {
         spinnercategory.setSelection(Integer.parseInt(callMethod.ReadString("Category")));
 
 
+        ArrayAdapter<String> ActiveDatabase_adapter = new ArrayAdapter<>(ConfigActivity.this,
+                android.R.layout.simple_spinner_item, ActiveDatabase_array);
+        ActiveDatabase_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerActiveDatabase.setAdapter(ActiveDatabase_adapter);
+        spinnerActiveDatabase.setSelection(Integer.parseInt(callMethod.ReadString("ActiveDatabase")));
+
+
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
         call.enqueue(new Callback<>() {
@@ -194,6 +208,22 @@ public class ConfigActivity extends AppCompatActivity  {
 
             }
         });
+
+
+        spinnerActiveDatabase.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                callMethod.EditString("ActiveDatabase",String.valueOf(position));
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         spinnerPath.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

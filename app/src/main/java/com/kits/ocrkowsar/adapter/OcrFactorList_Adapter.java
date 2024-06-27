@@ -1,7 +1,6 @@
 package com.kits.ocrkowsar.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -68,6 +68,17 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final facViewHolder holder, final int position) {
+
+
+
+        if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        }else {
+            holder.fac_rltv_ll.setBackgroundColor(mContext.getResources().getColor(R.color.purple_100));
+
+        }
+
 
 
 
@@ -137,7 +148,12 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         }
 
         if(state.equals("4")){
-            holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+            try {
+                holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+
+            }catch (Exception e){
+
+            }
             holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
@@ -154,73 +170,134 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
 
         holder.fac_factor_btn.setOnClickListener(v -> {
             callMethod.EditString("FactorDbName", factors.get(position).getDbname());
-            
-            
-            if(factors.get(position).getStackClass().length()>1){
-
-                if(callMethod.ReadString("Category").equals("5")) {
-                    
-                    action.GetOcrFactorDetail(factors.get(position));
-                    
-                }else {
-                    if (position < 5) {
-
-                        if (callMethod.ReadString("Category").equals("4")) {
-                            callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
-
-                            Call<RetrofitResponse> call;
-                            if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-                                call =apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
-                            }else {
-                                call =secendApiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
-                            }
 
 
-                            call.enqueue(new Callback<>() {
-                                @Override
-                                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                    if (response.isSuccessful()) {
-                                        assert response.body() != null;
-                                        if (response.body().getFactors().get(0).getErrCode().equals("0")) {
-                                            intent = new Intent(mContext, FactorActivity.class);
-                                            intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                                            intent.putExtra("FactorImage", "");
-                                            mContext.startActivity(intent);
+            if (factors.get(position).getDbname().equals(callMethod.ReadString("DbName"))){
+                if(factors.get(position).getStackClass().length()>1){
+
+                    if(callMethod.ReadString("Category").equals("5")) {
+
+                        action.GetOcrFactorDetail(factors.get(position));
+
+                    }else {
+                        if (position < 5) {
+
+                            if (callMethod.ReadString("Category").equals("4")) {
+                                callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+
+                                Call<RetrofitResponse> call;
+                                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                    call =apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                                }else {
+                                    call =secendApiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                                }
+
+
+                                call.enqueue(new Callback<>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            assert response.body() != null;
+                                            if (response.body().getFactors().get(0).getErrCode().equals("0")) {
+                                                intent = new Intent(mContext, FactorActivity.class);
+                                                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                                intent.putExtra("FactorImage", "");
+                                                mContext.startActivity(intent);
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                    @Override
+                                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                                }
-                            });
+                                    }
+                                });
 
 
+                            } else {
+
+                                callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+
+                                intent = new Intent(mContext, ConfirmActivity.class);
+                                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                intent.putExtra("State", state);
+                                mContext.startActivity(intent);
+                            }
                         } else {
-
-                            callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
-
-                            intent = new Intent(mContext, ConfirmActivity.class);
-                            intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
-                            intent.putExtra("State", state);
-                            mContext.startActivity(intent);
+                            Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
+
+                    }
+                }else{
+                    Toast.makeText(mContext, "فاکتور خالی می باشد", Toast.LENGTH_SHORT).show();
+                }
+            }else {
+
+                    if(callMethod.ReadString("Category").equals("5")) {
+
+                        action.GetOcrFactorDetail(factors.get(position));
+
+                    }else {
+                        if (position < 5) {
+
+                            if (callMethod.ReadString("Category").equals("4")) {
+                                callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+
+                                Call<RetrofitResponse> call;
+                                if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                    call =apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                                }else {
+                                    call =secendApiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
+                                }
+
+
+                                call.enqueue(new Callback<>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            assert response.body() != null;
+                                            if (response.body().getFactors().get(0).getErrCode().equals("0")) {
+                                                intent = new Intent(mContext, FactorActivity.class);
+                                                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                                intent.putExtra("FactorImage", "");
+                                                mContext.startActivity(intent);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+                                    }
+                                });
+
+
+                            } else {
+
+                                callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
+
+                                intent = new Intent(mContext, ConfirmActivity.class);
+                                intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
+                                intent.putExtra("State", state);
+                                mContext.startActivity(intent);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "فاکتور های قبلی را تکمیل کنید", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
 
-                }
-            }else{
-                Toast.makeText(mContext, "فاکتور خالی می باشد", Toast.LENGTH_SHORT).show();
             }
+            
+
 
 
         });
 
     }
 
-    @Override
+
+@Override
     public int getItemCount() {
         return factors.size();
     }
@@ -240,6 +317,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final LinearLayout fac_factor_state_ll;
 
         MaterialCardView fac_rltv;
+        LinearLayoutCompat fac_rltv_ll;
 
         facViewHolder(View itemView) {
             super(itemView);
@@ -258,6 +336,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             fac_factor_btn = itemView.findViewById(R.id.factor_list_btn);
             fac_explain = itemView.findViewById(R.id.factor_list_explain);
 
+            fac_rltv_ll = itemView.findViewById(R.id.factor_list_ll_main);
             fac_rltv = itemView.findViewById(R.id.factor_list);
         }
     }

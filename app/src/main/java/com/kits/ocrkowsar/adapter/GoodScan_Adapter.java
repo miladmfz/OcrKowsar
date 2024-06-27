@@ -2,8 +2,6 @@ package com.kits.ocrkowsar.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,26 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
+
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfirmActivity;
-import com.kits.ocrkowsar.activity.FactorActivity;
-import com.kits.ocrkowsar.activity.LocalFactorListActivity;
 import com.kits.ocrkowsar.application.CallMethod;
-import com.kits.ocrkowsar.model.DatabaseHelper;
-import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
-import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIInterface;

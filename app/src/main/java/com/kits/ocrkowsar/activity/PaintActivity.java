@@ -36,8 +36,6 @@ import com.kits.ocrkowsar.adapter.PaintView;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.NumberFunctions;
-import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -59,7 +59,9 @@ public interface APIInterface {
             , @Field("HasShortage") String HasShortage
             , @Field("IsEdited") String IsEdited
             , @Field("Row") String Row
-            , @Field("PageNo") String PageNo);
+            , @Field("PageNo") String PageNo
+            , @Field("SourceFlag") String SourceFlag
+            );
 
 
     @POST("index.php")

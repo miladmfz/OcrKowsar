@@ -200,8 +200,12 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             call1.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
-                    dialog.dismiss();
-                    dialogProg.dismiss();
+                    if (response.body().getText().equals("Done")) {
+                        dialog.dismiss();
+                        dialogProg.dismiss();
+                    }
+
+
                 }
 
                 @Override
@@ -693,11 +697,21 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         dialogProg();
 
         Call<String> call;
+
+
+
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
             call =apiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
         }else {
             call =secendApiInterface.getImageData("SaveOcrImage", signatureimage, factor_code);
         }
+
+        Log.e("kowsar",call.request().url().toString());
+
+        Log.e("kowsar",signatureimage);
+        Log.e("kowsar",factor_code);
+
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
@@ -717,6 +731,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Log.e("kowsar",t.getMessage());
 
                 Log.e("test","2");
                 Log.e("test",t.getMessage());
