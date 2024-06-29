@@ -197,7 +197,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
 
-            call1.enqueue(new Callback<>() {
+            call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
                     if (response.body().getText().equals("Done")) {
@@ -260,7 +260,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             call=secendApiInterface.GetJob("TestJob", "Ocr3");
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -296,7 +296,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             call1=secendApiInterface.GetJobPerson("TestJobPerson", job.getTitle());
                         }
 
-                        call1.enqueue(new Callback<>() {
+                        call1.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if (response.isSuccessful()) {
@@ -461,7 +461,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     call3=secendApiInterface.CheckState("OcrControlled", factor.getAppOCRFactorCode(), "3", "");
                 }
 
-                call3.enqueue(new Callback<>() {
+                call3.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         assert response.body() != null;
@@ -491,7 +491,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             );
                         }
 
-                        call2.enqueue(new Callback<>() {
+                        call2.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
@@ -542,7 +542,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         }else{
             call=secendApiInterface.GetGoodDetail("GetOcrGoodDetail", GoodCode);
         }
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -574,7 +574,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 400);
         }
 
-        call2.enqueue(new Callback<>() {
+        call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -674,7 +674,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             );
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -712,7 +712,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         Log.e("kowsar",factor_code);
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 callMethod.showToast("فاکتور ارسال گردید");
@@ -752,7 +752,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         APIInterface apiInterface = APIClient.getCleint("http://87.107.78.234:60005/login/").create(APIInterface.class);
         Call<String> cl = apiInterface.Kowsar_log("Log_report", android_id, mContext.getString(R.string.SERVERIP), mContext.getString(R.string.app_name), "", Date + "--" + strDate, callMethod.ReadString("Deliverer"), "");
-        cl.enqueue(new Callback<>() {
+        cl.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Log.e("ocrkowsar_onResponse", "" + response.body());

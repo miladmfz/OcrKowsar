@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.util.Base64;
@@ -21,17 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.model.AppPrinter;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -66,7 +57,6 @@ public class Print {
     PersianCalendar persianCalendar;
     Dialog dialog, dialogProg;
     Dialog dialogprint;
-    Calendar cldr;
     int printerconter ;
     Factor factorData;
     ArrayList<AppPrinter> AppPrinters ;
@@ -121,7 +111,7 @@ public class Print {
 
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -314,7 +304,7 @@ public class Print {
 
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 assert response.body() != null;
@@ -449,7 +439,7 @@ public class Print {
 
             );
         }
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 assert response.body() != null;

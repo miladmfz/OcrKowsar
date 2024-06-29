@@ -103,7 +103,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
             Call<RetrofitResponse> call1 = apiInterface.Activation( active_edt.getText().toString());
 
             Log.e("kowsar",""+call1.request().toString());
-            call1.enqueue(new Callback<>() {
+            call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
                     if (response.isSuccessful()) {
@@ -380,7 +380,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         btn_update.setOnClickListener(v -> {
 
             Call<RetrofitResponse> call1 = apiInterface.Activation( singleactive.getActivationCode());
-            call1.enqueue(new Callback<>() {
+            call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
                     if (response.isSuccessful()) {

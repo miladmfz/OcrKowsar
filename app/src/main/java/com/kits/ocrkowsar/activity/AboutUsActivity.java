@@ -1,6 +1,5 @@
 package com.kits.ocrkowsar.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -22,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.google.android.material.button.MaterialButton;
-import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.databinding.ActivityAboutUsBinding;
@@ -59,28 +56,26 @@ public class AboutUsActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.textvalue_yes, (dialogalert, which) -> {
 
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (!getPackageManager().canRequestPackageInstalls()) {
-                        // Open the permission settings for the user to enable the permission
-                        Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                        intent1.setData(Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent1, 1);
-                    } else {
+                if (!getPackageManager().canRequestPackageInstalls()) {
+                    // Open the permission settings for the user to enable the permission
+                    Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                    intent1.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent1, 1);
+                } else {
 
-                        final Dialog dialog = new Dialog(AboutUsActivity.this);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.loginconfig);
-                        EditText ed_password = dialog.findViewById(R.id.edloginconfig);
-                        MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
-                        btn_login.setOnClickListener(vs -> {
-                            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
-                                DownloadFun();
-                            } else {
-                                callMethod.showToast("رمز عبور صیحیح نیست");
-                            }
-                        });
-                        dialog.show();
-                    }
+                    final Dialog dialog = new Dialog(AboutUsActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.loginconfig);
+                    EditText ed_password = dialog.findViewById(R.id.edloginconfig);
+                    MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
+                    btn_login.setOnClickListener(vs -> {
+                        if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+                            DownloadFun();
+                        } else {
+                            callMethod.showToast("رمز عبور صیحیح نیست");
+                        }
+                    });
+                    dialog.show();
                 }
 
             });
@@ -135,7 +130,7 @@ public class AboutUsActivity extends AppCompatActivity {
 
                             Uri apkUri = FileProvider.getUriForFile(
                                     AboutUsActivity.this,
-                                    BuildConfig.APPLICATION_ID + ".provider",
+                                      ".provider",
                                     new File(Environment.getExternalStorageDirectory() + "/Android/data/com.kits.Ocrkowsar/files/Download/Ocrkowsar.apk")
                             );
 
@@ -160,10 +155,8 @@ public class AboutUsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (getPackageManager().canRequestPackageInstalls()) {
-                    DownloadFun();
-                }
+            if (getPackageManager().canRequestPackageInstalls()) {
+                DownloadFun();
             }
         }
     }

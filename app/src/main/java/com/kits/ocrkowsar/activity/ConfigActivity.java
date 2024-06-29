@@ -166,7 +166,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
 
         Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 stacks.add("همه");
@@ -276,7 +276,7 @@ public class ConfigActivity extends AppCompatActivity  {
         spinnerjobperson.setAdapter(null);
 
         Call<RetrofitResponse> call =apiInterface.GetJob("TestJob",where);
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -307,7 +307,7 @@ public class ConfigActivity extends AppCompatActivity  {
     public void GetDataIsPersian() {
 
         Call<RetrofitResponse> call =apiInterface.GetDataDbsetup("kowsar_info","DataIsPersian");
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -330,7 +330,7 @@ public class ConfigActivity extends AppCompatActivity  {
 
     public void GetJobPerson(String where) {
         Call<RetrofitResponse> call =apiInterface.GetJobPerson("TestJobPerson",where);
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {

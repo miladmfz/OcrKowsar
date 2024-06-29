@@ -216,7 +216,7 @@ public class PackFragment extends Fragment{
 
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
@@ -473,7 +473,7 @@ public class PackFragment extends Fragment{
                 }
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
@@ -834,17 +834,11 @@ public class PackFragment extends Fragment{
         this.factor = factor;
     }
 
-    public ArrayList<Good> getGoods() {
-        return goods;
-    }
 
     public void setGoods(ArrayList<Good> goods) {
         this.goods = goods;
     }
 
-    public String getBarcodeScan() {
-        return BarcodeScan;
-    }
 
     public void setBarcodeScan(String barcodeScan) {
         BarcodeScan = barcodeScan;

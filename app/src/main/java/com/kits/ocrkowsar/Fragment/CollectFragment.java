@@ -226,7 +226,7 @@ public class CollectFragment extends Fragment {
             }else{
                 call=secendApiInterface.CheckState("OcrControlled",factor.getAppOCRFactorCode(),"1","");
             }
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {
@@ -269,7 +269,7 @@ public class CollectFragment extends Fragment {
 
 
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if(response.isSuccessful()) {
@@ -607,7 +607,7 @@ public class CollectFragment extends Fragment {
 
 
 
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()) {

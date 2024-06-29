@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -123,7 +122,7 @@ public class  FactorActivity extends AppCompatActivity {
             }else {
                 call =secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,"GoodName");
             }
-            call.enqueue(new Callback<>() {
+            call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                     if(response.isSuccessful()){

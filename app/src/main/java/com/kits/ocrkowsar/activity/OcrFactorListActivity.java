@@ -297,7 +297,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 callMethod.ReadString("ActiveDatabase")
         );
         Log.e("kowsar",call.request().toString());
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -367,7 +367,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         call=apiInterface.GetCustomerPath("GetCustomerPath");
         Log.e("kowsar",call.request().toString());
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -434,7 +434,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 "0",
                 callMethod.ReadString("ActiveDatabase")
         );
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
@@ -500,7 +500,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 "0",
                 callMethod.ReadString("ActiveDatabase")
         );
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -533,7 +533,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         );
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -580,7 +580,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
         }
 
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if(response.isSuccessful()) {
@@ -596,10 +596,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
     public void noti_Messaging(String title, String message,String flag) {
 
         notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(Channel);
-        }
+        NotificationChannel Channel = new NotificationChannel(channel_id, channel_name, NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(Channel);
         Intent notificationIntent = new Intent(this, OcrFactorListActivity.class);
         notificationIntent.putExtra("State", "5");
         if(flag.equals("0")){

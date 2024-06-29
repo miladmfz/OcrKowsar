@@ -82,7 +82,7 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
             call2=secendApiInterface.GetImage("getImage", goods.get(position).getGoodCode(),0,400);
         }
 
-        call2.enqueue(new Callback<>() {
+        call2.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call2, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
@@ -109,7 +109,7 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
                     call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "0", "");
                 }
 
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {
@@ -135,7 +135,7 @@ public class GoodScan_Adapter extends RecyclerView.Adapter<GoodScan_Adapter.facV
                 }else{
                     call=secendApiInterface.CheckState("OcrControlled", goods.get(position).getAppOCRFactorRowCode(), "2", "");
                 }
-                call.enqueue(new Callback<>() {
+                call.enqueue(new Callback<RetrofitResponse>() {
                     @Override
                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                         if (response.isSuccessful()) {

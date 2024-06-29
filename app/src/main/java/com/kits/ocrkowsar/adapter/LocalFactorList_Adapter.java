@@ -196,7 +196,7 @@ public class LocalFactorList_Adapter extends RecyclerView.Adapter<LocalFactorLis
                         }
 
 
-                        call.enqueue(new Callback<>() {
+                        call.enqueue(new Callback<RetrofitResponse>() {
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 if(response.isSuccessful()) {

@@ -1,17 +1,14 @@
 package com.kits.ocrkowsar.activity;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +20,6 @@ import com.kits.ocrkowsar.Fragment.CollectFragment;
 import com.kits.ocrkowsar.Fragment.PackFragment;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.adapter.Action;
-import com.kits.ocrkowsar.application.App;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -192,7 +188,7 @@ public class ConfirmActivity extends AppCompatActivity {
             call=secendApiInterface.GetFactor("Getocrfactor",BarcodeScan,OrderBy);
         }
 
-        call.enqueue(new Callback<>() {
+        call.enqueue(new Callback<RetrofitResponse>() {
             @Override
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {

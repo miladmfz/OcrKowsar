@@ -193,7 +193,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                 }
 
 
-                                call.enqueue(new Callback<>() {
+                                call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                         if (response.isSuccessful()) {
@@ -251,7 +251,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                 }
 
 
-                                call.enqueue(new Callback<>() {
+                                call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                         if (response.isSuccessful()) {
