@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -540,6 +539,7 @@ public class CollectFragment extends Fragment {
         }
 
 
+
         ll_radif_check.addView(tv_gap);
         ll_radif_check.addView(checkBox);
 
@@ -552,6 +552,10 @@ public class CollectFragment extends Fragment {
         ll_details.addView(ll_radif_check);
         ll_details.addView(vp_radif_name);
         ll_details.addView(ll_name_price);
+        Log.e("kowsar",g.getMinAmount());
+        if (g.getMinAmount().equals("1.000")){
+            ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
+        }
 
         ll_factor_row.addView(ll_details);
         ll_factor_row.addView(vp_rows);

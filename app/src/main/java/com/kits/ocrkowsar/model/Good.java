@@ -8,6 +8,12 @@ public class Good implements Serializable {
 
 
 
+    @SerializedName("StackLocation")
+    private String StackLocation;
+    @SerializedName("Isbn")
+    private String Isbn;
+    @SerializedName("MinAmount")
+    private String MinAmount;
     @SerializedName("GoodName")
     private String GoodName;
 
@@ -59,11 +65,47 @@ public class Good implements Serializable {
 
     @SerializedName("CachedBarCode")
     private String CachedBarCode;
+    @SerializedName("GoodImageName")
+    private String GoodImageName;
     @SerializedName("ErrCode")
     private String ErrCode;
 
     @SerializedName("ErrMessage")
     private String ErrMessage;
+
+
+    public String getIsbn() {
+        return Isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        Isbn = isbn;
+    }
+
+    public String getMinAmount() {
+        return MinAmount;
+    }
+
+    public void setMinAmount(String minAmount) {
+        MinAmount = minAmount;
+    }
+
+    public String getStackLocation() {
+        return StackLocation;
+    }
+
+    public void setStackLocation(String stackLocation) {
+        StackLocation = stackLocation;
+    }
+
+    public String getGoodImageName() {
+        return GoodImageName;
+    }
+
+
+    public void setGoodImageName(String goodImageName) {
+        GoodImageName = goodImageName;
+    }
 
     public String getErrCode() {
         return ErrCode;

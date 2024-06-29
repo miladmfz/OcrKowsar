@@ -51,6 +51,12 @@ public interface APIInterface {
 
     @POST("index.php")
     @FormUrlEncoded
+    Call<RetrofitResponse> GetOcrGoodList(@Field("tag") String tag, @Field("SearchTarget") String SearchTarget);
+
+
+
+    @POST("index.php")
+    @FormUrlEncoded
     Call<RetrofitResponse> GetOcrFactorList(@Field("tag") String tag
             , @Field("State") String State
             , @Field("SearchTarget") String SearchTarget
@@ -156,7 +162,12 @@ public interface APIInterface {
                                     @Field("IX") Integer IX,
                                     @Field("Scale") Integer Scale);
 
-
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> SetStackLocation(@Field("tag") String tag,
+                                    @Field("GoodCode") String GoodCode,
+                                    @Field("StackLocation") String StackLocation
+                                   );
 
 
     @POST("index.php")

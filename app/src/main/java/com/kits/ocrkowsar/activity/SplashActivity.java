@@ -58,6 +58,13 @@ public class SplashActivity extends AppCompatActivity {
         callMethod.EditString("ConditionPosition", "0");
         callMethod.EditString("FactorDbName", "");
 
+        try {
+            Integer.parseInt(callMethod.ReadString("Delay"));
+        }catch (Exception e){
+            callMethod.EditString("Delay","500");
+        }
+
+
         if (callMethod.firstStart()) {
             callMethod.EditString("Deliverer", "پیش فرض");
             callMethod.EditString("Category", "0");
@@ -67,6 +74,7 @@ public class SplashActivity extends AppCompatActivity {
             callMethod.EditString("LastTcPrint", "0");
             callMethod.EditBoolan("FirstStart", false);
             callMethod.EditBoolan("ArabicText", true);
+            callMethod.EditString("Delay", "500");
 
 
             callMethod.EditString("ServerURLUse", "");

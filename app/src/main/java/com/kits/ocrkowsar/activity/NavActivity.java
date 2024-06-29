@@ -130,11 +130,28 @@ public void Config() {
             Delivery();
         }else if(state_category==5){ //state 2
             Manage();
+        }else if(state_category==6){ //state 2
+            StackLocation();
         }
 
     }
 
+    public void StackLocation() {
 
+
+        btn1.setText("جانمایی انبار");
+        btn2.setVisibility(View.GONE);
+        btn3.setVisibility(View.GONE);
+
+        btn1.setOnClickListener(view -> {
+            intent = new Intent(NavActivity.this, ConfirmActivity.class);
+            intent.putExtra("ScanResponse", "");
+            intent.putExtra("State", "6");
+            intent.putExtra("FactorImage", "");
+            startActivity(intent);
+        });
+
+    }
 
 
 

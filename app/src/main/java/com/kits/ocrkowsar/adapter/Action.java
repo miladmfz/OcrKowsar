@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +48,9 @@ import com.kits.ocrkowsar.webService.APIClientSecond;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
+
+import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -767,6 +771,72 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         });
 
     }
+
+
+    public void GoodStackLocation(Good good) {
+
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.stacklocation);
+
+
+        Button explain_btn = dialog.findViewById(R.id.stacklocation_explain_btn);
+        final TextView goodname_tv = dialog.findViewById(R.id.stacklocation_goodname_tv);
+        final EditText stacklocation_et = dialog.findViewById(R.id.stacklocation_explain_et);
+
+
+        goodname_tv.setText(good.getGoodName());
+        stacklocation_et.setText("");
+
+
+
+        dialog.show();
+        stacklocation_et.requestFocus();
+        stacklocation_et.postDelayed(() -> {
+            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(stacklocation_et, InputMethodManager.SHOW_IMPLICIT);
+        }, 500);
+
+
+
+
+        explain_btn.setOnClickListener(view -> {
+
+            dialogProg();
+            tv_rep.setText("در حال ارسال اطلاعات");
+            Call<RetrofitResponse> call = apiInterface.SetStackLocation(
+                    "SetStackLocation",
+                    good.getGoodCode(),
+                    good.getGoodCode()
+            );
+
+            call.enqueue(new Callback<RetrofitResponse>() {
+                @Override
+                public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        dialog.dismiss();
+                        dialogProg.dismiss();
+                        callMethod.showToast("ثبت گردید");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+                    dialog.dismiss();
+                    dialogProg.dismiss();
+                }
+            });
+        });
+
+    }
+
+
+
+
+
+
 
 
     @Override

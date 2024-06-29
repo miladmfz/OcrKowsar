@@ -59,6 +59,7 @@ public class ConfigActivity extends AppCompatActivity  {
     ArrayList<String> ActiveDatabase_array=new ArrayList<>();
     TextView ed_Deliverer;
     TextView tv_laststack;
+    TextView tv_delay;
     LinearLayoutCompat ll_Stack;
     MaterialButton btn_config;
     EditText ed_titlesize;
@@ -97,6 +98,7 @@ public class ConfigActivity extends AppCompatActivity  {
         works.add("بسته بندی");
         works.add("تحویل");
         works.add("مدیریت");
+        works.add("جانمایی انبار");
 
         spinnerPath=findViewById(R.id.configactivity_spinnerstacks);
         spinnercategory =findViewById(R.id.configactivity_spinnercategory);
@@ -105,6 +107,7 @@ public class ConfigActivity extends AppCompatActivity  {
         spinnerjobperson =findViewById(R.id.configactivity_spinnerjobperson);
         ed_Deliverer =findViewById(R.id.configactivity_Deliverer);
         tv_laststack =findViewById(R.id.configactivity_laststack);
+        tv_delay =findViewById(R.id.configactivity_delay);
         ll_Stack=findViewById(R.id.configactivity_line_stack);
         btn_config =findViewById(R.id.configactivity_btn);
         ed_titlesize = findViewById(R.id.config_titlesize);
@@ -140,10 +143,14 @@ public class ConfigActivity extends AppCompatActivity  {
         GetDataIsPersian();
         ed_Deliverer.setText(callMethod.ReadString("Deliverer"));
         tv_laststack.setText(callMethod.ReadString("StackCategory"));
+        tv_delay.setText(callMethod.ReadString("Delay"));
+
         ed_titlesize.setText(NumberFunctions.PerisanNumber(callMethod.ReadString("TitleSize")));
         sm_arabictext.setChecked(callMethod.ReadBoolan("ArabicText"));
         btn_config.setOnClickListener(v -> {
             callMethod.EditString("Deliverer",ed_Deliverer.getText().toString());
+            callMethod.EditString("Delay",tv_delay.getText().toString());
+
             callMethod.EditString("Category",workcategory);
             callMethod.EditString("StackCategory",stackcategory);
             callMethod.EditString("TitleSize",NumberFunctions.EnglishNumber(ed_titlesize.getText().toString()));

@@ -650,20 +650,23 @@ public class PackFragment extends Fragment{
 
             @Override
             public void afterTextChanged(Editable text) {
-                try {
 
-                    if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
-                        et_amountshortage.setText("");
-                        callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
-                    } else {
-                        arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), text.toString()});
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(() -> {
+                    try {
+
+                        if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
+                            et_amountshortage.setText("");
+                            callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
+                        } else {
+                            arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), text.toString()});
+
+                        }
+
+                    } catch (Exception ignored) {
 
                     }
-
-                } catch (Exception ignored) {
-
-                }
-
+                },  1000);
 
             }
         });

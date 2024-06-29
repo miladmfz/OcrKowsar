@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,8 +18,10 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.kits.ocrkowsar.Fragment.CollectFragment;
 import com.kits.ocrkowsar.Fragment.PackFragment;
+import com.kits.ocrkowsar.Fragment.StackFragment;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.adapter.Action;
 import com.kits.ocrkowsar.application.CallMethod;
@@ -37,6 +41,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ConfirmActivity extends AppCompatActivity {
+    Integer state_category;
+    public String searchtarget = "";
     APIInterface apiInterface;
     APIInterface secendApiInterface;
     EditText ed_barcode;
@@ -47,6 +53,8 @@ public class ConfirmActivity extends AppCompatActivity {
     FragmentManager fragmentManager ;
     FragmentTransaction fragmentTransaction;
     CollectFragment collectFragment;
+    StackFragment stackFragment;
+
     PackFragment packFragment;
     ArrayList<Good> goods;
     ArrayList<Good> goods_scan=new ArrayList<>();
@@ -57,7 +65,9 @@ public class ConfirmActivity extends AppCompatActivity {
     int width=1;
     Action action;
     Handler handler;
-
+    LottieAnimationView progressBar;
+    LottieAnimationView img_lottiestatus;
+    TextView tv_lottiestatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +121,9 @@ public class ConfirmActivity extends AppCompatActivity {
 
         ll_main = findViewById(R.id.confirm_layout);
         ed_barcode = findViewById(R.id.confirmActivity_barcode);
+        progressBar = findViewById(R.id.stackfragment_good_prog);
+        img_lottiestatus = findViewById(R.id.stackfragment_good_lottie);
+        tv_lottiestatus = findViewById(R.id.stackfragment_good_tvstatus);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -120,17 +133,17 @@ public class ConfirmActivity extends AppCompatActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
         collectFragment = new CollectFragment();
         packFragment = new PackFragment();
+        stackFragment = new StackFragment();
         collectFragment.setBarcodeScan(BarcodeScan);
         packFragment.setBarcodeScan(BarcodeScan);
+        stackFragment.setBarcodeScan(BarcodeScan);
         goods_scan.clear();
     }
 
 
+    public void Collect_Pack(){
 
-
-    public void init(){
-
-
+        Log.e("kowsar","Collect_Pack");
 
         ed_barcode.addTextChangedListener(
                 new TextWatcher() {
@@ -164,11 +177,12 @@ public class ConfirmActivity extends AppCompatActivity {
                                 }
 
                                 action.GoodScanDetail(goods_scan,State,BarcodeScan);
-                            }, 200);
+                            },  Integer.parseInt(callMethod.ReadString("Delay")));
                         }
                     }
 
-                });
+                }
+        );
 
 
 
@@ -226,6 +240,129 @@ public class ConfirmActivity extends AppCompatActivity {
 
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
+    }
+
+
+    public void StackLocation(){
+
+        ed_barcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100));
+        ed_barcode.setPadding(5, 5, 5, 5);
+
+        Log.e("kowsar","StackLocation");
+        img_lottiestatus.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+
+        tv_lottiestatus.setText("جستجو کنید");
+        tv_lottiestatus.setVisibility(View.VISIBLE);
+
+
+        ed_barcode.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+
+
+                    @Override
+                    public void afterTextChanged( Editable editable) {
+
+
+                            handler.removeCallbacksAndMessages(null);
+                            handler.postDelayed(() -> {
+                                searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
+                                searchtarget = searchtarget.replaceAll(" ", "%");
+                                progressBar.setVisibility(View.VISIBLE);
+
+                                Call<RetrofitResponse> call;
+
+                                call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
+                                Log.e("kowsar","searchtarget = "+searchtarget);
+
+                                Log.e("kowsar",call.request().url().toString());
+
+                                call.enqueue(new Callback<RetrofitResponse>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            Log.e("kowsar","StackLocation = "+response.body().getGoods());
+
+                                            goods = response.body().getGoods();
+
+                                            if (goods.size()> 0) {
+                                                img_lottiestatus.setVisibility(View.GONE);
+                                                tv_lottiestatus.setVisibility(View.GONE);
+
+                                                stackFragment.setGoods(goods);
+                                                fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
+                                                fragmentTransaction.commit();
+                                                progressBar.setVisibility(View.GONE);
+
+                                            } else {
+                                                tv_lottiestatus.setText("موردی یافت نشد");
+                                                img_lottiestatus.setVisibility(View.VISIBLE);
+                                                tv_lottiestatus.setVisibility(View.VISIBLE);
+
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                        callMethod.showToast("Connection fail ...!!!");
+                                        tv_lottiestatus.setText("موردی یافت نشد");
+                                        img_lottiestatus.setVisibility(View.VISIBLE);
+                                        tv_lottiestatus.setVisibility(View.VISIBLE);
+                                    }
+                                });
+
+                            },  Integer.parseInt(callMethod.ReadString("Delay")));
+
+
+
+
+                    }
+                }
+        );
+
+
+
+        ed_barcode.setFocusable(true);
+        ed_barcode.requestFocus();
+    }
+
+
+
+
+        public void init(){
+
+            try {
+                state_category=Integer.parseInt(callMethod.ReadString("Category"));
+            }catch (Exception e){
+                state_category=0;
+            }
+
+
+
+
+            if(state_category==2){
+                Collect_Pack();
+            }else if(state_category==3){
+                Collect_Pack();
+            }else if(state_category==6){
+                StackLocation();
+            }
+
+
+
+
+
+
+
     }
 
 

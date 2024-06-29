@@ -321,6 +321,33 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_weight="0.5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="وقفه جستجو :" />
+
+            <EditText
+                android:layout_weight="0.5"
+                android:id="@+id/configactivity_delay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittest1"
+
+                android:inputType="text"
+                tools:ignore="LabelFor"
+                android:gravity="center" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
