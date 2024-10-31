@@ -32,11 +32,26 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         if(callMethod.ReadString("Category").equals("1")){
             intent = new Intent(ScanCodeActivity.this, ConfirmActivity.class);
             intent.putExtra("ScanResponse", scan_result);
+
+        }else if(callMethod.ReadString("Category").equals("6")){
+            intent = new Intent(ScanCodeActivity.this, ConfirmActivity.class);
+            intent.putExtra("ScanResponse", scan_result);
+            intent.putExtra("State", "6");
+            intent.putExtra("FactorImage", "");
         }else {
             intent = new Intent(ScanCodeActivity.this, FactorActivity.class);
             intent.putExtra("ScanResponse", scan_result);
             intent.putExtra("FactorImage", "");
         }
+
+
+
+
+
+
+
+
+
         startActivity(intent);
         finish();
     }

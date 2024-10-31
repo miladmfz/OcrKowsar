@@ -1,6 +1,7 @@
 package com.kits.ocrkowsar.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -56,7 +57,7 @@ public class ConfirmActivity extends AppCompatActivity {
     StackFragment stackFragment;
 
     PackFragment packFragment;
-    ArrayList<Good> goods;
+    ArrayList<Good> goods=new ArrayList<>();
     ArrayList<Good> goods_scan=new ArrayList<>();
     Factor factor;
     String BarcodeScan;
@@ -64,6 +65,7 @@ public class ConfirmActivity extends AppCompatActivity {
     String State;
     int width=1;
     Action action;
+    Call<RetrofitResponse> call;
     Handler handler;
     LottieAnimationView progressBar;
     LottieAnimationView img_lottiestatus;
@@ -73,7 +75,6 @@ public class ConfirmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
-
         Dialog dialog1 = new Dialog(this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         Objects.requireNonNull(dialog1.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -98,10 +99,12 @@ public class ConfirmActivity extends AppCompatActivity {
 
 
     public  void intent(){
+
         Bundle bundle =getIntent().getExtras();
         assert bundle != null;
         BarcodeScan=bundle.getString("ScanResponse");
         State=bundle.getString("State");
+
 
     }
 
@@ -138,6 +141,7 @@ public class ConfirmActivity extends AppCompatActivity {
         packFragment.setBarcodeScan(BarcodeScan);
         stackFragment.setBarcodeScan(BarcodeScan);
         goods_scan.clear();
+
     }
 
 
@@ -245,17 +249,42 @@ public class ConfirmActivity extends AppCompatActivity {
 
     public void StackLocation(){
 
+        tv_lottiestatus.setText("اسکن کنید");
+        tv_lottiestatus.setVisibility(View.VISIBLE);
+        if (BarcodeScan.length()>0){
+            Log.e("kowsar","0");
+
+            progressBar.setVisibility(View.VISIBLE);
+            tv_lottiestatus.setText("در حال جستجو");
+            tv_lottiestatus.setVisibility(View.VISIBLE);
+            ed_barcode.setText(BarcodeScan);
+            ed_barcode.selectAll();
+            Search_call();
+        }
+        Log.e("kowsar","1");
         ed_barcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100));
         ed_barcode.setPadding(5, 5, 5, 5);
+
+
 
         Log.e("kowsar","StackLocation");
         img_lottiestatus.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
+        ed_barcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ed_barcode.setFocusable(true);
+                ed_barcode.requestFocus();
+                ed_barcode.selectAll();
+            }
+        });
 
-        tv_lottiestatus.setText("جستجو کنید");
-        tv_lottiestatus.setVisibility(View.VISIBLE);
 
-
+        tv_lottiestatus.setOnClickListener(view -> {
+             Intent intent = new Intent(this, ScanCodeActivity.class);
+            startActivity(intent);
+            finish();
+        });
         ed_barcode.addTextChangedListener(
                 new TextWatcher() {
                     @Override
@@ -274,51 +303,24 @@ public class ConfirmActivity extends AppCompatActivity {
 
                             handler.removeCallbacksAndMessages(null);
                             handler.postDelayed(() -> {
-                                searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
-                                searchtarget = searchtarget.replaceAll(" ", "%");
-                                progressBar.setVisibility(View.VISIBLE);
 
-                                Call<RetrofitResponse> call;
 
-                                call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
-                                Log.e("kowsar","searchtarget = "+searchtarget);
+                                if (ed_barcode.getText().toString().length()>0){
 
-                                Log.e("kowsar",call.request().url().toString());
+                                    Search_call();
 
-                                call.enqueue(new Callback<RetrofitResponse>() {
-                                    @Override
-                                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
-                                        if (response.isSuccessful()) {
-                                            Log.e("kowsar","StackLocation = "+response.body().getGoods());
-
-                                            goods = response.body().getGoods();
-
-                                            if (goods.size()> 0) {
-                                                img_lottiestatus.setVisibility(View.GONE);
-                                                tv_lottiestatus.setVisibility(View.GONE);
-
-                                                stackFragment.setGoods(goods);
-                                                fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
-                                                fragmentTransaction.commit();
-                                                progressBar.setVisibility(View.GONE);
-
-                                            } else {
-                                                tv_lottiestatus.setText("موردی یافت نشد");
-                                                img_lottiestatus.setVisibility(View.VISIBLE);
-                                                tv_lottiestatus.setVisibility(View.VISIBLE);
-
-                                            }
-                                        }
+                                }else {
+                                    if (goods.size()> 0) {
+                                        goods.clear();
                                     }
 
-                                    @Override
-                                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                                        callMethod.showToast("Connection fail ...!!!");
-                                        tv_lottiestatus.setText("موردی یافت نشد");
-                                        img_lottiestatus.setVisibility(View.VISIBLE);
-                                        tv_lottiestatus.setVisibility(View.VISIBLE);
-                                    }
-                                });
+                                    img_lottiestatus.setVisibility(View.GONE);
+                                    progressBar.setVisibility(View.GONE);
+                                    tv_lottiestatus.setText("اسکن کنید");
+                                    tv_lottiestatus.setVisibility(View.VISIBLE);
+                                }
+
+
 
                             },  Integer.parseInt(callMethod.ReadString("Delay")));
 
@@ -335,6 +337,69 @@ public class ConfirmActivity extends AppCompatActivity {
         ed_barcode.requestFocus();
     }
 
+    public void Search_call(){
+        searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
+        searchtarget = searchtarget.replaceAll(" ", "%");
+
+
+
+
+        call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
+        Log.e("kowsar","searchtarget = "+searchtarget);
+
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.e("kowsar","StackLocation = "+response.body().getGoods().size());
+
+                    goods = response.body().getGoods();
+
+                    if (goods.size()> 0) {
+                        try {
+                            Log.e("kowsar","0 ");
+                            img_lottiestatus.setVisibility(View.GONE);
+                            tv_lottiestatus.setText("اسکن کنید");
+                            tv_lottiestatus.setVisibility(View.VISIBLE);
+
+                            stackFragment.setGoods(goods);
+
+                            Log.e("kowsar","1 ");
+
+                            fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
+                            fragmentTransaction.commit();
+                            Log.e("kowsar","2 ");
+
+                            progressBar.setVisibility(View.GONE);
+                            Log.e("kowsar","3 ");
+
+                        }catch (Exception e){
+                            Log.e("kowsar","4 " +e.getMessage());
+
+
+                        }
+
+
+                    } else {
+
+                        tv_lottiestatus.setText("موردی یافت نشد");
+                        img_lottiestatus.setVisibility(View.VISIBLE);
+                        tv_lottiestatus.setVisibility(View.VISIBLE);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                callMethod.showToast("Connection fail ...!!!");
+                tv_lottiestatus.setText("موردی یافت نشد");
+                img_lottiestatus.setVisibility(View.VISIBLE);
+                tv_lottiestatus.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
 
 

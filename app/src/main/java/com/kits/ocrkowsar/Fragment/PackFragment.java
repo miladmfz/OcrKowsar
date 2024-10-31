@@ -504,6 +504,7 @@ public class PackFragment extends Fragment{
                 startActivity(intent);
                 requireActivity().finish();
             });
+
         }
 
 
@@ -599,6 +600,12 @@ public class PackFragment extends Fragment{
         ll_details.addView(ll_radif_check);
         ll_details.addView(vp_radif_name);
         ll_details.addView(ll_name_price);
+        Log.e("kowsarr","ssdsdsdsd");
+
+        Log.e("kowsarr",good.getMinAmount());
+        if (good.getMinAmount().equals("1.000")){
+            ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
+        }
 
         ll_factor_row.addView(ll_details);
         ll_factor_row.addView(vp_rows);
@@ -650,23 +657,23 @@ public class PackFragment extends Fragment{
 
             @Override
             public void afterTextChanged(Editable text) {
+                try {
 
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(() -> {
-                    try {
-
-                        if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
-                            et_amountshortage.setText("");
-                            callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
-                        } else {
-                            arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), text.toString()});
-
-                        }
-
-                    } catch (Exception ignored) {
+                    if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
+                        et_amountshortage.setText("");
+                        callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
+                    } else {
+                        arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), text.toString()});
 
                     }
-                },  1000);
+
+                } catch (Exception ignored) {
+
+                }
+//                handler.removeCallbacksAndMessages(null);
+//                handler.postDelayed(() -> {
+//
+//                },  1000);
 
             }
         });

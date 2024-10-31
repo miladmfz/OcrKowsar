@@ -539,6 +539,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         TextView tv_good_2 = dialog.findViewById(R.id.imagezoome_tv2);
         TextView tv_good_3 = dialog.findViewById(R.id.imagezoome_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.imagezoome_tv4);
+        TextView tv_good_5 = dialog.findViewById(R.id.imagezoome_tv5);
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -557,6 +558,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     tv_good_2.setText(goods.get(0).getSize());
                     tv_good_3.setText(goods.get(0).getCoverType());
                     tv_good_4.setText(goods.get(0).getPageNo());
+                    tv_good_5.setText(goods.get(0).getGoodExplain2());
 
                 }
             }
@@ -787,7 +789,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
         goodname_tv.setText(good.getGoodName());
-        stacklocation_et.setText("");
+        stacklocation_et.setText(good.getStackLocation());
+        stacklocation_et.selectAll();
 
 
 
@@ -802,19 +805,22 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
 
         explain_btn.setOnClickListener(view -> {
+            String safeInput = stacklocation_et.getText().toString().replaceAll("[;'\"--#/*]", "");
 
             dialogProg();
             tv_rep.setText("در حال ارسال اطلاعات");
             Call<RetrofitResponse> call = apiInterface.SetStackLocation(
                     "SetStackLocation",
                     good.getGoodCode(),
-                    good.getGoodCode()
+                    NumberFunctions.EnglishNumber(safeInput)
             );
 
             call.enqueue(new Callback<RetrofitResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<RetrofitResponse> call, @NotNull Response<RetrofitResponse> response) {
+
                     if (response.isSuccessful()) {
+
                         assert response.body() != null;
                         dialog.dismiss();
                         dialogProg.dismiss();
@@ -824,8 +830,11 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
                 @Override
                 public void onFailure(@NotNull Call<RetrofitResponse> call, @NotNull Throwable t) {
+
                     dialog.dismiss();
                     dialogProg.dismiss();
+                    callMethod.showToast("ثبت نگردید");
+
                 }
             });
         });

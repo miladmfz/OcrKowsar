@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    >
-
+    android:background="@color/backgroundColor"
+    android:padding="16dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -15,34 +15,38 @@
         android:background="@color/white"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        >
+        android:padding="10dp"
+        android:elevation="4dp">
+
         <ImageView
             android:id="@+id/image_zoom_view"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="300dp"
             android:background="@drawable/no_photo"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center"
+            android:scaleType="fitCenter" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_marginTop="8dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:text="موجودی کل "
+                android:text="موجودی کل"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
             <TextView
                 android:id="@+id/imagezoome_tv1"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -52,21 +56,20 @@
             android:weightSum="1">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="قطع"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
             <TextView
                 android:id="@+id/imagezoome_tv2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -75,21 +78,20 @@
             android:weightSum="1">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="نوع جلد"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
             <TextView
                 android:id="@+id/imagezoome_tv3"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -98,23 +100,41 @@
             android:weightSum="1">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:text="تعداد صفحه"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
             <TextView
                 android:id="@+id/imagezoome_tv4"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
                 android:textColor="@color/Black"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:text="جانمایی"
+                android:textColor="@color/Black"
+                android:layout_weight="0.5" />
+            <TextView
+                android:id="@+id/imagezoome_tv5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/Black"
+                android:layout_weight="0.5" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 </androidx.appcompat.widget.LinearLayoutCompat>

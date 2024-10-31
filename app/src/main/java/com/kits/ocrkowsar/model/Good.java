@@ -73,6 +73,38 @@ public class Good implements Serializable {
     @SerializedName("ErrMessage")
     private String ErrMessage;
 
+    @SerializedName("StackAmount")
+    private String StackAmount;
+
+    @SerializedName("MaxSellPrice")
+    private String MaxSellPrice;
+    @SerializedName("GoodExplain2")
+    private String GoodExplain2;
+
+
+    public String getGoodExplain2() {
+        return GoodExplain2;
+    }
+
+    public void setGoodExplain2(String goodExplain2) {
+        GoodExplain2 = goodExplain2;
+    }
+
+    public String getMaxSellPrice() {
+        return MaxSellPrice;
+    }
+
+    public void setMaxSellPrice(String maxSellPrice) {
+        MaxSellPrice = maxSellPrice;
+    }
+
+    public String getStackAmount() {
+        return StackAmount;
+    }
+
+    public void setStackAmount(String stackAmount) {
+        StackAmount = stackAmount;
+    }
 
     public String getIsbn() {
         return Isbn;

@@ -30,7 +30,8 @@
                 android:layout_margin="2dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading" />
+                app:lottie_rawRes="@raw/loading"
+                android:visibility="gone"/>
 
 
 
@@ -41,10 +42,10 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
-                android:visibility="gone"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/notfind" />
+                app:lottie_rawRes="@raw/notfind"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/stackfragment_good_tvstatus"
@@ -53,7 +54,7 @@
                 android:layout_gravity="center"
                 android:textColor="#BD622B"
                 android:textSize="40sp"
-
+                android:visibility="gone"
                 />
             <FrameLayout
                 android:id="@+id/confirm_framelayout"

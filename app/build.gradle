@@ -4,17 +4,13 @@ plugins {
 
 android {
     namespace 'com.kits.ocrkowsar'
-
-    compileSdk 34
-
+    compileSdk 33
     defaultConfig {
         applicationId "com.kits.ocrkowsar"
-        minSdkVersion 21
-        targetSdkVersion 34
-        minSdk 26
-        targetSdk 34
+        minSdk 29
+        targetSdk 33
         versionCode 1
-        versionName "13.04.01"
+        versionName "13.08.01"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,11 +26,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     viewBinding.enabled = true
     buildFeatures {
         buildConfig true
         viewBinding true
     }
+
 }
 
 
@@ -43,24 +41,22 @@ dependencies {
 
     // sysdefult
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // component
     implementation 'com.thoughtbot:expandablerecyclerview:1.3'
-
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.github.smarteist:autoimageslider:1.3.2'
-    implementation "androidx.work:work-runtime:2.9.0"
-    implementation "androidx.concurrent:concurrent-futures:1.2.0"
+    implementation "androidx.work:work-runtime:2.7.1"
+    implementation "androidx.concurrent:concurrent-futures:1.1.0"
     implementation 'com.google.guava:guava:29.0-android'
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
 
 
@@ -77,20 +73,22 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.7'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
-    implementation 'com.google.android.gms:play-services-maps:19.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
 
 
     // offline
-    implementation 'com.mindorks.android:prdownloader:0.6.0'
+    implementation 'com.github.amitshekhariitbhu:PRDownloader:1.0.1'
     implementation 'com.mohamadamin:persianmaterialdatetimepicker:1.2.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.github.juanlabrador:badgecounter:1.0.2@aar'
     implementation "com.airbnb.android:lottie:5.0.3"
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
-    implementation 'com.google.gms:google-services:4.4.2'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.gms:google-services:4.3.15'
+    implementation 'com.karumi:dexter:4.2.0'
+    implementation 'com.android.volley:volley:1.2.1'
 
 
 }

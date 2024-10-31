@@ -59,8 +59,6 @@ public class StackFragment extends Fragment {
     LinearLayoutCompat ll_main;
 
     CallMethod callMethod;
-
-
     ArrayList<Good> goods;
 
     String BarcodeScan;
@@ -86,10 +84,12 @@ public class StackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("kowsar","5 " );
 
         view= inflater.inflate(R.layout.fragment_stack, container, false);
         ll_main = view.findViewById(R.id.stackfragment_layout);
         rc_good = view.findViewById(R.id.stackfragment_good_recy);
+        Log.e("kowsar","6 " );
 
         return view;
     }
@@ -97,6 +97,7 @@ public class StackFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.e("kowsar","7 " );
 
 
         callMethod = new CallMethod(requireActivity());
@@ -105,12 +106,12 @@ public class StackFragment extends Fragment {
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
         handler=new Handler();
         print=new Print(requireActivity());
-        DisplayMetrics metrics = new DisplayMetrics();
-        view.getDisplay().getMetrics(metrics);
-        width =metrics.widthPixels;
+
         dialogProg = new Dialog(requireActivity());
         dialogProg.setContentView(R.layout.rep_prog);
         dialogProg.findViewById(R.id.rep_prog_text).setVisibility(View.GONE);
+        Log.e("kowsar","8 " );
+
         callrecycler();
 
     }
@@ -124,16 +125,10 @@ public class StackFragment extends Fragment {
         rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         rc_good.setAdapter(adapter);
         rc_good.setItemAnimator(new DefaultItemAnimator());
+        Log.e("kowsar","9 " );
 
     }
 
-
-    public void image_zome_view(String GoodCode) {
-
-        Action action=new Action(requireActivity());
-        action.good_detail(GoodCode);
-
-    }
 
     public String getBarcodeScan() {
         return BarcodeScan;

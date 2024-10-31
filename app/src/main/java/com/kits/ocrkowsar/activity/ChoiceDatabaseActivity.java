@@ -129,7 +129,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
     public void DownloadRequesttest(Activation activation) {
 
 
-        String downloadurl="http://178.131.31.161:60005/api/kits/GetDb?Code="+activation.getActivationCode();
+        String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+activation.getActivationCode();
 
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
@@ -215,7 +215,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
 
     public void DownloadRequesttest1(String url,String dbname,File databasedir, File databasefile,Activation singleactive) {
-        String downloadurl="http://178.131.31.161:60005/api/kits/GetDb?Code="+singleactive.getActivationCode();
+        String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+singleactive.getActivationCode();
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
                 .build();
