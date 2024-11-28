@@ -2,7 +2,9 @@ package com.kits.ocrkowsar.webService;//package com.kits.test.webService;
 
 import com.kits.ocrkowsar.model.RetrofitResponse;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -25,6 +27,9 @@ public interface APIInterface {
     Call<RetrofitResponse> Activation(
             @Query("ActivationCode") String ActivationCode
     );
+
+    @POST("kits/LogReport") // Replace with your actual API endpoint
+    Call<RetrofitResponse> LogReport(@Body RequestBody requestBody);
 
 
 

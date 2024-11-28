@@ -3,7 +3,9 @@ package com.kits.ocrkowsar.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,12 +31,15 @@ import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient_kowsar;
 import com.kits.ocrkowsar.webService.APIInterface;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChoiceDatabaseActivity extends AppCompatActivity {
 
@@ -109,9 +114,15 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         activation = response.body().getActivations().get(0);
-                        dbhbase.InsertActivation(activation);
-                        finish();
-                        startActivity(getIntent());
+                        Log.e("kowsar",""+activation.getErrCode());
+                        if (Integer.parseInt(activation.getErrCode())>0){
+                            callMethod.showToast(activation.getErrDesc());
+                        }else{
+                            FirstActivation(activation);
+                            dbhbase.InsertActivation(activation);
+                            finish();
+                            startActivity(getIntent());
+                        }
                     }
                 }
                 @Override
@@ -415,6 +426,77 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
 
         active_line.addView(ll_main,margin_10);
+    }
+
+    @SuppressLint("HardwareIds")
+    public void FirstActivation(Activation activation) {
+
+
+        Log.e("Debug Build.VERSION.SDK_INT =", Build.VERSION.SDK_INT+"");
+
+
+        @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
+                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) :
+                "debug";
+        PersianCalendar calendar1 = new PersianCalendar();
+        calendar1.setTimeZone(TimeZone.getDefault());
+        String version = BuildConfig.VERSION_NAME;
+
+
+
+        APIInterface apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface.class);
+//        Call<RetrofitResponse> call = apiInterface.Kowsar_log("Kowsar_log", android_id
+//                , url
+//                , callMethod.ReadString("PersianCompanyNameUse")
+//                , callMethod.ReadString("PreFactorCode")
+//                , calendar1.getPersianShortDateTime()
+//                , dbh.ReadConfig("BrokerCode")
+//                , version);
+//
+//
+
+        String Body_str  = "";
+        Body_str =callMethod.CreateJson("Device_Id", android_id, Body_str);
+        Body_str =callMethod.CreateJson("Address_Ip", activation.getServerURL(), Body_str);
+        Body_str =callMethod.CreateJson("Server_Name", activation.getPersianCompanyName(), Body_str);
+        Body_str =callMethod.CreateJson("Factor_Code", "0", Body_str);
+        Body_str =callMethod.CreateJson("StrDate", calendar1.getPersianShortDateTime(), Body_str);
+        Body_str =callMethod.CreateJson("Broker",  "0", Body_str);
+        Body_str =callMethod.CreateJson("Explain", version, Body_str);
+        Body_str =callMethod.CreateJson("DeviceAgant", Build.BRAND+" / "+Build.MODEL+" / "+Build.HARDWARE, Body_str);
+        Body_str =callMethod.CreateJson("SdkVersion", Build.VERSION.SDK_INT+"", Body_str);
+        Body_str =callMethod.CreateJson("DeviceIp", "---- / -----", Body_str);
+
+        Log.e("e=",""+Body_str);
+        Call<RetrofitResponse> call = apiInterface.LogReport(callMethod.RetrofitBody(Body_str));
+        Log.e("ec=",""+call.request().url());
+        Log.e("ec=",""+call.request().body());
+
+
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                Log.e("res=",""+response.body().toString());
+
+                if (response.isSuccessful()) {
+                    // Handle successful response
+                } else {
+                    // Handle unsuccessful response
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                // Handle failure
+            }
+        });
+
+
+
+
+
+
     }
 
 

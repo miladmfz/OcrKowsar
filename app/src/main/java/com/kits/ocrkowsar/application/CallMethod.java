@@ -21,9 +21,13 @@ import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.BuildConfig;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -60,6 +64,23 @@ public class CallMethod extends Application {
         sEdit.putBoolean(Key, Value);
         sEdit.apply();
     }
+    public String CreateJson(String key, String value, String existingJson) {
+
+        JSONObject jsonObject = null;
+        try {
+            if (existingJson != null && !existingJson.isEmpty()) {
+                jsonObject = new JSONObject(existingJson);
+            } else {
+                jsonObject = new JSONObject();
+            }
+            jsonObject.put(key, value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject.toString()+"";
+    }
 
     public boolean firstStart() {
 
@@ -88,6 +109,13 @@ public class CallMethod extends Application {
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
         return gson.fromJson(json, type);
+    }
+    public RequestBody RetrofitBody(String jsonRequestBody) {
+
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonRequestBody);
+
+        return requestBody;
     }
 
     public void Create() {

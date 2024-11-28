@@ -84,7 +84,7 @@ public class Good_ProSearch_Adapter extends RecyclerView.Adapter<Good_ProSearch_
 
 
         holder.goodnameTextView.setText(NumberFunctions.PerisanNumber(goods.get(position).getGoodName()));
-       holder.sellprice_tv.setText(NumberFunctions.PerisanNumber(goods.get(position).getMaxSellPrice().substring(0,goods.get(position).getMaxSellPrice().indexOf("."))));
+        holder.sellprice_tv.setText(NumberFunctions.PerisanNumber(goods.get(position).getMaxSellPrice().substring(0,goods.get(position).getMaxSellPrice().indexOf("."))));
         holder.amount_tv.setText(NumberFunctions.PerisanNumber(goods.get(position).getStackAmount().substring(0,goods.get(position).getStackAmount().indexOf("."))));
         holder.stacklocation_tv.setText(NumberFunctions.PerisanNumber(goods.get(position).getStackLocation()));
         Log.e("kowsar","10 getGoodImageName"+ position );
@@ -118,13 +118,14 @@ public class Good_ProSearch_Adapter extends RecyclerView.Adapter<Good_ProSearch_
                     if (response.isSuccessful()) {
 
                         assert response.body() != null;
+                        try {
                         if (!response.body().getText().equals("no_photo")) {
                             goods.get(position).setGoodImageName(response.body().getText());
                         } else {
                             goods.get(position).setGoodImageName(String.valueOf(R.string.no_photo));
 
                         }
-                        try {
+
                             Glide.with(holder.img)
                                     .asBitmap()
                                     .load(Base64.decode(goods.get(position).getGoodImageName(), Base64.DEFAULT))

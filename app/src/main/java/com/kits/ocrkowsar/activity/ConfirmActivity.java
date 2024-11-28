@@ -310,7 +310,7 @@ public class ConfirmActivity extends AppCompatActivity {
                                     Search_call();
 
                                 }else {
-                                    if (goods.size()> 0) {
+                                    if (!goods.isEmpty()) {
                                         goods.clear();
                                     }
 
@@ -353,7 +353,7 @@ public class ConfirmActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 if (response.isSuccessful()) {
                     Log.e("kowsar","StackLocation = "+response.body().getGoods().size());
-
+                    goods.clear();
                     goods = response.body().getGoods();
 
                     if (goods.size()> 0) {
@@ -363,12 +363,41 @@ public class ConfirmActivity extends AppCompatActivity {
                             tv_lottiestatus.setText("اسکن کنید");
                             tv_lottiestatus.setVisibility(View.VISIBLE);
 
-                            stackFragment.setGoods(goods);
+//                            stackFragment.setGoods(goods);
+//
+//                            Log.e("kowsar","1 ");
+//
+//                            fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
+//                            fragmentTransaction.commit();
 
-                            Log.e("kowsar","1 ");
+// Obtain the fragment manager
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            StackFragment stackFragment = (StackFragment) fragmentManager.findFragmentByTag("STACK_FRAGMENT");
 
-                            fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
-                            fragmentTransaction.commit();
+// Begin transaction
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+// Check if stackFragment exists
+                            if (stackFragment != null) {
+                                // Update the existing fragment's data
+                                stackFragment.setGoods(goods);
+                                stackFragment.setBarcodeScan(BarcodeScan);
+                                stackFragment.callrecycler() ;
+                                Log.e("kowsar", "Fragment already exists, data updated");
+                            } else {
+                                // Create a new instance of StackFragment if not already added
+                                stackFragment = new StackFragment();
+                                stackFragment.setGoods(goods);
+                                stackFragment.setBarcodeScan(BarcodeScan);
+                                fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment, "STACK_FRAGMENT");
+                                Log.e("kowsar", "New fragment created and data set");
+                            }
+
+// Commit the transaction
+                            fragmentTransaction.commitAllowingStateLoss();
+
+
+
                             Log.e("kowsar","2 ");
 
                             progressBar.setVisibility(View.GONE);

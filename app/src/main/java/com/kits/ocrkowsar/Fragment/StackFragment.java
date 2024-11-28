@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -117,7 +119,9 @@ public class StackFragment extends Fragment {
     }
 
 
-    private void callrecycler() {
+
+
+    public void callrecycler() {
 
 
         adapter = new Good_ProSearch_Adapter(goods, requireActivity());
