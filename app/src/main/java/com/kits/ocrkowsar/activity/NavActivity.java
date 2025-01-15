@@ -26,7 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.kits.ocrkowsar.BuildConfig;
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
@@ -94,6 +94,7 @@ public void Config() {
         tv_versionname.setText(BuildConfig.VERSION_NAME);
         tv_dbname.setText(callMethod.ReadString("PersianCompanyNameUse"));
         toolbar.setTitle(callMethod.ReadString("PersianCompanyNameUse"));
+
         btn_changedb.setOnClickListener(v -> {
             callMethod.EditString("PersianCompanyNameUse", "");
             callMethod.EditString("EnglishCompanyNameUse", "");
@@ -102,6 +103,7 @@ public void Config() {
             callMethod.EditString("ActivationCode", "");
             callMethod.EditString("SecendServerURL", "");
             callMethod.EditString("DbName", "");
+            callMethod.EditString("AppType", "");
             callMethod.EditString("FactorDbName", "");
             intent = new Intent(this, SplashActivity.class);
             finish();
@@ -174,6 +176,7 @@ public void Config() {
             intent = new Intent(this, ScanCodeActivity.class);
             startActivity(intent);
         });
+
         btn2.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

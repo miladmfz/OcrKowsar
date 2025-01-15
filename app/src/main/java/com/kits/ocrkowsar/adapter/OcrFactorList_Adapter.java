@@ -19,6 +19,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.FactorActivity;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -88,6 +89,14 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         holder.fac_code.setText(NumberFunctions.PerisanNumber(factor.getFactorPrivateCode()));
         holder.fac_customercode.setText(NumberFunctions.PerisanNumber(factors.get(position).getCustomerCode()));
 
+//        TODO  AppOCRFactorExplain
+//        if (factors.get(position).getAppOCRFactorExplain() != null&&factors.get(position).getAppOCRFactorExplain().length()>0){
+//            holder.fac_factor_ocrexplain_ll.setVisibility(View.VISIBLE);
+//            holder.fac_ocrexplain.setText(NumberFunctions.PerisanNumber(factors.get(position).getAppOCRFactorExplain()));
+//        }else {
+//            holder.fac_factor_ocrexplain_ll.setVisibility(View.GONE);
+//        }
+
         if (factors.get(position).getExplain() != null&&factors.get(position).getExplain().length()>0){
             holder.fac_factor_explain_ll.setVisibility(View.VISIBLE);
             holder.fac_explain.setText(NumberFunctions.PerisanNumber(factors.get(position).getExplain()));
@@ -101,7 +110,9 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         if(state.equals("0")){
             try {
 
-                holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+                //holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
+                holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass()));
+
                 if(factor.getIsEdited().equals("1")){
                     holder.fac_factor_state_ll.setVisibility(View.VISIBLE);
                     holder.fac_hasedite.setText("اصلاح شده");
@@ -150,10 +161,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         if(state.equals("4")){
             try {
                 holder.fac_stackclass.setText(NumberFunctions.PerisanNumber(factors.get(position).getStackClass().substring(1)));
-
-            }catch (Exception e){
-
-            }
+            }catch (Exception e){}
             holder.fac_factor_btn.setVisibility(View.GONE);
         }else {
             holder.fac_factor_btn.setVisibility(View.VISIBLE);
@@ -180,7 +188,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                         action.GetOcrFactorDetail(factors.get(position));
 
                     }else {
-                        if (position < 5) {
+                        if (position < Integer.parseInt(callMethod.ReadString("AccessCount"))) {
 
                             if (callMethod.ReadString("Category").equals("4")) {
                                 callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
@@ -238,7 +246,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                         action.GetOcrFactorDetail(factors.get(position));
 
                     }else {
-                        if (position < 5) {
+                        if (position < Integer.parseInt(callMethod.ReadString("AccessCount"))) {
 
                             if (callMethod.ReadString("Category").equals("4")) {
                                 callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
@@ -314,6 +322,8 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
         private final TextView fac_stackclass;
         private final Button fac_factor_btn;
         private final LinearLayout fac_factor_explain_ll;
+        private final LinearLayout fac_factor_ocrexplain_ll;
+
         private final LinearLayout fac_factor_state_ll;
 
         MaterialCardView fac_rltv;
@@ -325,6 +335,8 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
             fac_customer = itemView.findViewById(R.id.factor_list_customer);
             fac_customercode = itemView.findViewById(R.id.factor_list_customercode);
             fac_factor_explain_ll = itemView.findViewById(R.id.factor_list_ll_explain);
+            fac_factor_ocrexplain_ll = itemView.findViewById(R.id.factor_list_ll_ocrexplain);
+
             fac_factor_state_ll = itemView.findViewById(R.id.factor_list_ll_state);
             fac_stackclass = itemView.findViewById(R.id.factor_list_stackclass);
 

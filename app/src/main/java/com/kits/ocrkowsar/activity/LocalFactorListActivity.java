@@ -55,6 +55,7 @@ public class LocalFactorListActivity extends AppCompatActivity {
     Toolbar toolbar;
     SwitchMaterial mySwitch_activestack;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

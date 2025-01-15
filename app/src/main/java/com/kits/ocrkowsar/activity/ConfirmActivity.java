@@ -24,7 +24,7 @@ import com.kits.ocrkowsar.Fragment.CollectFragment;
 import com.kits.ocrkowsar.Fragment.PackFragment;
 import com.kits.ocrkowsar.Fragment.StackFragment;
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -71,6 +71,9 @@ public class ConfirmActivity extends AppCompatActivity {
     LottieAnimationView img_lottiestatus;
     TextView tv_lottiestatus;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +98,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
 
     }
-    ////////////////////////////////////////////////////
+    ////////////////////////////////////////
 
 
     public  void intent(){
@@ -194,6 +197,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
         if(State.equals("0")){
             OrderBy="GoodExplain1";
+            //OrderBy="FormNo";
         }else{
             OrderBy="GoodName";
         }
@@ -221,6 +225,9 @@ public class ConfirmActivity extends AppCompatActivity {
                         if (factor.getAppIsControled().equals("0")) {
                             collectFragment.setFactor(factor);
                             collectFragment.setGoods(goods);
+                            collectFragment.setState(State);
+                            collectFragment.setTcPrintRef(BarcodeScan);
+
                             fragmentTransaction.replace(R.id.confirm_framelayout, collectFragment);
                             fragmentTransaction.commit();
                         } else if (factor.getAppIsPacked().equals("0")) {
@@ -337,6 +344,7 @@ public class ConfirmActivity extends AppCompatActivity {
         ed_barcode.requestFocus();
     }
 
+
     public void Search_call(){
         searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
         searchtarget = searchtarget.replaceAll(" ", "%");
@@ -363,29 +371,21 @@ public class ConfirmActivity extends AppCompatActivity {
                             tv_lottiestatus.setText("اسکن کنید");
                             tv_lottiestatus.setVisibility(View.VISIBLE);
 
-//                            stackFragment.setGoods(goods);
-//
-//                            Log.e("kowsar","1 ");
-//
-//                            fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment);
-//                            fragmentTransaction.commit();
 
-// Obtain the fragment manager
+
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             StackFragment stackFragment = (StackFragment) fragmentManager.findFragmentByTag("STACK_FRAGMENT");
 
-// Begin transaction
+
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// Check if stackFragment exists
                             if (stackFragment != null) {
-                                // Update the existing fragment's data
                                 stackFragment.setGoods(goods);
                                 stackFragment.setBarcodeScan(BarcodeScan);
                                 stackFragment.callrecycler() ;
                                 Log.e("kowsar", "Fragment already exists, data updated");
                             } else {
-                                // Create a new instance of StackFragment if not already added
+
                                 stackFragment = new StackFragment();
                                 stackFragment.setGoods(goods);
                                 stackFragment.setBarcodeScan(BarcodeScan);
@@ -393,7 +393,7 @@ public class ConfirmActivity extends AppCompatActivity {
                                 Log.e("kowsar", "New fragment created and data set");
                             }
 
-// Commit the transaction
+
                             fragmentTransaction.commitAllowingStateLoss();
 
 
@@ -441,8 +441,6 @@ public class ConfirmActivity extends AppCompatActivity {
             }
 
 
-
-
             if(state_category==2){
                 Collect_Pack();
             }else if(state_category==3){
@@ -450,11 +448,6 @@ public class ConfirmActivity extends AppCompatActivity {
             }else if(state_category==6){
                 StackLocation();
             }
-
-
-
-
-
 
 
     }

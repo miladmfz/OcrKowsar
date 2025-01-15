@@ -58,6 +58,17 @@ public class Factor {
     private String dbname;
 
 
+
+    @SerializedName("MandehBedehkar")
+    private String MandehBedehkar;
+
+    @SerializedName("AppOCRFactorExplain")
+    private String AppOCRFactorExplain;
+
+
+
+
+
     public String getDbname() {
         return dbname;
     }
@@ -126,7 +137,21 @@ public class Factor {
     @SerializedName("AppFactorState") private String AppFactorState;
 
 
+    public String getMandehBedehkar() {
+        return MandehBedehkar;
+    }
 
+    public void setMandehBedehkar(String mandehBedehkar) {
+        MandehBedehkar = mandehBedehkar;
+    }
+
+    public String getAppOCRFactorExplain() {
+        return AppOCRFactorExplain;
+    }
+
+    public void setAppOCRFactorExplain(String appOCRFactorExplain) {
+        AppOCRFactorExplain = appOCRFactorExplain;
+    }
 
     @SerializedName("Check")
     private boolean Check;

@@ -122,7 +122,9 @@ public class CallMethod extends Application {
         sEdit.putBoolean("FirstStart", false);
         sEdit.apply();
     }
-
+    public void Log(String log_str) {
+        Log.e("kowsar_",log_str);
+    }
     public void ErrorLog(String ErrorStr) {
 
         showToast(ErrorStr);

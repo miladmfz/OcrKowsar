@@ -7,7 +7,6 @@ import java.io.Serializable;
 public class Good implements Serializable {
 
 
-
     @SerializedName("StackLocation")
     private String StackLocation;
     @SerializedName("Isbn")
@@ -16,6 +15,11 @@ public class Good implements Serializable {
     private String MinAmount;
     @SerializedName("GoodName")
     private String GoodName;
+
+    @SerializedName("FormNo")
+    private String FormNo;
+
+
 
     @SerializedName("GoodCode")
     private String GoodCode;
@@ -72,6 +76,12 @@ public class Good implements Serializable {
 
     @SerializedName("ErrMessage")
     private String ErrMessage;
+
+
+
+
+
+
 
     @SerializedName("StackAmount")
     private String StackAmount;

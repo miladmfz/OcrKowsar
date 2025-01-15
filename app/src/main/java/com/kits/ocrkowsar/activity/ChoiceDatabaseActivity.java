@@ -29,6 +29,7 @@ import com.kits.ocrkowsar.model.Activation;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
+import com.kits.ocrkowsar.webService.APIClient;
 import com.kits.ocrkowsar.webService.APIClient_kowsar;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
@@ -42,9 +43,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChoiceDatabaseActivity extends AppCompatActivity {
-
-
-
 
 
     APIInterface apiInterface = APIClient_kowsar.getCleint_log().create(APIInterface.class);
@@ -104,34 +102,41 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
         tv_versionname.setText(NumberFunctions.PerisanNumber("نسخه نرم افزار : "+ BuildConfig.VERSION_NAME));
 
         active_btn.setOnClickListener(v -> {
+            int exist=0;
+            for (Activation singleactive : activations) {
+                if (active_edt.getText().toString().equals(singleactive.getActivationCode())){
+                    exist=exist+1;
+                }
+            }
+            if (exist<1) {
+                Call<RetrofitResponse> call1 = apiInterface.Activation(active_edt.getText().toString());
 
-            Call<RetrofitResponse> call1 = apiInterface.Activation( active_edt.getText().toString());
-
-            Log.e("kowsar",""+call1.request().toString());
-            call1.enqueue(new Callback<RetrofitResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        activation = response.body().getActivations().get(0);
-                        Log.e("kowsar",""+activation.getErrCode());
-                        if (Integer.parseInt(activation.getErrCode())>0){
-                            callMethod.showToast(activation.getErrDesc());
-                        }else{
-                            FirstActivation(activation);
-                            dbhbase.InsertActivation(activation);
-                            finish();
-                            startActivity(getIntent());
+                call1.enqueue(new Callback<RetrofitResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull retrofit2.Response<RetrofitResponse> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            activation = response.body().getActivations().get(0);
+                            if (Integer.parseInt(activation.getErrCode())>0){
+                                callMethod.showToast(activation.getErrDesc());
+                            }else{
+                                FirstActivation(activation);
+                                dbhbase.InsertActivation(activation);
+                                finish();
+                                startActivity(getIntent());
+                            }
                         }
                     }
-                }
-                @Override
-                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                    callMethod.showToast(t.getMessage());
-                    Log.e("test",t.getMessage());
-                }
-            });
 
+                    @Override
+                    public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                        callMethod.showToast(t.getMessage());
+                        Log.e("test", t.getMessage());
+                    }
+                });
+            }else{
+                callMethod.showToast("این کد وارد شده است");
+            }
         });
 
 
@@ -195,9 +200,9 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                         File tempdb = new File(activation.getDatabaseFolderPath() + "/tempDb");
 
                         if (tempdb.exists()) {
-                            dbh.GetLastDataFromOldDataBase(activation.getDatabaseFolderPath() + "/tempDb");
-                            dbh.InitialConfigInsert();
-                            tempdb.delete();
+//                            dbh.GetLastDataFromOldDataBase(activation.getDatabaseFolderPath() + "/tempDb");
+//                            dbh.InitialConfigInsert();
+//                            tempdb.delete();
                         } else {
                             dbh.InitialConfigInsert();
                         }
@@ -206,12 +211,22 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
                         callMethod.EditString("EnglishCompanyNameUse", activation.getEnglishCompanyName());
                         callMethod.EditString("ServerURLUse", activation.getServerURL());
                         callMethod.EditString("ActivationCode", activation.getActivationCode());
+
+                        callMethod.EditString("DbName", activation.getDbName());
+                        callMethod.EditString("AppType", activation.getAppType());
+
+
+                        if (activation.getSecendServerURL() == null || activation.getSecendServerURL().isEmpty()) {
+                            callMethod.EditString("SecendServerURL", activation.getServerURL());
+                        }else{
+                            callMethod.EditString("SecendServerURL", activation.getSecendServerURL());
+                        }
+
                         intent = new Intent(App.getContext(), SplashActivity.class);
                         startActivity(intent);
                         finish();
                         dialog.dismiss();
                     }
-
 
                     @Override
                     public void onError(Error error) {
@@ -221,73 +236,8 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
                     }
                 });
-
     }
 
-
-    public void DownloadRequesttest1(String url,String dbname,File databasedir, File databasefile,Activation singleactive) {
-        String downloadurl="http://5.160.152.173:60005/api/kits/GetDb?Code="+singleactive.getActivationCode();
-        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
-                .setDatabaseEnabled(true)
-                .build();
-        PRDownloader.initialize(getApplicationContext(), config);
-
-        // Setting timeout globally for the download network requests:
-        PRDownloaderConfig config1 = PRDownloaderConfig.newBuilder()
-                .setReadTimeout(30_000)
-                .setConnectTimeout(30_000)
-                .build();
-        PRDownloader.initialize(getApplicationContext(), config1);
-
-        PRDownloader.download(downloadurl, databasedir.getPath(), databasefile.getName())
-                .build()
-                .setOnStartOrResumeListener(() -> {
-                    dialog.show();
-                    dialog.setCancelable(false);
-                })
-                .setOnPauseListener(() -> {})
-                .setOnCancelListener(() -> {})
-                .setOnProgressListener(progress -> {
-                    tv_rep.setText("در حال بارگیری...");
-                    tv_step.setText(NumberFunctions.PerisanNumber((((progress.currentBytes)*100)/progress.totalBytes)+"/100"));
-                })
-                .start(new OnDownloadListener() {
-                    @SuppressLint("SdCardPath")
-                    @Override
-                    public void onDownloadComplete() {
-                        dialog.dismiss();
-                        callMethod.EditString("DatabaseName", "/data/data/com.kits.ocrkowsar/databases/" + dbname + "/KowsarDb.sqlite");
-                        dbh = new DatabaseHelper(App.getContext(), callMethod.ReadString("DatabaseName"));
-                        dbh.DatabaseCreate();
-                        File tempdb = new File(getApplicationInfo().dataDir + "/databases/" + callMethod.ReadString("EnglishCompanyNameUse")+"/tempDb");
-
-                        if (tempdb.exists()){
-                            String tempdbpath= getApplicationInfo().dataDir + "/databases/" + callMethod.ReadString("EnglishCompanyNameUse")+"/tempDb";
-                            dbh.GetLastDataFromOldDataBase(tempdbpath);
-                            dbh.InitialConfigInsert();
-                            tempdb.delete();
-                        }else{
-                            dbh.InitialConfigInsert();
-                        }
-
-
-
-                        callMethod.EditString("PersianCompanyNameUse", singleactive.getPersianCompanyName());
-                        callMethod.EditString("EnglishCompanyNameUse", singleactive.getEnglishCompanyName());
-                        callMethod.EditString("ServerURLUse", singleactive.getServerURL());
-                        callMethod.EditString("ActivationCode", singleactive.getActivationCode());
-                        intent = new Intent(App.getContext(), SplashActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Error error) {
-                        callMethod.ErrorLog(error.toString());
-                    }
-
-                });
-    }
     @SuppressLint({"SetTextI18n", "SdCardPath"})
     public void CreateView(Activation singleactive){
 
@@ -371,7 +321,14 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
             callMethod.EditString("EnglishCompanyNameUse",singleactive.getEnglishCompanyName());
             callMethod.EditString("ServerURLUse", singleactive.getServerURL());
             callMethod.EditString("ActivationCode", singleactive.getActivationCode());
-            callMethod.EditString("SecendServerURL", singleactive.getSecendServerURL());
+
+
+            if (singleactive.getSecendServerURL() == null || singleactive.getSecendServerURL().isEmpty()) {
+                callMethod.EditString("SecendServerURL", singleactive.getServerURL());
+            }else{
+                callMethod.EditString("SecendServerURL", singleactive.getSecendServerURL());
+            }
+
             callMethod.EditString("DbName", singleactive.getDbName());
             callMethod.EditString("AppType", singleactive.getAppType());
 
@@ -434,7 +391,6 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
         Log.e("Debug Build.VERSION.SDK_INT =", Build.VERSION.SDK_INT+"");
 
-
         @SuppressLint("HardwareIds") String android_id = BuildConfig.BUILD_TYPE.equals("release") ?
                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID) :
                 "debug";
@@ -475,7 +431,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
-            public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                 Log.e("res=",""+response.body().toString());
 
                 if (response.isSuccessful()) {
@@ -487,7 +443,7 @@ public class ChoiceDatabaseActivity extends AppCompatActivity {
 
 
             @Override
-            public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 // Handle failure
             }
         });

@@ -31,7 +31,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.FileProvider;
 
 import com.kits.ocrkowsar.R;
-import com.kits.ocrkowsar.adapter.Action;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.adapter.PaintView;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -69,6 +69,9 @@ public class PaintActivity extends AppCompatActivity {
     CallMethod callMethod;
 
     EditText ed_signexplain;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

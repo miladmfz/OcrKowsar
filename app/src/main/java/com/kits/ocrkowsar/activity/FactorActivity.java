@@ -24,6 +24,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.kits.ocrkowsar.R;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
@@ -62,6 +63,8 @@ public class  FactorActivity extends AppCompatActivity {
     Bitmap bitmap_factor;
     int width=1;
     CallMethod callMethod;
+    Action action;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +102,11 @@ public class  FactorActivity extends AppCompatActivity {
 
         callMethod = new CallMethod(this);
         dbh = new DatabaseHelper(this, callMethod.ReadString("DatabaseName"));
+        action = new Action(this);
+
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+
         main_layout = findViewById(R.id.factor_layout);
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -298,6 +304,7 @@ public class  FactorActivity extends AppCompatActivity {
 
             total_layout.addView(total_amount_tv);
             total_layout.addView(total_price_tv);
+
 
         if(!factor.getNewSumPrice().equals(factor.getSumPrice())){
             TextView total_newprice_tv = new TextView(getApplicationContext());

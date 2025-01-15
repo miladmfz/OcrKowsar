@@ -3,13 +3,6 @@ package com.kits.ocrkowsar.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,16 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.card.MaterialCardView;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIClientSecond;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.model.Good;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class Good_ProSearch_Adapter extends RecyclerView.Adapter<Good_ProSearch_Adapter.GoodViewHolder>{
+public class Good_StackFragment_Adapter extends RecyclerView.Adapter<Good_StackFragment_Adapter.GoodViewHolder>{
     private final Context mContext;
     DecimalFormat decimalFormat= new DecimalFormat("0,000");
     private List<Good> goods;
@@ -57,7 +49,7 @@ public class Good_ProSearch_Adapter extends RecyclerView.Adapter<Good_ProSearch_
 
 
 
-    public Good_ProSearch_Adapter(List<Good> goods, Context context)
+    public Good_StackFragment_Adapter(List<Good> goods, Context context)
     {
         this.mContext = context;
         this.goods = goods;

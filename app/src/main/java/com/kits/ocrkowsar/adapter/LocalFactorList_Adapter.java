@@ -28,7 +28,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.FactorActivity;
 import com.kits.ocrkowsar.activity.LocalFactorListActivity;
-import com.kits.ocrkowsar.application.App;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;

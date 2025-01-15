@@ -42,17 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.SH_ArabicText = callMethod.ReadBoolan("ArabicText");
     }
 
-    public void GetLastDataFromOldDataBase(String tempDbPath) {
 
-        getWritableDatabase().execSQL("ATTACH DATABASE '" + tempDbPath + "' AS tempDb");
-
-        getWritableDatabase().execSQL("INSERT INTO main.Prefactor SELECT * FROM tempDb.Prefactor " );
-        getWritableDatabase().execSQL("INSERT INTO main.PreFactorRow SELECT * FROM tempDb.PreFactorRow " );
-        getWritableDatabase().execSQL("INSERT INTO main.Config SELECT * FROM tempDb.Config " );
-
-        getWritableDatabase().execSQL("DETACH DATABASE 'tempDb' ");
-
-    }
 
     public void CreateActivationDb() {
         getWritableDatabase().execSQL("CREATE TABLE IF NOT EXISTS Activation (" +

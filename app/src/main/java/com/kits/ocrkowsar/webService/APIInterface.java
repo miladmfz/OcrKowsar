@@ -141,7 +141,17 @@ public interface APIInterface {
             , @Field("image") String image
     );
 
-
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> OcrDoubleCheck(@Field("tag") String tag
+            , @Field("AppOCRCode") String AppOCRCode
+    );
+    @POST("index.php")
+    @FormUrlEncoded
+    Call<RetrofitResponse> SetOcrFactorExplain(@Field("tag") String tag
+            , @Field("AppOCRFactorCode") String AppOCRFactorCode
+            , @Field("Explain") String Explain
+    );
     @POST("index.php")
     @FormUrlEncoded
     Call<String> Kowsar_log(@Field("tag") String tag

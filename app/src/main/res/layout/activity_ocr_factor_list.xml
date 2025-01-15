@@ -83,6 +83,8 @@
             android:orientation="horizontal"
             android:weightSum="1">
             <LinearLayout
+                android:id="@+id/factorlist_ll_counter"
+
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:orientation="horizontal"
@@ -115,22 +117,22 @@
 
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/factorlistActivity_combocheck"
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/factor_listActivity_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"/>
-        <TextView
-            android:id="@+id/factor_listActivity_Tvstatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:textColor="@color/Black"
-            />
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+
+            android:weightSum="3">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/factor_list_stacks_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:layout_margin="2dp"/>
+        </LinearLayout>
 
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/factor_listActivity_prog"
@@ -142,8 +144,29 @@
             android:layout_centerVertical="true"
             android:indeterminate="true"
             android:layout_weight="0.9"
-            android:visibility="gone"
+            android:visibility="visible"
             />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/factor_listActivity_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:id="@+id/factor_listActivity_Tvstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/Black"
+            />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/factor_listActivity_fab"

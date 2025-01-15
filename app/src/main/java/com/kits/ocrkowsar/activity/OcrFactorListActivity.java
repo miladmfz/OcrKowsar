@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,10 +33,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.kits.ocrkowsar.R;
+import com.kits.ocrkowsar.adapter.ItemAdapter;
 import com.kits.ocrkowsar.adapter.OcrFactorList_Adapter;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
+import com.kits.ocrkowsar.model.Good;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
 import com.kits.ocrkowsar.webService.APIClient;
@@ -43,6 +46,9 @@ import com.kits.ocrkowsar.webService.APIInterface;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,28 +56,43 @@ import retrofit2.Response;
 
 public class OcrFactorListActivity extends AppCompatActivity {
 
+
+
+
+
+
     APIInterface apiInterface;
     APIInterface secendApiInterface;
     OcrFactorList_Adapter adapter;
     GridLayoutManager gridLayoutManager;
+    LinearLayout factorlist_ll_counter;
+    LinearLayout factorlistActivity_combocheck;
     RecyclerView factor_list_recycler;
+    RecyclerView stacks_list_recycler;
     AppCompatEditText edtsearch;
     Handler handler;
     Handler counthandler=new Handler();
     ArrayList<Factor> factors=new ArrayList<>();
+    ArrayList<Factor> visible_factors=new ArrayList<>();
+    ArrayList<Factor> visible_factors_temp=new ArrayList<>();
+
     String srch="";
     String TotallistCount="0";
     TextView textView_Count;
     TextView textView_status;
     String state="0",StateEdited="0",StateShortage="0";
     ProgressBar prog;
-
+    ItemAdapter itemAdapter;
     Dialog dialog1;
     SwitchMaterial RadioEdited;
     SwitchMaterial RadioShortage;
     Spinner spinnerPath;
     String path="همه";
     ArrayList<String> customerpath=new ArrayList<>();
+    ArrayList<String> stacks=new ArrayList<>();
+    private int clickCount = 0;
+    private long lastClickTime = 0;
+    private static final long DOUBLE_CLICK_TIME_DELTA = 500;
     Intent intent;
     NotificationManager notificationManager;
     String channel_id = "Kowsarmobile";
@@ -140,12 +161,62 @@ public class OcrFactorListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         factor_list_recycler=findViewById(R.id.factor_listActivity_recyclerView);
+        stacks_list_recycler=findViewById(R.id.factor_list_stacks_recyclerView);
+        factorlist_ll_counter=findViewById(R.id.factorlist_ll_counter);
+        factorlistActivity_combocheck=findViewById(R.id.factorlistActivity_combocheck);
+
         textView_Count=findViewById(R.id.factorlistActivity_count);
         textView_status=findViewById(R.id.factor_listActivity_Tvstatus);
         edtsearch = findViewById(R.id.factorlistActivity_edtsearch);
         RadioEdited= findViewById(R.id.factorlistActivity_edited);
         RadioShortage= findViewById(R.id.factorlistActivity_shortage);
         spinnerPath= findViewById(R.id.factorlistActivity_path);
+
+
+//        swipeRefreshLayout = findViewById(R.id.factor_listactivity_swipe);
+
+        if (callMethod.ReadString("StackCategory").equals("همه") && callMethod.ReadString("Category").equals("2")) {
+            Row=callMethod.ReadString("RowCall");
+            factorlistActivity_combocheck.setVisibility(View.VISIBLE);
+        }else{
+            factorlistActivity_combocheck.setVisibility(View.GONE);
+
+        }
+
+
+        factorlist_ll_counter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long currentClickTime = System.currentTimeMillis(); // Zaman click ro ghabl az in sabt mikonim
+
+                // Agar 5 saniye gap bod, click ro reset mikonim
+                if (lastClickTime != 0 && (currentClickTime - lastClickTime) > DOUBLE_CLICK_TIME_DELTA) {
+                    clickCount = 0; // Reset click ha agar be mehr zaman (5 saniye) bemoone
+                }
+
+                clickCount++;
+
+                if (clickCount == 2) {
+
+                    itemAdapter.Clear_selectedItems();
+                    visibleItemCount =  0;
+                    totalItemCount =   0;
+                    pastVisiblesItems =   0;
+                    prog.setVisibility(View.VISIBLE);
+                    loading = false;
+                    RetrofitRequset_List();
+                }
+
+                lastClickTime = currentClickTime; // Update zamani ke click anjam shode
+            }
+        });
+
+
+
+
+
+
+
 
     }
 
@@ -173,9 +244,89 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
     }
 
+    public void CheckStackList() {
+
+        visible_factors_temp.clear();  // Aval visible_factors ra pak mikonim
+
+        List<String> selectedItems = itemAdapter.getSelectedItems();
+        Log.e("selectedItems.size_", selectedItems.size()+"");
+        if (selectedItems.size()>0) {
+
+            for (Factor factor : factors) {
+                List<String> factorStacks = Arrays.asList(factor.getStackClass().split(",")); // goli ke az stack ra mishnasim
+                // Check mikonim ke aya selectedItems be hameh stack ha in factor moshabehe
+//                if (new HashSet<>(factorStacks).containsAll(selectedItems)) {
+//                    visible_factors_temp.add(factor); // Agar match kardan, factor ro ezafe mikonim
+//                }
+                if (new HashSet<>(factorStacks).equals(new HashSet<>(selectedItems))) {
+                    visible_factors_temp.add(factor); // Agar barabar bashand, factor ro ezafe mikonim
+                }
+
+            }
+
+
+
+            if(visible_factors_temp.size()>0){
+
+                visible_factors=visible_factors_temp;
+                adapter.notifyDataSetChanged();
+
+                CallRecycle();
+
+            }else {
+
+                callMethod.showToast("فاکتوری موجود نمی باشد");
+            }
+            Log.e("Visible Factors", factors.size()+"");
+            Log.e("Selected Items", selectedItems.toString());
+            Log.e("Visible Factors", visible_factors.size()+"");
+
+        } else {
+            // Agar chizi entekhab nashode, hameye factors ra neshan midahim
+
+            visible_factors=factors;
+            adapter.notifyDataSetChanged();
+
+            CallRecycle();
+            Log.e("Visible Factors", factors.size()+"");
+            Log.e("Selected Items", selectedItems.toString());
+            Log.e("Visible Factors", visible_factors.size()+"");
+        }
+
+
+    }
 
 
     public void init(){
+
+
+        Call<RetrofitResponse> call =apiInterface.GetCustomerPath("GetStackCategory");
+        call.enqueue(new Callback<RetrofitResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    for ( Good good : response.body().getGoods()) {
+
+                        stacks.add(good.getGoodExplain4());
+                    }
+
+                    itemAdapter=new ItemAdapter(OcrFactorListActivity.this,stacks);
+                    stacks_list_recycler=findViewById(R.id.factor_list_stacks_recyclerView);
+
+                    stacks_list_recycler.setLayoutManager(new GridLayoutManager(OcrFactorListActivity.this, 1, GridLayoutManager.HORIZONTAL, false
+                    ));
+                    stacks_list_recycler.setAdapter(itemAdapter);
+
+                }
+
+            }
+            @Override
+            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+
+            }
+        });
 
 
         customerpath.add("همه");
@@ -229,7 +380,9 @@ public class OcrFactorListActivity extends AppCompatActivity {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount-1) {
                                 loading = false;
                                 PageNo++;
-                                MoreFactor();
+                            itemAdapter.Clear_selectedItems();
+
+                            MoreFactor();
                         }
                     }
                 }
@@ -276,9 +429,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
 
         prog.setVisibility(View.VISIBLE);
 
-
-
-
         Call<RetrofitResponse> call;
 
 
@@ -307,10 +457,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     ArrayList<Factor> factor_page = response.body().getFactors();
                     factors.addAll(factor_page);
                     adapter.notifyDataSetChanged();
+
+                    CallRecycle();
                     String textView_st="تعداد "+adapter.getItemCount()+" از "+TotallistCount+"";
                     textView_Count.setText(NumberFunctions.PerisanNumber(textView_st));
-                    CallRecycle();
-                    prog.setVisibility(View.GONE);
                     loading=true;
                 }
             }
@@ -360,9 +510,6 @@ public class OcrFactorListActivity extends AppCompatActivity {
     public void RetrofitRequset_Path() {
 
 
-        Log.e("kowsar",callMethod.ReadString("FactorDbName"));
-        Log.e("kowsar",callMethod.ReadString("DbName"));
-
         Call<RetrofitResponse> call;
 
         call=apiInterface.GetCustomerPath("GetCustomerPath");
@@ -406,7 +553,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
                 }else{
                     finish();
                     callMethod.showToast("مشکلی در گروه بندی ارسال");
-                    Log.e("",t.getMessage());
+                    Log.e("kowsar_onFailure",t.getMessage());
                 }
 
             }
@@ -416,11 +563,10 @@ public class OcrFactorListActivity extends AppCompatActivity {
     public void RetrofitRequset_List() {
 
         PageNo=0;
+        textView_status.setVisibility(View.GONE);
         RetrofitRequset_ListCount();
         pastVisiblesItems=0;
-
         Call<RetrofitResponse> call;
-
 
         call=apiInterface.GetOcrFactorList(
                 "GetFactorList",
@@ -439,10 +585,16 @@ public class OcrFactorListActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
 
                 if(response.isSuccessful()) {
+                    prog.setVisibility(View.GONE);
+                    loading = true;
                     recallcount=0;
                     assert response.body() != null;
                     factors.clear();
+                    visible_factors.clear();
                     factors= response.body().getFactors();
+                    visible_factors=factors;
+                    callMethod.showToast("بارگیری شد");
+
                     if(factors.size()>0){
                         CallRecycle();
 
@@ -469,6 +621,8 @@ public class OcrFactorListActivity extends AppCompatActivity {
                     try {
                         factors.clear();
                         dialog1.dismiss();
+                        prog.setVisibility(View.GONE);
+                        textView_status.setVisibility(View.VISIBLE);
                         textView_status.setText("فاکتوری یافت نشد");
                         textView_Count.setText(NumberFunctions.PerisanNumber("تعداد 0"));
                         adapter.notifyDataSetChanged();
@@ -510,7 +664,7 @@ public class OcrFactorListActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-                Log.e("test_+",t.getMessage());
+                Log.e("kowsar_onFailure+",t.getMessage());
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.kits.ocrkowsar.Fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -31,8 +30,9 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.NavActivity;
-import com.kits.ocrkowsar.adapter.Action;
+import com.kits.ocrkowsar.application.Action;
 import com.kits.ocrkowsar.application.CallMethod;
+import com.kits.ocrkowsar.application.Print;
 import com.kits.ocrkowsar.model.DatabaseHelper;
 import com.kits.ocrkowsar.model.Factor;
 import com.kits.ocrkowsar.model.Good;
@@ -50,41 +50,44 @@ import retrofit2.Response;
 
 public class PackFragment extends Fragment{
 
+    ArrayList<String> Array_GoodCodesCheck = new ArrayList<>();
+    ArrayList<Good> goods;
+    ArrayList<Good> goods_visible = new ArrayList<>();
+    int firsttry = 0;
+    ArrayList<String[]> arraygood_shortage = new ArrayList<>();
+    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
 
     APIInterface apiInterface;
     APIInterface secendApiInterface;
     DatabaseHelper dbh;
     Action action;
-    ArrayList<String> GoodCodeCheck = new ArrayList<>();
-    ArrayList<String[]> arraygood_shortage = new ArrayList<>();
-    LinearLayoutCompat ll_main;
-    LinearLayoutCompat ll_title;
-    LinearLayoutCompat ll_good_body_detail;
-    LinearLayoutCompat ll_good_body;
-    LinearLayoutCompat ll_factor_summary;
-    LinearLayoutCompat ll_send_confirm;
     CallMethod callMethod;
     ViewPager ViewPager;
-    Button btn_send;
-    Button btn_confirm;
-    Button btn_shortage;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
-    ArrayList<Good> goods;
     Factor factor;
     String BarcodeScan;
-    Integer lastCunter = 0;
     Intent intent;
     int width = 1;
     Handler handler;
-    TextView tv_company;
-    TextView tv_customername;
-    TextView tv_factorcode;
-    TextView tv_factordate;
-    TextView tv_address;
-    TextView tv_phone;
-    TextView tv_total_amount;
-    TextView tv_total_price;
+    Print print;
+
     View view;
+
+
+
+    LinearLayoutCompat ll_main,ll_title,ll_good_body_detail,ll_good_body,ll_factor_summary;
+    LinearLayoutCompat ll_send_confirm,ll_shortage_print;
+
+    Button btn_send,btn_confirm,btn_shortage,btn_print;
+
+    Integer lastCunter = 0;
+    TextView tv_company,tv_customername,tv_factorcode,tv_phone,tv_total_amount,tv_total_price;
+    TextView tv_factorexplain,tv_address,tv_factordate;
+
+
+
+    ArrayList<String> GoodCodeCheck = new ArrayList<>();
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,26 +96,31 @@ public class PackFragment extends Fragment{
         ll_main = view.findViewById(R.id.packfragment_layout);
         return view;
     }
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        callMethod = new CallMethod(requireActivity());
-        dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
-        action=new Action(requireActivity());
-        apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-        secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
-        handler = new Handler();
-        for (final String[] ignored : arraygood_shortage) {
-            arraygood_shortage.add(new String[]{"goodcode", "amount "});
-        }
-        DisplayMetrics metrics = new DisplayMetrics();
-        view.getDisplay().getMetrics(metrics);
-        width = metrics.widthPixels;
+        try {
 
-        CreateView_Pack();
+            callMethod = new CallMethod(requireActivity());
+            dbh = new DatabaseHelper(requireActivity(), callMethod.ReadString("DatabaseName"));
+            action=new Action(requireActivity());
+            apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
+            secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
+            handler = new Handler();
+            print=new Print(requireActivity());
+
+            for (final String[] ignored : arraygood_shortage) {
+                arraygood_shortage.add(new String[]{"goodcode", "amount "});
+            }
+            DisplayMetrics metrics = new DisplayMetrics();
+            view.getDisplay().getMetrics(metrics);
+            width = metrics.widthPixels;
+
+            CreateView_Pack();
+        }catch (Exception e){
+            Log.e("kowsar",e.getMessage());
+        }
     }
 
 
@@ -132,18 +140,25 @@ public class PackFragment extends Fragment{
 
 
         ll_send_confirm.setWeightSum(2);
+        ll_shortage_print.setWeightSum(2);
+
 
         tv_company.setText(NumberFunctions.PerisanNumber("بخش بسته بندی"));
         tv_customername.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
         tv_factorcode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
         tv_factordate.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
+        tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getExplain()));
+
+
         tv_address.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
         tv_phone.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
         tv_total_amount.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
         tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
+
         btn_confirm.setText("تاییده بخش");
         btn_send.setText("ارسال تاییده");
         btn_shortage.setText("اعلام کسر موجودی");
+        btn_print.setText("پرینت فاکتور");
 
 
         if (!factor.getNewSumPrice().equals(factor.getSumPrice())) {
@@ -168,6 +183,7 @@ public class PackFragment extends Fragment{
         ll_title.addView(tv_customername);
         ll_title.addView(tv_factorcode);
         ll_title.addView(tv_factordate);
+        ll_title.addView(tv_factorexplain);
         ll_title.addView(tv_address);
         ll_title.addView(tv_phone);
         ll_title.addView(ViewPager);
@@ -185,7 +201,9 @@ public class PackFragment extends Fragment{
         ll_main.addView(ll_good_body);
 
         if (callMethod.ReadString("Category").equals("3")) {
-            ll_main.addView(btn_shortage);
+            ll_shortage_print.addView(btn_shortage);
+            ll_shortage_print.addView(btn_print);
+            ll_main.addView(ll_shortage_print);
         }
 
         ll_main.addView(ll_factor_summary);
@@ -196,13 +214,14 @@ public class PackFragment extends Fragment{
 
         btn_send.setOnClickListener(v -> action.Pack_detail(factor));
 
+        btn_print.setOnClickListener(v -> print.Printing(factor,goods_visible,"0","0"));
 
         btn_confirm.setOnClickListener(v -> {
 
-            int b = GoodCodeCheck.size();
+            int b = Array_GoodCodesCheck.size();
             final int[] conter = {0};
 
-            for (String goodchecks : GoodCodeCheck) {
+            for (String goodchecks : Array_GoodCodesCheck) {
 
                 Call<RetrofitResponse> call;
                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -258,7 +277,7 @@ public class PackFragment extends Fragment{
     }
 
     @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForPack(Good good, int j) {
+    public View CreateGoodViewForPack(Good good, int countergood) {
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -324,10 +343,11 @@ public class PackFragment extends Fragment{
 
         tv_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
 
-        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(j)));
+        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(countergood)));
         tv_goodname.setText(NumberFunctions.PerisanNumber(good.getGoodName()));
         tv_amount.setText(NumberFunctions.PerisanNumber(good.getFacAmount()));
-        tv_price.setText(NumberFunctions.PerisanNumber(good.getGoodMaxSellPrice()));
+        tv_price.setText(NumberFunctions.PerisanNumber(decimalFormat.format(Integer.valueOf(good.getGoodMaxSellPrice()))));
+
 
         tv_gap.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         checkBox.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -351,41 +371,45 @@ public class PackFragment extends Fragment{
         ll_details.addView(vp_radif_name);
         ll_details.addView(ll_name_price);
 
+        try {
+            if (good.getMinAmount().equals("1.000")){
+                ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
+            }
+        }catch (Exception e){
+
+        }
+
         ll_factor_row.addView(ll_details);
         ll_factor_row.addView(vp_rows);
 
 
-        int fa = j - 1;
-        if (goods.get(fa).getAppRowIsPacked().equals("1")) {
+        int correct_row = countergood - 1;
+        if (goods.get(correct_row).getAppRowIsPacked().equals("1")) {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         } else {
-            checkBox.setEnabled(true);
+            checkBox.setEnabled(!callMethod.ReadBoolan("JustScanner"));
+
+
         }
         if (callMethod.ReadString("Category").equals("1")) {
             checkBox.setVisibility(View.GONE);
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                goods.get(fa).setAppRowIsPacked("1");
-                GoodCodeCheck.add(goods.get(fa).getAppOCRFactorRowCode());
-            } else {
-                goods.get(fa).setAppRowIsPacked("0");
-                int b = 0, c = 0;
-                for (String s : GoodCodeCheck) {
-                    if (s.equals(goods.get(fa).getAppOCRFactorRowCode()))
-                        b = c;
-                    c++;
+                goods.get(correct_row).setAppRowIsPacked("1");
+                if (!Array_GoodCodesCheck.contains(goods.get(correct_row).getAppOCRFactorRowCode())) {
+                    Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
                 }
-                GoodCodeCheck.remove(b);
-
+                Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
+            } else {
+                goods.get(correct_row).setAppRowIsPacked("0");
+                Array_GoodCodesCheck.remove(goods.get(correct_row).getAppOCRFactorRowCode());
             }
-
-
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(correct_row).getGoodCode()));
 
 
         return ll_factor_row;
@@ -413,6 +437,8 @@ public class PackFragment extends Fragment{
         tv_customername.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
         tv_factorcode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
         tv_factordate.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
+        tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getFactorDate()));
+
 
         btn_confirm.setText("ارسال کسری");
         btn_send.setText("بازگشت");
@@ -434,6 +460,7 @@ public class PackFragment extends Fragment{
         ll_title.addView(tv_customername);
         ll_title.addView(tv_factorcode);
         ll_title.addView(tv_factordate);
+        ll_title.addView(tv_factorexplain);
         ll_title.addView(ViewPager);
         ll_send_confirm.addView(btn_confirm);
         ll_send_confirm.addView(btn_send);
@@ -488,7 +515,7 @@ public class PackFragment extends Fragment{
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
-                        Log.e("123", t.getMessage());
+                        Log.e("kowsar_onFailure", t.getMessage());
                     }
                 });
             }
@@ -511,7 +538,10 @@ public class PackFragment extends Fragment{
     }
 
     @SuppressLint("RtlHardcoded")
-    public View CreateGoodViewForshortage(@NonNull Good good, int j) {
+    public View CreateGoodViewForshortage(@NonNull Good good, int contergood) {
+        arraygood_shortage.clear();
+        arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), good.getFacAmount()});
+
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -567,12 +597,13 @@ public class PackFragment extends Fragment{
         tv_amount.setGravity(Gravity.CENTER);
         et_amountshortage.setGravity(Gravity.CENTER);
 
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        et_amountshortage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_goodname.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        et_amountshortage.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
 
-        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(j)));
+
+        checkBox.setText(NumberFunctions.PerisanNumber(String.valueOf(contergood)));
         tv_goodname.setText(NumberFunctions.PerisanNumber(good.getGoodName()));
         tv_amount.setText(NumberFunctions.PerisanNumber(good.getFacAmount()));
         et_amountshortage.setHint(good.getFacAmount());
@@ -600,9 +631,8 @@ public class PackFragment extends Fragment{
         ll_details.addView(ll_radif_check);
         ll_details.addView(vp_radif_name);
         ll_details.addView(ll_name_price);
-        Log.e("kowsarr","ssdsdsdsd");
 
-        Log.e("kowsarr",good.getMinAmount());
+
         if (good.getMinAmount().equals("1.000")){
             ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
         }
@@ -611,37 +641,31 @@ public class PackFragment extends Fragment{
         ll_factor_row.addView(vp_rows);
 
 
-        int fa = j - 1;
-        if (goods.get(fa).getAppRowIsPacked().equals("1")) {
+        int correct_row = contergood - 1;
+        if (goods.get(correct_row).getAppRowIsPacked().equals("1")) {
             checkBox.setChecked(true);
             checkBox.setEnabled(false);
         } else {
-            checkBox.setEnabled(true);
+            checkBox.setEnabled(!callMethod.ReadBoolan("JustScanner"));
         }
         if (callMethod.ReadString("Category").equals("1")) {
             checkBox.setVisibility(View.GONE);
         }
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                goods.get(fa).setAppRowIsPacked("1");
-                GoodCodeCheck.add(goods.get(fa).getAppOCRFactorRowCode());
-            } else {
-                goods.get(fa).setAppRowIsPacked("0");
-                int b = 0, c = 0;
-                for (String s : GoodCodeCheck) {
-                    if (s.equals(goods.get(fa).getAppOCRFactorRowCode()))
-                        b = c;
-                    c++;
+                goods.get(correct_row).setAppRowIsPacked("1");
+                if (!Array_GoodCodesCheck.contains(goods.get(correct_row).getAppOCRFactorRowCode())) {
+                    Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
                 }
-                GoodCodeCheck.remove(b);
-
+                Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
+            } else {
+                goods.get(correct_row).setAppRowIsPacked("0");
+                Array_GoodCodesCheck.remove(goods.get(correct_row).getAppOCRFactorRowCode());
             }
-
-
         });
 
 
-        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(fa).getGoodCode()));
+        tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(correct_row).getGoodCode()));
 
         arraygood_shortage.clear();
         et_amountshortage.addTextChangedListener(new TextWatcher() {
@@ -658,6 +682,10 @@ public class PackFragment extends Fragment{
             @Override
             public void afterTextChanged(Editable text) {
                 try {
+                    if (firsttry==0){
+                        arraygood_shortage.clear();
+                        firsttry = firsttry +1;
+                    }
 
                     if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
                         et_amountshortage.setText("");
@@ -687,6 +715,7 @@ public class PackFragment extends Fragment{
         tv_customername.setGravity(Gravity.RIGHT);
         tv_factorcode.setGravity(Gravity.RIGHT);
         tv_factordate.setGravity(Gravity.RIGHT);
+        tv_factorexplain.setGravity(Gravity.RIGHT);
         tv_address.setGravity(Gravity.RIGHT);
         tv_phone.setGravity(Gravity.RIGHT);
         tv_total_amount.setGravity(Gravity.RIGHT);
@@ -694,20 +723,22 @@ public class PackFragment extends Fragment{
         btn_confirm.setGravity(Gravity.CENTER);
         btn_send.setGravity(Gravity.CENTER);
         btn_shortage.setGravity(Gravity.CENTER);
+        btn_print.setGravity(Gravity.CENTER);
     }
 
     public void setTextSize() {
 
-        tv_company.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_customername.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_factorcode.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_factordate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_address.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_phone.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_total_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        tv_total_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
-        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+        tv_company.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_customername.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_factorcode.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_factordate.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_factorexplain.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_address.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_phone.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_total_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        tv_total_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
+        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("titlesize")));
+        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("titlesize")));
     }
 
     public void setBackgroundResource() {
@@ -715,13 +746,15 @@ public class PackFragment extends Fragment{
         btn_confirm.setBackgroundResource(R.color.green_800);
         btn_send.setBackgroundResource(R.color.red_700);
         btn_shortage.setBackgroundResource(R.color.orange_500);
-    }
+        btn_print.setBackgroundResource(R.color.blue_500);
 
+    }
     public void setTextColor() {
         tv_company.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_customername.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_factorcode.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_factordate.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
+        tv_factorexplain.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_address.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_phone.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
         tv_total_amount.setTextColor(requireActivity().getColor(R.color.colorPrimaryDark));
@@ -729,14 +762,17 @@ public class PackFragment extends Fragment{
         btn_confirm.setTextColor(requireActivity().getColor(R.color.white));
         btn_send.setTextColor(requireActivity().getColor(R.color.white));
         btn_shortage.setTextColor(requireActivity().getColor(R.color.Black));
+        btn_print.setTextColor(requireActivity().getColor(R.color.Black));
 
     }
+
 
     public void setPadding() {
         tv_company.setPadding(0, 0, 30, 20);
         tv_customername.setPadding(0, 0, 30, 20);
         tv_factorcode.setPadding(0, 0, 30, 20);
         tv_factordate.setPadding(0, 0, 30, 20);
+        tv_factorexplain.setPadding(0, 0, 30, 20);
         tv_address.setPadding(0, 0, 30, 20);
         tv_phone.setPadding(0, 0, 30, 20);
         tv_total_amount.setPadding(0, 0, 30, 20);
@@ -744,6 +780,7 @@ public class PackFragment extends Fragment{
         btn_confirm.setPadding(0, 0, 30, 20);
         btn_send.setPadding(0, 0, 30, 20);
         btn_shortage.setPadding(0, 0, 30, 20);
+        btn_print.setPadding(0, 0, 30, 20);
     }
 
     public void setLayoutParams() {
@@ -752,16 +789,19 @@ public class PackFragment extends Fragment{
         ll_good_body.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_factor_summary.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         ll_send_confirm.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        ll_shortage_print.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
 
         tv_company.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_customername.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factorcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_factordate.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
+        tv_factorexplain.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_address.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_phone.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         btn_confirm.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
         btn_send.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-        btn_shortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(400, LinearLayoutCompat.LayoutParams.MATCH_PARENT));
+        btn_shortage.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+        btn_print.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
 
         tv_total_amount.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
         tv_total_price.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, LinearLayoutCompat.LayoutParams.WRAP_CONTENT));
@@ -770,17 +810,20 @@ public class PackFragment extends Fragment{
 
     }
 
+
     public void Newview() {
         ll_title = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_good_body_detail = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_factor_summary = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ll_send_confirm = new LinearLayoutCompat(requireActivity().getApplicationContext());
+        ll_shortage_print = new LinearLayoutCompat(requireActivity().getApplicationContext());
         ViewPager = new ViewPager(requireActivity().getApplicationContext());
         tv_company = new TextView(requireActivity().getApplicationContext());
         tv_customername = new TextView(requireActivity().getApplicationContext());
         tv_factorcode = new TextView(requireActivity().getApplicationContext());
         tv_factordate = new TextView(requireActivity().getApplicationContext());
+        tv_factorexplain = new TextView(requireActivity().getApplicationContext());
         tv_address = new TextView(requireActivity().getApplicationContext());
         tv_phone = new TextView(requireActivity().getApplicationContext());
         tv_total_amount = new TextView(requireActivity().getApplicationContext());
@@ -788,6 +831,7 @@ public class PackFragment extends Fragment{
         btn_confirm = new Button(requireActivity().getApplicationContext());
         btn_send = new Button(requireActivity().getApplicationContext());
         btn_shortage = new Button(requireActivity().getApplicationContext());
+        btn_print = new Button(requireActivity().getApplicationContext());
 
 
     }
@@ -799,6 +843,7 @@ public class PackFragment extends Fragment{
         ll_good_body_detail.setOrientation(LinearLayoutCompat.VERTICAL);
         ll_factor_summary.setOrientation(LinearLayoutCompat.VERTICAL);
         ll_send_confirm.setOrientation(LinearLayoutCompat.HORIZONTAL);
+        ll_shortage_print.setOrientation(LinearLayoutCompat.HORIZONTAL);
     }
 
     public void setLayoutDirection() {
@@ -807,7 +852,9 @@ public class PackFragment extends Fragment{
         ll_good_body_detail.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ll_factor_summary.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ll_send_confirm.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        ll_shortage_print.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
+
 
     public void ConfirmCount_Pack() {
         int ConfirmCounter = 0;

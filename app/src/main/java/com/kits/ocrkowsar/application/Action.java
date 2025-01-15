@@ -1,14 +1,15 @@
-package com.kits.ocrkowsar.adapter;
+package com.kits.ocrkowsar.application;
 
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.Settings;
+
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -32,7 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.kits.ocrkowsar.R;
 import com.kits.ocrkowsar.activity.ConfigActivity;
+import com.kits.ocrkowsar.activity.ConfirmActivity;
 import com.kits.ocrkowsar.activity.LocalFactorListActivity;
+import com.kits.ocrkowsar.adapter.GoodScan_Adapter;
 import com.kits.ocrkowsar.application.CallMethod;
 import com.kits.ocrkowsar.application.Print;
 import com.kits.ocrkowsar.model.DatabaseHelper;
@@ -42,19 +45,15 @@ import com.kits.ocrkowsar.model.Job;
 import com.kits.ocrkowsar.model.JobPerson;
 import com.kits.ocrkowsar.model.NumberFunctions;
 import com.kits.ocrkowsar.model.RetrofitResponse;
-import com.kits.ocrkowsar.model.Utilities;
 import com.kits.ocrkowsar.webService.APIClient;
-import com.kits.ocrkowsar.webService.APIClientSecond;
 import com.kits.ocrkowsar.webService.APIInterface;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -64,6 +63,9 @@ import retrofit2.Response;
 
 public class Action extends Activity implements DatePickerDialog.OnDateSetListener {
 
+    private final DecimalFormat decimalFormat = new DecimalFormat("0,000");
+
+    ArrayList<Good> goods = new ArrayList<>();
     APIInterface apiInterface;
     APIInterface secendApiInterface;
     DatabaseHelper dbh;
@@ -81,25 +83,24 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     ArrayList<String> sendtimearray = new ArrayList<>();
     TextView tv_rep;
     Print print;
+
+    Handler handler;
+
+
+
     public Action(Context mcontxt) {
         this.mContext = mcontxt;
         callMethod = new CallMethod(mContext);
         dbh = new DatabaseHelper(mContext, callMethod.ReadString("DatabaseName"));
 
-        Log.e("kowsar",callMethod.ReadString("ServerURLUse"));
-        Log.e("kowsar",callMethod.ReadString("SecendServerURL"));
-        Log.e("kowsar","");
-        Log.e("kowsar","");
-        Log.e("kowsar","");
-
-
         apiInterface = APIClient.getCleint(callMethod.ReadString("ServerURLUse")).create(APIInterface.class);
-
         secendApiInterface = APIClient.getCleint(callMethod.ReadString("SecendServerURL")).create(APIInterface.class);
 
-        dialog = new Dialog(mcontxt);
+        handler=new Handler();
+        dialog = new Dialog(mContext);
         dialogProg = new Dialog(mContext);
         print = new Print(mContext);
+
 
     }
     public void dialogProg() {
@@ -113,7 +114,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_factor_detail);
-
 
         TextView tv_AppOCRFactorCode = dialog.findViewById(R.id.dialog_factor_AppOCRFactorCode);
         TextView tv_AppTcPrintRef = dialog.findViewById(R.id.dialog_factor_AppTcPrintRef);
@@ -152,7 +152,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         tv_CustName.setText(NumberFunctions.PerisanNumber(factor.getCustName()));
         tv_customercode.setText(NumberFunctions.PerisanNumber(factor.getCustomercode()));
         tv_Ersall.setText(NumberFunctions.PerisanNumber(factor.getErsall()));
-        Log.e("kowsar",factor.getBrokerName());
+
         if (factor.getBrokerName().length() > 20)
             tv_BrokerName.setText(NumberFunctions.PerisanNumber(factor.getBrokerName().substring(0, 20) + "..."));
         else
@@ -196,43 +196,65 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
             }
 
 
-
-
-
-
-
             call1.enqueue(new Callback<RetrofitResponse>() {
                 @Override
-                public void onResponse(Call<RetrofitResponse> call, Response<RetrofitResponse> response) {
+                public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                    assert response.body() != null;
                     if (response.body().getText().equals("Done")) {
                         dialog.dismiss();
                         dialogProg.dismiss();
                     }
-
-
                 }
-
                 @Override
-                public void onFailure(Call<RetrofitResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
                 }
             });
-
-
         });
 
         btn_2.setOnClickListener(v -> {
             Pack_detail(factor);
             dialog.dismiss();
         });
+        dialog.show();
+    }
 
+    public void checkSumAmounthint(Factor factor) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.checkamount);
+        EditText edamount = dialog.findViewById(R.id.edamount);
+        MaterialButton btncheckamount = dialog.findViewById(R.id.btncheckamount);
+
+        edamount.setText(factor.getSumAmount());
+        edamount.setEnabled(false);
+        btncheckamount.setVisibility(View.GONE);
 
         dialog.show();
 
 
     }
+    public void checkSumAmount(Factor factor) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.checkamount);
+        EditText edamount = dialog.findViewById(R.id.edamount);
+        MaterialButton btncheckamount = dialog.findViewById(R.id.btncheckamount);
 
 
+        btncheckamount.setOnClickListener(v -> {
+            if (NumberFunctions.EnglishNumber(edamount.getText().toString()).equals(factor.getSumAmount())) {
+                Pack_detail(factor);
+            }else {
+                callMethod.showToast("تعداد وارد شده صحیح نیست");
+            }
+        });
+        dialog.show();
+
+
+    }
     public void Pack_detail(Factor factor) {
         dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -326,7 +348,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                                         spinner_new.setSelection(Integer.parseInt(callMethod.ReadString(job.getTitle())));
                                     } catch (Exception e) {
                                         spinner_new.setSelection(0);
-
                                     }
 
                                     spinner_new.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -341,10 +362,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                                         }
                                     });
                                     ll_new.addView(spinner_new);
-
                                 }
                             }
-
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                             }
@@ -352,55 +371,56 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                         ll_pack_h_main.addView(ll_new);
                     }
 
-                    sendtimearray.clear();
-                    sendtimearray.add("");
-                    sendtimearray.add("صبح");
+                    if (callMethod.ReadBoolan("SendTimeType")) {
 
-                    LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            70
-                    );
+                        sendtimearray.clear();
+                        sendtimearray.add("");
+                        sendtimearray.add("صبح");
+                        sendtimearray.add("ظهر");
+                        sendtimearray.add("شب");
 
-                    params.setMargins(30, 30, 30, 30);
-                    LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
-                    ll_new.setLayoutParams(params);
-                    ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                    ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
-                    ll_new.setWeightSum(2);
+                        LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                70
+                        );
 
-
-                    TextView Tv_new = new TextView(mContext.getApplicationContext());
-                    Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                    Tv_new.setText("نحوه ارسال :");
-                    Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                        params.setMargins(30, 30, 30, 30);
+                        LinearLayoutCompat ll_new = new LinearLayoutCompat(mContext.getApplicationContext());
+                        ll_new.setLayoutParams(params);
+                        ll_new.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        ll_new.setOrientation(LinearLayoutCompat.HORIZONTAL);
+                        ll_new.setWeightSum(2);
 
 
-                    ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
-                            android.R.layout.simple_spinner_item, sendtimearray);
-                    spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
-                    spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
-                    spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                    spinner_sendtime.setAdapter(spinner_adapter);
-                    spinner_sendtime.setSelection(0);
+                        TextView Tv_new = new TextView(mContext.getApplicationContext());
+                        Tv_new.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                        Tv_new.setText("نحوه ارسال :");
+                        Tv_new.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
 
-                    spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            sendtime = sendtimearray.get(position);
-                        }
+                        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<>(mContext,
+                                android.R.layout.simple_spinner_item, sendtimearray);
+                        spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Spinner spinner_sendtime = new Spinner(mContext.getApplicationContext());
+                        spinner_sendtime.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.MATCH_PARENT, 1));
+                        spinner_sendtime.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        spinner_sendtime.setAdapter(spinner_adapter);
+                        spinner_sendtime.setSelection(0);
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
-                    ll_new.addView(Tv_new);
-                    ll_new.addView(spinner_sendtime);
-                    ll_pack_h_main.addView(ll_new);
-
+                        spinner_sendtime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                sendtime = sendtimearray.get(position);
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                            }
+                        });
+                        ll_new.addView(Tv_new);
+                        ll_new.addView(spinner_sendtime);
+                        ll_pack_h_main.addView(ll_new);
+                    }
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
 
@@ -416,8 +436,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     persianCalendar1.getPersianMonth(),
                     persianCalendar1.getPersianDay()
             );
-
-
             datePickerDialog.show(((Activity) mContext).getFragmentManager(), "Datepickerdialog");
         });
 
@@ -437,7 +455,18 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
             for (Job job : jobs) {
 
-                 if (!job.getText().equals("برای انتخاب کلیک کنید")) {
+                Log.e("kowsarr22",job.getText());
+                Log.e("kowsarr22_jobcode=",job.getJobCode());
+                Log.e("kowsarr22_jobcode=",job.getText());
+                Log.e("kowsarr22_jobcode=",job.getTitle());
+
+
+                //vase qoqnos shod 1-2-3
+                //vase gostaresh shod 3-4-5
+
+
+
+                if (!job.getText().equals("برای انتخاب کلیک کنید")) {
                     if (job.getJobCode().equals("1")) {
                         coltrol_s = job.getText();
                     }
@@ -499,35 +528,50 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                             @Override
                             public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
                                 dialog.dismiss();
+                                //print.Printing(factor,goods,packCount,"0");
+
                                 if (!callMethod.ReadString("Category").equals("5")) {
-                                    print.Printing(factor,packCount);
+                                    print.Printing(factor,goods,packCount,"0");
                                 }
                             }
-
                             @Override
                             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                             }
                         });
                     }
-
                     @Override
                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                         Log.e("", t.getMessage());
                     }
                 });
-
-
             } else {
                 callMethod.showToast(falt_message + " را تکمیل کنید");
             }
-
-
         });
 
 
         dialog.show();
 
 
+    }
+
+    public void goodamount_detail(String amount,String shortage) {
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.amount_zoom);
+        TextView tv_good_1 = dialog.findViewById(R.id.amountzoome_tv1);
+        TextView tv_good_2 = dialog.findViewById(R.id.amountzoome_tv2);
+        TextView tv_good_3 = dialog.findViewById(R.id.amountzoome_tv3);
+
+        tv_good_1.setText(NumberFunctions.PerisanNumber(amount));
+
+        int finalShortage = (shortage != null||shortage != "null") ? Integer.parseInt(shortage) : 0;
+
+        tv_good_2.setText(NumberFunctions.PerisanNumber(String.valueOf(Integer.parseInt(amount) - finalShortage)));
+
+        tv_good_3.setText(NumberFunctions.PerisanNumber(shortage));
+
+        dialog.show();
     }
 
     public void good_detail(String GoodCode) {
@@ -540,6 +584,8 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         TextView tv_good_3 = dialog.findViewById(R.id.imagezoome_tv3);
         TextView tv_good_4 = dialog.findViewById(R.id.imagezoome_tv4);
         TextView tv_good_5 = dialog.findViewById(R.id.imagezoome_tv5);
+        LinearLayoutCompat ll_amonut = dialog.findViewById(R.id.imagezoome_ll1_tv1);
+
 
         Call<RetrofitResponse> call;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
@@ -554,11 +600,19 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
                     assert response.body() != null;
                     ArrayList<Good> goods = response.body().getGoods();
 
+
+                    if (!callMethod.ReadBoolan("ShowAmount")){
+                        ll_amonut.setVisibility(View.GONE);
+                    }
+
                     tv_good_1.setText(goods.get(0).getTotalAvailable());
                     tv_good_2.setText(goods.get(0).getSize());
                     tv_good_3.setText(goods.get(0).getCoverType());
                     tv_good_4.setText(goods.get(0).getPageNo());
                     tv_good_5.setText(goods.get(0).getGoodExplain2());
+
+                    //tv_good_5.setText(NumberFunctions.PerisanNumber(goods.get(0).getFormNo()));
+
 
                 }
             }
@@ -608,6 +662,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
     public void GoodScanDetail(ArrayList<Good> goodspass, String state, String barcodescan) {
 
         ArrayList<Good> Currctgoods = new ArrayList<>();
+        ArrayList<Good> CurrctgoodsForBarcode = new ArrayList<>();
 
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -615,6 +670,7 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         RecyclerView goodscan_recycler = dialog.findViewById(R.id.goods_scan_recyclerView);
         Button goodscan_btn = dialog.findViewById(R.id.goods_scan_btn);
         TextView goodscan_tvstatus = dialog.findViewById(R.id.goods_scan_status);
+        EditText ed_goodscan = dialog.findViewById(R.id.goods_scan_barcode);
 
 
         if (goodspass.size() > 0) {
@@ -643,6 +699,110 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         }
 
         goodscan_btn.setOnClickListener(view -> dialog.dismiss());
+        ed_goodscan.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+
+
+                    @Override
+                    public void afterTextChanged( Editable editable) {
+
+                        dialogProg();
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(() -> {
+
+
+                            CurrctgoodsForBarcode.clear();
+                            if (goodspass.size() > 0) {
+                                for (Good good : goodspass) {
+                                    if (state.equals("0"))
+                                        if (good.getAppRowIsControled().equals("0")) {
+                                            CurrctgoodsForBarcode.add(good);
+                                        }
+                                    if (state.equals("1"))
+                                        if (good.getAppRowIsPacked().equals("0")) {
+                                            CurrctgoodsForBarcode.add(good);
+                                        }
+                                }
+                                if (CurrctgoodsForBarcode.size() == 1) {
+
+                                    if (state.equals("0")){
+
+                                        Call<RetrofitResponse> call;
+                                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                        }else{
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "0", "");
+                                        }
+
+                                        call.enqueue(new Callback<RetrofitResponse>() {
+                                            @Override
+                                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                                if (response.isSuccessful()) {
+
+                                                    Intent intent = new Intent(mContext, ConfirmActivity.class);
+                                                    intent.putExtra("ScanResponse", barcodescan);
+                                                    intent.putExtra("State", "0");
+                                                    ((Activity) mContext).finish();
+                                                    mContext.startActivity(intent);
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                                Log.e("kowsar_onFailure", t.getMessage());
+                                            }
+                                        });
+
+                                    }else if (state.equals("1"))
+                                    {
+
+                                        Call<RetrofitResponse> call;
+                                        if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
+                                            call=apiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                        }else{
+                                            call=secendApiInterface.CheckState("OcrControlled", CurrctgoodsForBarcode.get(0).getAppOCRFactorRowCode(), "2", "");
+                                        }
+                                        call.enqueue(new Callback<RetrofitResponse>() {
+                                            @Override
+                                            public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
+                                                if (response.isSuccessful()) {
+
+                                                    Intent intent = new Intent(mContext, ConfirmActivity.class);
+                                                    intent.putExtra("ScanResponse", barcodescan);
+                                                    intent.putExtra("State", "1");
+                                                    ((Activity) mContext).finish();
+                                                    mContext.startActivity(intent);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                                                Log.e("kowsar_onFailure", t.getMessage());
+                                            }
+                                        });
+
+                                    }
+                                }
+                            }
+
+                        },  Integer.parseInt(callMethod.ReadString("Delay")));
+
+
+
+
+
+
+                    }
+
+                }
+        );
 
         dialog.show();
     }
@@ -654,6 +814,32 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         dialog.setContentView(R.layout.loginconfig);
         EditText ed_password = dialog.findViewById(R.id.edloginconfig);
         MaterialButton btn_login = dialog.findViewById(R.id.btnloginconfig);
+
+        ed_password.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(final Editable editable) {
+
+                        if(NumberFunctions.EnglishNumber(ed_password.getText().toString()).length()>5) {
+                            if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
+
+                                Intent intent = new Intent(mContext, ConfigActivity.class);
+                                mContext.startActivity(intent);
+                            } else {
+                                callMethod.showToast("رمز عبور صیحیح نیست");
+                            }
+
+                        }
+                    }
+                });
         btn_login.setOnClickListener(v -> {
             if (NumberFunctions.EnglishNumber(ed_password.getText().toString()).equals(callMethod.ReadString("ActivationCode"))) {
                 Intent intent = new Intent(mContext, ConfigActivity.class);
@@ -699,7 +885,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
     public void sendfactor(final String factor_code, String signatureimage) {
 
-        app_info();
         dialogProg();
 
         Call<String> call;
@@ -741,34 +926,6 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
                 Log.e("test","2");
                 Log.e("test",t.getMessage());
-            }
-        });
-
-    }
-
-    public void app_info() {
-
-        @SuppressLint("HardwareIds") String android_id = Settings.Secure.getString(mContext
-                .getContentResolver(), Settings.Secure.ANDROID_ID);
-        String Date = Utilities.getCurrentShamsidate();
-        Calendar c = Calendar.getInstance();
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        String strDate = sdf.format(c.getTime());
-
-
-        APIInterface apiInterface = APIClient.getCleint("http://87.107.78.234:60005/login/").create(APIInterface.class);
-        Call<String> cl = apiInterface.Kowsar_log("Log_report", android_id, mContext.getString(R.string.SERVERIP), mContext.getString(R.string.app_name), "", Date + "--" + strDate, callMethod.ReadString("Deliverer"), "");
-        cl.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                Log.e("ocrkowsar_onResponse", "" + response.body());
-                Log.e("1", "0");
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                Log.e("ocrkowsar_onFailure", "" + t);
             }
         });
 
