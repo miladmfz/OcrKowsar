@@ -233,6 +233,7 @@ public class CollectFragment extends Fragment {
         }
 
         row_counter= 0;
+        callMethod.Log("goods.size = " + goods.size());
         for (Good single_good : goods) {
             if(callMethod.ReadString("StackCategory").equals("همه")) {
                 goods_visible.add(single_good);
@@ -266,13 +267,24 @@ public class CollectFragment extends Fragment {
 
         }
 
-        ll_title.addView(tv_company);
+        callMethod.Log("goods_visible.size = " + goods_visible.size());
 
+        try{
+            factor.getAppOCRFactorExplain();
+        }catch (Exception e){
+            factor.setAppOCRFactorExplain("");
+        }
+
+        ll_title.addView(tv_company);
+        callMethod.Log("step = " + "00");
         if (factor.getAppOCRFactorExplain().contains(callMethod.ReadString("StackCategory"))) {
             Log.e("CheckString", "AppOCRFactorExplain Dare");
         } else {
+            Log.e("CheckString", "AppOCRFactorExplain nadare");
+
             ll_title.addView(btn_set_stack);
         }
+        callMethod.Log("step = " + "0");
 
 
 
@@ -284,16 +296,19 @@ public class CollectFragment extends Fragment {
         ll_title.addView(tv_address);
         ll_title.addView(tv_phone);
         ll_title.addView(ViewPager);
+        callMethod.Log("step = " + "1");
 
         ll_send_confirm.addView(btn_confirm);
         ll_send_confirm.addView(btn_send);
 
+        callMethod.Log("step = " + "2");
 
         ll_good_body.addView(ll_good_body_detail);
 
         if (callMethod.ReadBoolan("JustScanner")){
             ll_factor_summary.addView(tv_total_amount);
         }
+        callMethod.Log("step = " + "3");
 
         ll_factor_summary.addView(tv_total_price);
 
@@ -301,6 +316,7 @@ public class CollectFragment extends Fragment {
         ll_main.addView(ll_good_body);
 
 
+        callMethod.Log("step = " + "4");
 
 
 
@@ -313,10 +329,12 @@ public class CollectFragment extends Fragment {
             ll_main.addView(ll_factor_summary);
             ll_main.addView(ll_send_confirm);
         }
+        callMethod.Log("step = " + "5");
 
 
 
         ConfirmCount_Control();
+        callMethod.Log("step = " + "8");
 
         btn_shortage.setOnClickListener(v -> CreateView_shortage());
         btn_print.setOnClickListener(v -> print.Printing(factor,goods_visible,"0","1"));
@@ -719,7 +737,8 @@ public class CollectFragment extends Fragment {
 
         // TODO
         tv_amount.setText(NumberFunctions.PerisanNumber(good_detial.getFacAmount()));
-        tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice().substring(0,good_detial.getGoodMaxSellPrice().indexOf("."))));
+        tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice()));
+        //tv_price.setText(NumberFunctions.PerisanNumber(good_detial.getGoodMaxSellPrice().substring(0,good_detial.getGoodMaxSellPrice().indexOf("."))));
 
 
 //        // TODO
@@ -759,6 +778,7 @@ public class CollectFragment extends Fragment {
         ll_details.addView(ll_radif_check);
         ll_details.addView(vp_radif_name);
         ll_details.addView(ll_name_price);
+
 
 
 
@@ -831,6 +851,8 @@ public class CollectFragment extends Fragment {
     }
 
     public void ConfirmCount_Control(){
+        callMethod.Log("step = " + "6");
+
         int ConfirmCounter_stack = 0;
         int ConfirmCounter = 0;
 
@@ -922,6 +944,8 @@ public class CollectFragment extends Fragment {
             btn_send.setTextColor(requireActivity().getColor(R.color.Black));
             btn_send.setEnabled(false);
         }
+        callMethod.Log("step = " + "7");
+
     }
 
 

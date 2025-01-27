@@ -100,7 +100,7 @@ public class StackFragment extends Fragment {
 
         adapter = new Good_StackFragment_Adapter(goods, requireActivity());
 
-        rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+        rc_good.setLayoutManager(new GridLayoutManager(requireActivity(), 1));
         rc_good.setAdapter(adapter);
         rc_good.setItemAnimator(new DefaultItemAnimator());
 

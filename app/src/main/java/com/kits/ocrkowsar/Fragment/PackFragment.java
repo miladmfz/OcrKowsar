@@ -119,13 +119,16 @@ public class PackFragment extends Fragment{
 
             CreateView_Pack();
         }catch (Exception e){
-            Log.e("kowsar",e.getMessage());
+            Log.e("kowsarwwww ",e.getMessage());
         }
+
     }
 
 
     @SuppressLint("RtlHardcoded")
     public void CreateView_Pack() {
+
+        callMethod.Log("step ="+ "-1");
         ll_main.removeAllViews();
         Newview();
         setLayoutParams();
@@ -142,24 +145,28 @@ public class PackFragment extends Fragment{
         ll_send_confirm.setWeightSum(2);
         ll_shortage_print.setWeightSum(2);
 
+        callMethod.Log("step ="+ "0");
 
         tv_company.setText(NumberFunctions.PerisanNumber("بخش بسته بندی"));
         tv_customername.setText(NumberFunctions.PerisanNumber(" نام مشتری :   " + factor.getCustName()));
         tv_factorcode.setText(NumberFunctions.PerisanNumber(" کد فاکتور :   " + factor.getFactorPrivateCode()));
         tv_factordate.setText(NumberFunctions.PerisanNumber(" تارخ فاکتور :   " + factor.getFactorDate()));
         tv_factorexplain.setText(NumberFunctions.PerisanNumber(" توضیحات :   " + factor.getExplain()));
+        callMethod.Log("step ="+ "1");
 
 
         tv_address.setText(NumberFunctions.PerisanNumber(" آدرس : " + factor.getAddress()));
         tv_phone.setText(NumberFunctions.PerisanNumber(" تلفن تماس : " + factor.getPhone()));
         tv_total_amount.setText(NumberFunctions.PerisanNumber(" تعداد کل:   " + factor.getSumAmount()));
         tv_total_price.setText(NumberFunctions.PerisanNumber(" قیمت کل : " + decimalFormat.format(Integer.valueOf(factor.getSumPrice())) + " ریال"));
+        callMethod.Log("step ="+ "2");
 
         btn_confirm.setText("تاییده بخش");
         btn_send.setText("ارسال تاییده");
         btn_shortage.setText("اعلام کسر موجودی");
         btn_print.setText("پرینت فاکتور");
 
+        callMethod.Log("step ="+ "3");
 
         if (!factor.getNewSumPrice().equals(factor.getSumPrice())) {
             TextView tv_total_newprice = new TextView(requireActivity().getApplicationContext());
@@ -171,6 +178,9 @@ public class PackFragment extends Fragment{
 
             ll_factor_summary.addView(tv_total_newprice);
         }
+        callMethod.Log("step ="+ "4");
+
+        callMethod.Log("good ="+ goods.size());
 
         int countergood = 0;
         for (Good Singlegood : goods) {
@@ -178,6 +188,7 @@ public class PackFragment extends Fragment{
             ll_good_body_detail.addView(CreateGoodViewForPack(Singlegood, countergood));
 
         }
+        callMethod.Log("step ="+ "5");
 
         ll_title.addView(tv_company);
         ll_title.addView(tv_customername);
@@ -278,6 +289,7 @@ public class PackFragment extends Fragment{
 
     @SuppressLint("RtlHardcoded")
     public View CreateGoodViewForPack(Good good, int countergood) {
+        callMethod.Log("good ="+ good.getGoodName());
         LinearLayoutCompat ll_factor_row = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_details = new LinearLayoutCompat(requireActivity().getApplicationContext());
         LinearLayoutCompat ll_radif_check = new LinearLayoutCompat(requireActivity().getApplicationContext());
@@ -633,8 +645,13 @@ public class PackFragment extends Fragment{
         ll_details.addView(ll_name_price);
 
 
-        if (good.getMinAmount().equals("1.000")){
-            ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
+        try {
+            if (good.getMinAmount().equals("1.000")){
+                ll_details.setBackgroundColor(requireActivity().getColor(R.color.red_100));
+            }
+        }catch (Exception e){
+
+            callMethod.Log(e.getMessage());
         }
 
         ll_factor_row.addView(ll_details);
@@ -737,8 +754,8 @@ public class PackFragment extends Fragment{
         tv_phone.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
         tv_total_amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
         tv_total_price.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("BodySize")));
-        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("titlesize")));
-        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("titlesize")));
+        btn_confirm.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
+        btn_send.setTextSize(TypedValue.COMPLEX_UNIT_SP, Integer.parseInt(callMethod.ReadString("TitleSize")));
     }
 
     public void setBackgroundResource() {

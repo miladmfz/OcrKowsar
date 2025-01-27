@@ -423,9 +423,9 @@ public class ConfigActivity extends AppCompatActivity  {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 workcategory=String.valueOf(position);
                 if(position==2){
-                    ll_Stack.setVisibility(View.VISIBLE);
+                    ll_spinner_Stack.setVisibility(View.VISIBLE);
                 }else {
-                    ll_Stack.setVisibility(View.GONE);
+                    ll_spinner_Stack.setVisibility(View.GONE);
                 }
                 GetJob("Ocr"+position);
 

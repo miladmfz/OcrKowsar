@@ -227,7 +227,6 @@ public class ConfirmActivity extends AppCompatActivity {
                             collectFragment.setGoods(goods);
                             collectFragment.setState(State);
                             collectFragment.setTcPrintRef(BarcodeScan);
-
                             fragmentTransaction.replace(R.id.confirm_framelayout, collectFragment);
                             fragmentTransaction.commit();
                         } else if (factor.getAppIsPacked().equals("0")) {
@@ -238,29 +237,23 @@ public class ConfirmActivity extends AppCompatActivity {
                         } else {
                             finish();
                         }
-
                     }
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
                 callMethod.showToast("Connection fail ...!!!");
             }
         });
-
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
     }
-
 
     public void StackLocation(){
 
         tv_lottiestatus.setText("اسکن کنید");
         tv_lottiestatus.setVisibility(View.VISIBLE);
         if (BarcodeScan.length()>0){
-            Log.e("kowsar","0");
-
             progressBar.setVisibility(View.VISIBLE);
             tv_lottiestatus.setText("در حال جستجو");
             tv_lottiestatus.setVisibility(View.VISIBLE);
@@ -268,11 +261,8 @@ public class ConfirmActivity extends AppCompatActivity {
             ed_barcode.selectAll();
             Search_call();
         }
-        Log.e("kowsar","1");
         ed_barcode.setLayoutParams(new LinearLayoutCompat.LayoutParams(LinearLayoutCompat.LayoutParams.MATCH_PARENT, 100));
         ed_barcode.setPadding(5, 5, 5, 5);
-
-
 
         Log.e("kowsar","StackLocation");
         img_lottiestatus.setVisibility(View.GONE);
@@ -301,9 +291,6 @@ public class ConfirmActivity extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     }
-
-
-
                     @Override
                     public void afterTextChanged( Editable editable) {
 
@@ -326,35 +313,21 @@ public class ConfirmActivity extends AppCompatActivity {
                                     tv_lottiestatus.setText("اسکن کنید");
                                     tv_lottiestatus.setVisibility(View.VISIBLE);
                                 }
-
-
-
                             },  Integer.parseInt(callMethod.ReadString("Delay")));
-
-
-
-
                     }
                 }
         );
 
-
-
         ed_barcode.setFocusable(true);
         ed_barcode.requestFocus();
     }
-
-
     public void Search_call(){
         searchtarget = NumberFunctions.EnglishNumber(ed_barcode.getText().toString());
         searchtarget = searchtarget.replaceAll(" ", "%");
 
-
-
-
         call=apiInterface.GetOcrGoodList("GetOcrGoodList",searchtarget);
         Log.e("kowsar","searchtarget = "+searchtarget);
-
+        action.dialogProg();
 
         call.enqueue(new Callback<RetrofitResponse>() {
             @Override
@@ -362,6 +335,7 @@ public class ConfirmActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.e("kowsar","StackLocation = "+response.body().getGoods().size());
                     goods.clear();
+                    action.dialogProg_dismiss();
                     goods = response.body().getGoods();
 
                     if (goods.size()> 0) {
@@ -392,14 +366,7 @@ public class ConfirmActivity extends AppCompatActivity {
                                 fragmentTransaction.replace(R.id.confirm_framelayout, stackFragment, "STACK_FRAGMENT");
                                 Log.e("kowsar", "New fragment created and data set");
                             }
-
-
                             fragmentTransaction.commitAllowingStateLoss();
-
-
-
-                            Log.e("kowsar","2 ");
-
                             progressBar.setVisibility(View.GONE);
                             Log.e("kowsar","3 ");
 

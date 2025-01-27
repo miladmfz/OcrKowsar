@@ -109,6 +109,10 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
         tv_rep.setVisibility(View.GONE);
         dialogProg.show();
     }
+    public void dialogProg_dismiss() {
+        dialogProg.dismiss();
+    }
+
 
     public void factor_detail(Factor factor) {
         final Dialog dialog = new Dialog(mContext);

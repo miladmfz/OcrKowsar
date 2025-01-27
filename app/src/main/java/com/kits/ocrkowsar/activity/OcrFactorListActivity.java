@@ -253,13 +253,29 @@ public class OcrFactorListActivity extends AppCompatActivity {
         if (selectedItems.size()>0) {
 
             for (Factor factor : factors) {
+
+                callMethod.Log("factor.getStackClass() ="+factor.getStackClass());
                 List<String> factorStacks = Arrays.asList(factor.getStackClass().split(",")); // goli ke az stack ra mishnasim
+
+
+                callMethod.Log("factorStacks = "+factorStacks);
+
+
+
                 // Check mikonim ke aya selectedItems be hameh stack ha in factor moshabehe
 //                if (new HashSet<>(factorStacks).containsAll(selectedItems)) {
 //                    visible_factors_temp.add(factor); // Agar match kardan, factor ro ezafe mikonim
 //                }
+
+                callMethod.Log("selectedItems = "+selectedItems);
+
+
                 if (new HashSet<>(factorStacks).equals(new HashSet<>(selectedItems))) {
+
                     visible_factors_temp.add(factor); // Agar barabar bashand, factor ro ezafe mikonim
+                }else{
+                    callMethod.Log("if_selectedItems = "+new HashSet<>(selectedItems));
+                    callMethod.Log("if_factorStacks = "+new HashSet<>(factorStacks));
                 }
 
             }
