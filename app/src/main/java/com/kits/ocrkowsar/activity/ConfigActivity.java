@@ -111,7 +111,7 @@ public class ConfigActivity extends AppCompatActivity  {
         works.add(new SpinnerItem(1,"اسکن بارکد"));
         works.add(new SpinnerItem(2,"جمع کننده انبار"));
         works.add(new SpinnerItem(3,"بررسی مجدد انبار"));
-        works.add(new SpinnerItem(7,"توضیحات بسته بندی"));
+//        works.add(new SpinnerItem(7,"توضیحات بسته بندی"));
         works.add(new SpinnerItem(4,"ارسال"));
         works.add(new SpinnerItem(5,"مدیریت"));
         works.add(new SpinnerItem(6,"جانمایی انبار"));

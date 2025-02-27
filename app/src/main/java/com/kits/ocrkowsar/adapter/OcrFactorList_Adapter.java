@@ -199,8 +199,6 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                 }else {
                                     call =secendApiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                                 }
-
-
                                 call.enqueue(new Callback<RetrofitResponse>() {
                                     @Override
                                     public void onResponse(@NonNull Call<RetrofitResponse> call, @NonNull Response<RetrofitResponse> response) {
@@ -214,18 +212,12 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                             }
                                         }
                                     }
-
                                     @Override
                                     public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
-
                                     }
                                 });
-
-
                             } else {
-
                                 callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
-
                                 intent = new Intent(mContext, ConfirmActivity.class);
                                 intent.putExtra("ScanResponse", factor.getAppTcPrintRef());
                                 intent.putExtra("State", state);
@@ -252,6 +244,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
                                 callMethod.EditString("LastTcPrint", factors.get(position).getAppTcPrintRef());
 
                                 Call<RetrofitResponse> call;
+
                                 if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
                                     call =apiInterface.CheckState("OcrDeliverd", factor.getAppOCRFactorCode(), "1", callMethod.ReadString("Deliverer"));
                                 }else {
@@ -305,7 +298,7 @@ public class OcrFactorList_Adapter extends RecyclerView.Adapter<OcrFactorList_Ad
     }
 
 
-@Override
+    @Override
     public int getItemCount() {
         return factors.size();
     }

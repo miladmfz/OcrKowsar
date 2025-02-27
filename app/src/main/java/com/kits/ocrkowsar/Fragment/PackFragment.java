@@ -413,11 +413,11 @@ public class PackFragment extends Fragment{
                 if (!Array_GoodCodesCheck.contains(goods.get(correct_row).getAppOCRFactorRowCode())) {
                     Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
                 }
-                Array_GoodCodesCheck.add(goods.get(correct_row).getAppOCRFactorRowCode());
             } else {
                 goods.get(correct_row).setAppRowIsPacked("0");
                 Array_GoodCodesCheck.remove(goods.get(correct_row).getAppOCRFactorRowCode());
             }
+
         });
 
 
@@ -685,43 +685,54 @@ public class PackFragment extends Fragment{
         tv_goodname.setOnClickListener(v -> image_zome_view(goods.get(correct_row).getGoodCode()));
 
         arraygood_shortage.clear();
+
         et_amountshortage.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable text) {
                 try {
-                    if (firsttry==0){
+                    if (firsttry == 0) {
                         arraygood_shortage.clear();
-                        firsttry = firsttry +1;
+                        firsttry = 1;
                     }
 
-                    if (Integer.parseInt(text.toString()) > Integer.parseInt(good.getFacAmount())) {
-                        et_amountshortage.setText("");
-                        callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
-                    } else {
-                        arraygood_shortage.add(new String[]{good.getAppOCRFactorRowCode(), text.toString()});
+                    String newAmount = text.toString();
+                    String goodCode = good.getAppOCRFactorRowCode();
+
+                    if (!newAmount.isEmpty()) {
+                        int amount = Integer.parseInt(newAmount);
+
+                        if (amount > Integer.parseInt(good.getFacAmount())) {
+                            et_amountshortage.setText("");  // مقدار رو پاک کن
+                            callMethod.showToast("از مقدار فاکتور بیشتر می باشد");
+                        } else {
+                            // بررسی کن که آیا این `goodCode` قبلاً در لیست هست؟
+                            boolean found = false;
+                            for (int i = 0; i < arraygood_shortage.size(); i++) {
+                                if (arraygood_shortage.get(i)[0].equals(goodCode)) {
+                                    arraygood_shortage.get(i)[1] = newAmount;  // مقدار رو آپدیت کن
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            // اگر مقدار جدید بود، اضافه کن
+                            if (!found) {
+                                arraygood_shortage.add(new String[]{goodCode, newAmount});
+                            }
+                        }
 
                     }
-
-                } catch (Exception ignored) {
-
-                }
-//                handler.removeCallbacksAndMessages(null);
-//                handler.postDelayed(() -> {
-//
-//                },  1000);
-
+                } catch (Exception ignored) {}
             }
         });
+
+
         return ll_factor_row;
     }
 

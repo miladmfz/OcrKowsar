@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/image_zoom_page"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:layoutDirection="rtl"
-    android:padding="16dp"
     android:background="@color/white">
 
     <androidx.cardview.widget.CardView
@@ -17,22 +17,52 @@
         android:backgroundTint="@color/white"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            >
 
             <ImageView
                 android:id="@+id/image_zoom_view"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:background="@drawable/no_photo"
                 android:layout_gravity="center"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="8dp"/>
+            <!-- Row: شماره قفسه -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:text="شماره قفسه"
+                    android:textColor="@color/Black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/imagezoome_tv5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:textSize="20sp"
+                    android:textColor="@color/Black"
+                    android:gravity="center"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
 
             <!-- Row: موجودی کل -->
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -155,35 +185,9 @@
                     android:gravity="center"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!-- Row: شماره قفسه -->
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:text="شماره قفسه"
-                    android:textColor="@color/Black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/imagezoome_tv5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:textSize="20sp"
-                    android:textColor="@color/Black"
-                    android:gravity="center"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+        </ScrollView>
     </androidx.cardview.widget.CardView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

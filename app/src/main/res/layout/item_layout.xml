@@ -6,13 +6,15 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:backgroundTint="@color/Black"
+    android:background="@drawable/bg_round"
     app:borderWidth="1dp"
     app:elevation="2dp"
-    android:padding="8dp"
+    android:layoutDirection="rtl"
     android:layout_margin="1dp">
 
     <CheckBox
         android:id="@+id/checkbox"
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -20,6 +22,6 @@
         android:id="@+id/textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:layout_marginHorizontal="4dp"/>
 </LinearLayout>

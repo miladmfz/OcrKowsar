@@ -633,9 +633,9 @@ public class Action extends Activity implements DatePickerDialog.OnDateSetListen
 
         Call<RetrofitResponse> call2;
         if (callMethod.ReadString("FactorDbName").equals(callMethod.ReadString("DbName"))){
-            call2=apiInterface.GetImage("getImage", GoodCode, 0, 400);
+            call2=apiInterface.GetImage("getImage", GoodCode, 0, 250);
         }else{
-            call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 400);
+            call2=secendApiInterface.GetImage("getImage", GoodCode, 0, 250);
         }
 
         call2.enqueue(new Callback<RetrofitResponse>() {

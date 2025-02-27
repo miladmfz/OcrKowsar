@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.gson.JsonDeserializationContext;
 import com.kits.ocrkowsar.Fragment.CollectFragment;
 import com.kits.ocrkowsar.Fragment.PackFragment;
 import com.kits.ocrkowsar.Fragment.StackFragment;
@@ -217,6 +218,10 @@ public class ConfirmActivity extends AppCompatActivity {
 
                     assert response.body() != null;
                     factor = response.body().getFactor();
+                    callMethod.Log("AppFacto = "+response.body().getFactor().getAppFactorRef());
+                    callMethod.Log("CustName = "+response.body().getFactor().getCustName());
+                    callMethod.Log("Customer = "+response.body().getFactor().getCustomercode());
+
                     if (factor.getFactorCode().equals("0")) {
                         callMethod.showToast("لطفا مجددا اسکن کنید");
                         finish();
@@ -389,6 +394,7 @@ public class ConfirmActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<RetrofitResponse> call, @NonNull Throwable t) {
+                goods.clear();
                 callMethod.showToast("Connection fail ...!!!");
                 tv_lottiestatus.setText("موردی یافت نشد");
                 img_lottiestatus.setVisibility(View.VISIBLE);
@@ -417,6 +423,15 @@ public class ConfirmActivity extends AppCompatActivity {
             }
 
 
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        ed_barcode.setFocusable(true);
+        ed_barcode.requestFocus();
+        ed_barcode.selectAll();
+
+
+        super.onWindowFocusChanged(hasFocus);
     }
 
 
